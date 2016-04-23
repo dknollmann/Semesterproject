@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">semesterprojekt</string>
+    <string name="action_settings">Settings</string>
+    <string name="my_shopping_lists">Meine Einkaufslisten</string>
+    <string name="add">+</string>
+    <string name="title_activity_list">ListActivity</string>
+
+</resources>
