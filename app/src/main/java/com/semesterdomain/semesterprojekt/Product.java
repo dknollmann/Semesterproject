@@ -10,6 +10,7 @@ public class Product {
     public String price;
 
 
+
     public Product(String name, String producer, String price){
         this.name = name;
         this.producer = producer;
