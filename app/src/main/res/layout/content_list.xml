@@ -31,27 +31,16 @@
         android:layout_toRightOf="@id/searchView"
         />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Einkaufsliste variable"
-        android:textSize="26sp"
-        android:textColor="@color/black"
-
-        android:textStyle="normal"
-        android:id="@+id/textView"
-        android:layout_below="@+id/searchView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="28dp" />
-
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/list"
-        android:layout_below="@+id/textView"
+
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/btn_back" />
+        android:layout_above="@+id/btn_back"
+        android:layout_below="@+id/searchView"
+        android:layout_centerHorizontal="true" />
 
     <Button
         android:layout_width="wrap_content"
@@ -60,7 +49,21 @@
         android:id="@+id/btn_back"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="tes"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0€"
+        android:id="@+id/text_sumPrice"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignTop="@+id/btn_back"
+        android:layout_toEndOf="@+id/searchView"
+        android:layout_toRightOf="@+id/searchView" />
 </RelativeLayout>
 
 

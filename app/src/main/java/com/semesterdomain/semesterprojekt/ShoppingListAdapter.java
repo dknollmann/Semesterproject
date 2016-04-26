@@ -7,19 +7,22 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.semesterdomain.semesterprojekt.Product;
+import com.semesterdomain.semesterprojekt.R;
+import com.semesterdomain.semesterprojekt.Shopping_List;
+
 import java.util.ArrayList;
 
 /**
- * Created by L 875 on 22.04.2016.
+ * Created by L 875 on 26.04.2016.
  */
-public class ProdListAdapter extends BaseAdapter {
+public class ShoppingListAdapter extends BaseAdapter{
 
         Context context;
-        ArrayList<Product> data;
+        ArrayList<Shopping_List> data;
         private static LayoutInflater inflater = null;
 
-        public ProdListAdapter(Context context, ArrayList<Product> data) {
-            // TODO Auto-generated constructor stub
+        public ShoppingListAdapter(Context context, ArrayList<Shopping_List> data) {
             this.context = context;
             this.data = data;
             inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -43,7 +46,7 @@ public class ProdListAdapter extends BaseAdapter {
             return position;
         }
 
-        public void add(Product s){
+        public void add(Shopping_List s){
             data.add(s);
         }
 
@@ -52,18 +55,17 @@ public class ProdListAdapter extends BaseAdapter {
             // TODO Auto-generated method stub
             View vi = convertView;
             if (vi == null)
-                vi = inflater.inflate(R.layout.prod_list_item, null);
+                vi = inflater.inflate(R.layout.shopping_list_item, null);
 
-            TextView name = (TextView) vi.findViewById(R.id.text_prodname);
-            name.setText(data.get(position).name);
+            TextView name = (TextView) vi.findViewById(R.id.text_shoppingListname);
+            name.setText(data.get(position).getName());
 
-            TextView producer = (TextView) vi.findViewById(R.id.text_producer);
-            producer.setText(data.get(position).producer);
-
-            TextView price = (TextView) vi.findViewById(R.id.text_prodprice);
-            price.setText( ""+data.get(position).price+ "€");
+            TextView price = (TextView) vi.findViewById(R.id.text_shoppingListPrice);
+            price.setText( data.get(position).getSumPrice()+" €");
 
             return vi;
         }
+
+
 
 }
