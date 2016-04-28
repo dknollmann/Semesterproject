@@ -3,13 +3,9 @@ package com.semesterdomain.semesterprojekt;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Created by L 875 on 26.04.2016.
- */
-
 public class Shopping_List implements Serializable{
 
-    private ArrayList<Product> myProducts = new ArrayList<Product>();
+    private ArrayList<Product> myProducts = new ArrayList<>();
     private int sumPrice;
     private String name;
 
@@ -37,9 +33,6 @@ public class Shopping_List implements Serializable{
         return sumPrice;
     }
 
-    public void setSumPrice(int sumPrice) {
-        this.sumPrice = sumPrice;
-    }
     public String getName() {
         return name;
     }

@@ -7,15 +7,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.semesterdomain.semesterprojekt.Product;
-import com.semesterdomain.semesterprojekt.R;
-import com.semesterdomain.semesterprojekt.Shopping_List;
 
 import java.util.ArrayList;
 
-/**
- * Created by L 875 on 26.04.2016.
- */
 public class ShoppingListAdapter extends BaseAdapter{
 
         Context context;
@@ -52,20 +46,18 @@ public class ShoppingListAdapter extends BaseAdapter{
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            // TODO Auto-generated method stub
             View vi = convertView;
-            if (vi == null)
+            if (vi == null) {
                 vi = inflater.inflate(R.layout.shopping_list_item, null);
+            }
 
             TextView name = (TextView) vi.findViewById(R.id.text_shoppingListname);
             name.setText(data.get(position).getName());
 
             TextView price = (TextView) vi.findViewById(R.id.text_shoppingListPrice);
-            price.setText( data.get(position).getSumPrice()+" €");
+            String listPrice = String.format("%d",data.get(position).getSumPrice())+ R.string.Euro;
+            price.setText(listPrice);
 
             return vi;
         }
-
-
-
 }
