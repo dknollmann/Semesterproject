@@ -4,9 +4,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-/**
- * Created by L 875 on 26.04.2016.
- */
 public class MyTextWatcher implements TextWatcher {
 
     Shopping_List shopping_list;

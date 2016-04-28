@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS "TEST";
+CREATE TABLE "TEST" ("_id" INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , "meintest" TEXT NOT NULL , "meintest_bla" TEXT NOT NULL );
+INSERT INTO "TEST" VALUES(1,'Test1','Test1');
+INSERT INTO "TEST" VALUES(2,'Test2','Test2');
+DROP TABLE IF EXISTS "android_metadata";
+CREATE TABLE "android_metadata" ("locale" TEXT DEFAULT 'en_US');
+INSERT INTO "android_metadata" VALUES('en_US');
