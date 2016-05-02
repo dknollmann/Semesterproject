@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class ActivityList extends AppCompatActivity {
 
     //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
-    ArrayList<Product> prodListItems=new ArrayList<Product>();
+
 
     //DEFINING AN ADAPTER WHICH WILL HANDLE THE DATA OF THE LISTVIEW
     ProdListAdapter adapter;
@@ -23,6 +23,7 @@ public class ActivityList extends AppCompatActivity {
     ListView product_lv;
     EditText list_header;
     Shopping_List myShoppingList;
+    ArrayList<Product> prodListItems;
 
     @Override
     protected void onRestart() {
@@ -39,38 +40,40 @@ public class ActivityList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        //define views
         product_lv = (ListView) findViewById(R.id.list);
+        prodSearchView=(SearchView) findViewById(R.id.searchView);
 
+        prodListItems=new ArrayList<Product>();
         adapter = new ProdListAdapter(this, prodListItems);
-
         myShoppingList = new Shopping_List();
 
         product_lv.setAdapter(adapter);
 
+        //define Header of Productlist
         list_header = new EditText(this);
         list_header.addTextChangedListener(new MyTextWatcher(myShoppingList, list_header));
         list_header.setText("Meine Einkaufsliste");
         list_header.setSingleLine();
         product_lv.addHeaderView(list_header);
 
-        prodSearchView=(SearchView) findViewById(R.id.searchView);
-
         }
 
     public void addProduct(View view) {
         if(!prodSearchView.getQuery().toString().isEmpty()) {
             //Die Produkteigenschaften müssen über eine DB Query ermittelt werden
-            adapter.add(new Product(prodSearchView.getQuery().toString(), "Hersteller ", 1));
-            myShoppingList.setMyProducts(adapter.data);
+            ShoppingDBHelper sDBH;
+            Product prod = new Product(prodSearchView.getQuery().toString(), "Hersteller ", 1);
+            adapter.add(prod);
+            //myShoppingList.getMyProducts().add(prod);
 
             TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
-            sumPrice.setText(myShoppingList.calcPrice()+ "€");
-
-            adapter.notifyDataSetChanged();
+            sumPrice.setText(myShoppingList.calcPrice(prodListItems) + "€");
         }
     }
 
     public void tes(View view) {
+        myShoppingList.setMyProducts(prodListItems);
         Intent intent = new Intent(this, HomeActivity.class);
 
         intent.putExtra("shoppingList", myShoppingList);
