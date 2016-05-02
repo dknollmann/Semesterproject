@@ -33,7 +33,7 @@ public class ProdListAdapter extends ArrayAdapter<Product> {
         // Populate the data into the template view using the data object
         tvProdName.setText(product.getProductname());
         tvManufacturer.setText(product.getManufacturer());
-        tvPrice.setText(product.getPrice() + R.string.Euro);
+        tvPrice.setText(product.getPrice() + "€");
 
         // Return the completed view to render on screen
         return convertView;

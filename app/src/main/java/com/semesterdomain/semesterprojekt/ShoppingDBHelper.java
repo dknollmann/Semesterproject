@@ -104,12 +104,14 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
     }
 
     //get Single Productdata
-    public Product get_ProductFromDB(String productname){
-
+    public Product get_ProductFromDB(String productname, String manufacturer){
+        if(!myDatabase.isOpen()){
+            open_database();
+        }
         Product product = null;
 
-        String where_clause = "productname = ?";
-        String[] args = {productname};
+        String where_clause = "productname = ? AND manufacturer = ?";
+        String[] args = {productname, manufacturer};
 
         Cursor c = myDatabase.query(TBL_PRODUCT, null, where_clause, args, null, null, null);
         if(c != null){
@@ -125,7 +127,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
                 }while(c.moveToNext());
             }
         }
-        close_database();
+        c.close();
         return product;
     }
 
@@ -136,9 +138,9 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         values.put("listname", list.getName());
         values.put("fk_user", list.getFk_user());
         //evtl try-catch weil methode wirft SQLExepprion wenns der insert fehlschlägt
-        myDatabase.beginTransaction();
+        //myDatabase.beginTransaction();
         try{
-            long list_id = myDatabase.insertOrThrow("LIST", null, values);
+            long list_id = myDatabase.insert("LIST", null, values);
             if(list_id == -1){
                 Log.d("DB_LOG","insert List Failure");
                 return false;
@@ -147,27 +149,36 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
             values.clear();
 
             for(Product p : list.getMyProducts()){
-                if(!setProductToList(p, list_id)){
-                    Log.d("DB_LOG", p.getProductname() + " can't be attached to "+list.getName()+ " on db");
-                };
+
+                setProductToList(get_ProductFromDB(p.getProductname(), p.getManufacturer()), list_id);
+                Log.d("DB_LOG", p.getProductname() + " attached to "+list.getName()+ " on db");
             }
             }catch(android.database.SQLException e){
                 Log.d("DB_LOG", list.getName() + " could not be added to DB");
-                myDatabase.endTransaction();
-            }
-        myDatabase.endTransaction();
+            }finally {
+            //myDatabase.endTransaction();
+        }
         close_database();
+
         return true;
     }
 
     //match product to a List on database
     public boolean setProductToList(Product product, long id){
 
-        SQLiteDatabase database = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("fk_product", product.getProduct_id());
         values.put("fk_list", id);
-        long list_prod_id = database.insertOrThrow("LIST_PRODUCT", null, values);
+        long list_prod_id = 0;
+
+        //myDatabase.beginTransaction();
+        try {
+            list_prod_id = myDatabase.insert("LIST_PRODUCT", null, values);
+        }catch(android.database.SQLException e) {
+            Log.d("DB_LOG", product.getProductname() + " could not be added to attached to DB");
+        }finally {
+            //myDatabase.endTransaction();
+        }
         values.clear();
         if(list_prod_id == -1){
             return false;

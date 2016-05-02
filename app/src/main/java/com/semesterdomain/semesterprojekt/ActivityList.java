@@ -63,7 +63,7 @@ public class ActivityList extends AppCompatActivity {
         if(!prodSearchView.getQuery().toString().isEmpty()) {
             //Die Produkteigenschaften müssen über eine DB Query ermittelt werden
             ShoppingDBHelper sDBH;
-            Product prod = new Product(prodSearchView.getQuery().toString(), "Hersteller ", 1);
+            Product prod = new Product(prodSearchView.getQuery().toString(), "Testmanufacturer", 1);
             adapter.add(prod);
             //myShoppingList.getMyProducts().add(prod);
 
