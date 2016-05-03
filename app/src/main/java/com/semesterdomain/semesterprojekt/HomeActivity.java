@@ -1,13 +1,14 @@
 package com.semesterdomain.semesterprojekt;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,6 @@ public class HomeActivity extends AppCompatActivity {
     ListView view_mainList;
     ShoppingListAdapter sadapter;
     private ShoppingDBHelper db;
-    private SharedPreferences sp;
 
 
     @Override
@@ -29,6 +29,17 @@ public class HomeActivity extends AppCompatActivity {
         sadapter = new ShoppingListAdapter(this, mainList);
 
         view_mainList.setAdapter(sadapter);
+
+        view_mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(HomeActivity.this, ActivityList.class);
+                Shopping_List list = (Shopping_List) parent.getItemAtPosition(position);
+                Log.d("LOG", list.getName());
+                intent.putExtra("shoppingListForward", list);
+                startActivity(intent);
+            }
+        });
 
         db = new ShoppingDBHelper(this.getApplicationContext());
 
@@ -56,11 +67,23 @@ public class HomeActivity extends AppCompatActivity {
         //view_mainList.setAdapter(sadapter);
 
         sadapter.add(shoppingList);
+        Log.d("LOG", "after adapter insertion");
         db.insertList(shoppingList);
+        Log.d("LOG", "after db insertion");
        // sadapter.notifyDataSetChanged();*/
        /* Product p = db.get_Product("Testproduct");
         Button btn_test = (Button) findViewById(R.id.btn_test);
         btn_test.setText(p.getManufacturer());
         */
     }
+
+   /* public void showProdList(View view) {
+        TextView v = (TextView) view.findViewById(R.id.text_shoppingListname);
+        Shopping_List list = db.getShoppingList(v.getText().toString());
+
+        Intent intent = new Intent(this, ActivityList.class);
+        intent.putExtra("shoppingList", list);
+        startActivity(intent);
+
+    }*/
 }

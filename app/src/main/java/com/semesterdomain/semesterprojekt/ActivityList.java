@@ -4,7 +4,9 @@ package com.semesterdomain.semesterprojekt;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
@@ -31,7 +33,7 @@ public class ActivityList extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
 
         intent.putExtra("shoppingList", myShoppingList);
-
+        Log.d("LOG", "onRestart");
         startActivity(intent);
     }
 
@@ -46,18 +48,27 @@ public class ActivityList extends AppCompatActivity {
 
         prodListItems=new ArrayList<Product>();
         adapter = new ProdListAdapter(this, prodListItems);
-        myShoppingList = new Shopping_List();
+
+        Intent intent = getIntent();
+        myShoppingList = (Shopping_List) intent.getSerializableExtra("shoppingListForward");
+
+        if(myShoppingList == null) {
+            myShoppingList = new Shopping_List();
+            myShoppingList.setName("Meine Einkaufsliste");
+        }
 
         product_lv.setAdapter(adapter);
 
         //define Header of Productlist
         list_header = new EditText(this);
         list_header.addTextChangedListener(new MyTextWatcher(myShoppingList, list_header));
-        list_header.setText("Meine Einkaufsliste");
+        list_header.setText(myShoppingList.getName());
         list_header.setSingleLine();
         product_lv.addHeaderView(list_header);
 
-        }
+        Log.d("LOG", "onCreate");
+
+    }
 
     public void addProduct(View view) {
         if(!prodSearchView.getQuery().toString().isEmpty()) {
@@ -72,7 +83,7 @@ public class ActivityList extends AppCompatActivity {
         }
     }
 
-    public void tes(View view) {
+    public void passShoppingListToHomeActivity(View view) {
         myShoppingList.setMyProducts(prodListItems);
         Intent intent = new Intent(this, HomeActivity.class);
 
@@ -81,4 +92,15 @@ public class ActivityList extends AppCompatActivity {
         startActivity(intent);
 
     }
+
+    /*public void test(View view) {
+        Intent intent = getIntent();
+        Log.d("LOG","before passing Shopping ListName");
+        Shopping_List shoppingList = (Shopping_List) intent.getSerializableExtra("shoppingList");
+        Log.d("shoppingList", shoppingList.getName());
+        Log.d("LOG","after passing Shopping List");
+        //sadapter = new ShoppingListAdapter(this, mainList);
+        //view_mainList.setAdapter(sadapter);
+        list_header.setText(shoppingList.getName());
+    }*/
 }

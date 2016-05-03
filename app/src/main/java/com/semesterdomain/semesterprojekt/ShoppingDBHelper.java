@@ -133,12 +133,13 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
     public boolean insertList(Shopping_List list) {
         open_database();
+
         //write listvalues to database
         ContentValues values = new ContentValues();
         values.put("listname", list.getName());
         values.put("fk_user", list.getFk_user());
         //evtl try-catch weil methode wirft SQLExepprion wenns der insert fehlschlägt
-        //myDatabase.beginTransaction();
+        myDatabase.beginTransaction();
         try{
             long list_id = myDatabase.insert("LIST", null, values);
             if(list_id == -1){
@@ -153,10 +154,11 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
                 setProductToList(get_ProductFromDB(p.getProductname(), p.getManufacturer()), list_id);
                 Log.d("DB_LOG", p.getProductname() + " attached to "+list.getName()+ " on db");
             }
+            myDatabase.setTransactionSuccessful();
             }catch(android.database.SQLException e){
                 Log.d("DB_LOG", list.getName() + " could not be added to DB");
             }finally {
-            //myDatabase.endTransaction();
+                myDatabase.endTransaction();
         }
         close_database();
 
@@ -184,6 +186,31 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
             return false;
         }
         return true;
+    }
+
+    public Shopping_List getShoppingList(String listname){
+        if(!myDatabase.isOpen()){
+            open_database();
+        }
+        Shopping_List list = null;
+
+        String where_clause = "listname = ?";
+        String[] args = {listname};
+
+        Cursor c = myDatabase.query(TBL_LIST, null, where_clause, args, null, null, null);
+        if(c != null){
+            if(c.moveToFirst()){
+                do{
+                    list = new Shopping_List();
+                    list.setList_id(c.getInt(0));
+                    list.setName(listname);
+                    list.setFk_user(c.getInt(2));
+                }while(c.moveToNext());
+            }
+        }
+        c.close();
+        close_database();
+        return list;
     }
 }
 
