@@ -7,11 +7,11 @@ public class Product implements Serializable{
     private long product_id;
     private String productname;
     private String manufacturer;
-    private int price;
+    private long price;
     private double posX;
     private double posY;
 
-    public Product (String name, String manufacturer, int price){
+    public Product (String name, String manufacturer, long price){
         this.productname = name;
         this.manufacturer = manufacturer;
         this.price = price;
@@ -41,11 +41,11 @@ public class Product implements Serializable{
         this.manufacturer = manufacturer;
     }
 
-    public int getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(long price) {
         this.price = price;
     }
 

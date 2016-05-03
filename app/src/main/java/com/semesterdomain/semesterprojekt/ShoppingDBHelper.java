@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 public class ShoppingDBHelper extends SQLiteOpenHelper {
@@ -81,8 +82,10 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
     }
 
     public void open_database(){
-        myDatabase = SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
-        Log.d("LOG",DB_NAME +" opened");
+        if(!(myDatabase != null && myDatabase.isOpen())) {
+            myDatabase = SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
+            Log.d("LOG", DB_NAME + " opened");
+        }
     }
 
     public void close_database(){
@@ -102,12 +105,38 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         //must be filled:
         //increase Version with every update
     }
+    public ArrayList<Product> getAllProductsOfList(Shopping_List list){
+        open_database();
 
+        Product product;
+        String[] args = {""+list.getList_id()};
+
+        Cursor c = myDatabase.rawQuery("SELECT product_id, productname, manufacturer, productprice, posx, posy FROM LIST_PRODUCT " +
+                                        "JOIN PRODUCT ON LIST_PRODUCT.fk_product = PRODUCT.product_id " +
+                                        "WHERE LIST_PRODUCT.fk_list = ?",args);
+        list.getMyProducts().clear();
+        if(c != null){
+            if(c.moveToFirst()){
+                do{
+                    product = new Product("Dummy", "Dummy", 1);
+                    product.setProduct_id(c.getInt(0));
+                    product.setProductname(c.getString(1));
+                    product.setManufacturer(c.getString(2));
+                    product.setPrice(c.getInt(3));
+                    product.setPosX(c.getInt(4));
+                    product.setPosY(c.getInt(5));
+                    list.getMyProducts().add(product);
+                }while(c.moveToNext());
+            }
+        }
+        c.close();
+        close_database();
+        return list.getMyProducts();
+    }
     //get Single Productdata
     public Product get_ProductFromDB(String productname, String manufacturer){
-        if(!myDatabase.isOpen()){
-            open_database();
-        }
+        open_database();
+
         Product product = null;
 
         String where_clause = "productname = ? AND manufacturer = ?";
@@ -189,9 +218,9 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
     }
 
     public Shopping_List getShoppingList(String listname){
-        if(!myDatabase.isOpen()){
-            open_database();
-        }
+
+        open_database();
+
         Shopping_List list = null;
 
         String where_clause = "listname = ?";

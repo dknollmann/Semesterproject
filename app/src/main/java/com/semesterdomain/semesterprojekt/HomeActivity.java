@@ -35,7 +35,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(HomeActivity.this, ActivityList.class);
                 Shopping_List list = (Shopping_List) parent.getItemAtPosition(position);
-                Log.d("LOG", list.getName());
+                Log.d("LOG", "ID: "+ list.getList_id());
                 intent.putExtra("shoppingListForward", list);
                 startActivity(intent);
             }

@@ -4,8 +4,6 @@
     <string name="my_shopping_lists">Meine Einkaufslisten</string>
     <string name="add">+</string>
     <string name="title_activity_list">ListActivity</string>
-
-    <!--Währungen-->
     <string name="Euro">€</string>
     <string name="Dollar">$</string>
 

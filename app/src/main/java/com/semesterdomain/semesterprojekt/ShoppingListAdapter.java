@@ -30,7 +30,7 @@ public class ShoppingListAdapter extends ArrayAdapter<Shopping_List> {
 
         // Populate the data into the template view using the data object
         tvListName.setText(slist.getName());
-        tvListPrice.setText(slist.getSumPrice() + R.string.Euro);
+        tvListPrice.setText(slist.getSumPrice()+""+ R.string.Euro);
 
         // Return the completed view to render on screen
         return convertView;

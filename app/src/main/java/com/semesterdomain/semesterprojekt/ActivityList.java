@@ -26,6 +26,7 @@ public class ActivityList extends AppCompatActivity {
     EditText list_header;
     Shopping_List myShoppingList;
     ArrayList<Product> prodListItems;
+    ShoppingDBHelper dbH = new ShoppingDBHelper(this);
 
     @Override
     protected void onRestart() {
@@ -52,12 +53,19 @@ public class ActivityList extends AppCompatActivity {
         Intent intent = getIntent();
         myShoppingList = (Shopping_List) intent.getSerializableExtra("shoppingListForward");
 
+        product_lv.setAdapter(adapter);
+
         if(myShoppingList == null) {
             myShoppingList = new Shopping_List();
             myShoppingList.setName("Meine Einkaufsliste");
+        }else{
+            //dbH = new ShoppingDBHelper(this);
+            adapter.clear();
+            for(Product p : dbH.getAllProductsOfList(myShoppingList)){
+                adapter.add(p);
+                Log.d("LOG","add");
+            }
         }
-
-        product_lv.setAdapter(adapter);
 
         //define Header of Productlist
         list_header = new EditText(this);
@@ -73,8 +81,8 @@ public class ActivityList extends AppCompatActivity {
     public void addProduct(View view) {
         if(!prodSearchView.getQuery().toString().isEmpty()) {
             //Die Produkteigenschaften müssen über eine DB Query ermittelt werden
-            ShoppingDBHelper sDBH;
-            Product prod = new Product(prodSearchView.getQuery().toString(), "Testmanufacturer", 1);
+            Product prod = dbH.get_ProductFromDB(prodSearchView.getQuery().toString(), "Testmanufacturer");
+            //Product prod = new Product(prodSearchView.getQuery().toString(), "Testmanufacturer", 1);
             adapter.add(prod);
             //myShoppingList.getMyProducts().add(prod);
 
