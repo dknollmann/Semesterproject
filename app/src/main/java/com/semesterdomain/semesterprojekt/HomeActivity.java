@@ -24,6 +24,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        User user = new User("Testuser");
+
         view_mainList = (ListView) findViewById(R.id.mainList);
 
         sadapter = new ShoppingListAdapter(this, mainList);
@@ -35,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(HomeActivity.this, ActivityList.class);
                 Shopping_List list = (Shopping_List) parent.getItemAtPosition(position);
-                Log.d("LOG", "ID: "+ list.getList_id());
+                Log.d("LOG", "ID: " + list.getList_id());
                 intent.putExtra("shoppingListForward", list);
                 startActivity(intent);
             }
@@ -45,45 +47,24 @@ public class HomeActivity extends AppCompatActivity {
 
         db.create_database();
 
+        ArrayList<Shopping_List> myLists = db.getShoppingListsByUser(user);
+        for(Shopping_List list: myLists){
+            list.setMyProducts(db.getAllProductsOfList(list));
+        }
+        sadapter.addAll(myLists);
 
+        //is there a new shopping List from ActivityList than add it
+        Intent intent = getIntent();
+        Shopping_List tmp_list = (Shopping_List) intent.getSerializableExtra("shoppingList");
+        if (tmp_list != null) {
+            db.insertList(tmp_list);
+            sadapter.add(tmp_list);
+        }
     }
-
 
     public void addList(View view) {
         Intent intent = new Intent(this, ActivityList.class);
-
-
         startActivity(intent);
     }
 
-    public void testklick(View view) {
-
-        Intent intent = getIntent();
-        Log.d("LOG","before passing Shopping List");
-        Shopping_List shoppingList = (Shopping_List) intent.getSerializableExtra("shoppingList");
-        Log.d("shoppingList", shoppingList.getName());
-        Log.d("LOG","after passing Shopping List");
-        //sadapter = new ShoppingListAdapter(this, mainList);
-        //view_mainList.setAdapter(sadapter);
-
-        sadapter.add(shoppingList);
-        Log.d("LOG", "after adapter insertion");
-        db.insertList(shoppingList);
-        Log.d("LOG", "after db insertion");
-       // sadapter.notifyDataSetChanged();*/
-       /* Product p = db.get_Product("Testproduct");
-        Button btn_test = (Button) findViewById(R.id.btn_test);
-        btn_test.setText(p.getManufacturer());
-        */
-    }
-
-   /* public void showProdList(View view) {
-        TextView v = (TextView) view.findViewById(R.id.text_shoppingListname);
-        Shopping_List list = db.getShoppingList(v.getText().toString());
-
-        Intent intent = new Intent(this, ActivityList.class);
-        intent.putExtra("shoppingList", list);
-        startActivity(intent);
-
-    }*/
 }

@@ -160,14 +160,17 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         return product;
     }
 
+    //insert full List to database
     public boolean insertList(Shopping_List list) {
+
         open_database();
 
         //write listvalues to database
         ContentValues values = new ContentValues();
         values.put("listname", list.getName());
         values.put("fk_user", list.getFk_user());
-        //evtl try-catch weil methode wirft SQLExepprion wenns der insert fehlschlägt
+
+        //make transaction that only full list would be added or no list
         myDatabase.beginTransaction();
         try{
             long list_id = myDatabase.insert("LIST", null, values);
@@ -195,20 +198,18 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
     }
 
     //match product to a List on database
-    public boolean setProductToList(Product product, long id){
+    public boolean setProductToList(Product product, long list_id){
 
         ContentValues values = new ContentValues();
         values.put("fk_product", product.getProduct_id());
-        values.put("fk_list", id);
+        values.put("fk_list", list_id);
         long list_prod_id = 0;
 
-        //myDatabase.beginTransaction();
+
         try {
             list_prod_id = myDatabase.insert("LIST_PRODUCT", null, values);
         }catch(android.database.SQLException e) {
             Log.d("DB_LOG", product.getProductname() + " could not be added to attached to DB");
-        }finally {
-            //myDatabase.endTransaction();
         }
         values.clear();
         if(list_prod_id == -1){
@@ -217,29 +218,33 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    public Shopping_List getShoppingList(String listname){
+    public ArrayList<Shopping_List> getShoppingListsByUser(User user){
 
         open_database();
 
+        ArrayList<Shopping_List> listArr = new ArrayList<>();
         Shopping_List list = null;
 
-        String where_clause = "listname = ?";
-        String[] args = {listname};
+        String[] args = {""+user.getUser_id()};
 
-        Cursor c = myDatabase.query(TBL_LIST, null, where_clause, args, null, null, null);
+        Cursor c = myDatabase.rawQuery("SELECT list_id, listname, user_id FROM LIST " +
+                "JOIN USER ON USER.user_id = LIST.fk_user " +
+                "WHERE LIST.fk_user = ?", args);
+
         if(c != null){
             if(c.moveToFirst()){
                 do{
                     list = new Shopping_List();
                     list.setList_id(c.getInt(0));
-                    list.setName(listname);
+                    list.setName(c.getString(1));
                     list.setFk_user(c.getInt(2));
+                    listArr.add(list);
                 }while(c.moveToNext());
             }
         }
         c.close();
         close_database();
-        return list;
+        return listArr;
     }
 }
 

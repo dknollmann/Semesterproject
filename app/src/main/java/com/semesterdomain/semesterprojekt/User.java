@@ -9,6 +9,7 @@ public class User implements Serializable {
 
     public User(String username) {
         this.username = username;
+        this.user_id = 1;
     }
 
     public String getUsername() {

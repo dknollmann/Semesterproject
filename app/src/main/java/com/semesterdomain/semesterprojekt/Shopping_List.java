@@ -15,6 +15,7 @@ public class Shopping_List implements Serializable{
     public Shopping_List(){
         this.fk_user = 1;
         sumPrice = 0;
+        myProducts = new ArrayList<>();
     }
 
     public int calcPrice(ArrayList<Product> products){

@@ -61,10 +61,11 @@ public class ActivityList extends AppCompatActivity {
         }else{
             //dbH = new ShoppingDBHelper(this);
             adapter.clear();
-            for(Product p : dbH.getAllProductsOfList(myShoppingList)){
+            for(Product p : myShoppingList.getMyProducts()){ //dbH.getAllProductsOfList(myShoppingList)
                 adapter.add(p);
                 Log.d("LOG","add");
             }
+            displaySumPrice();
         }
 
         //define Header of Productlist
@@ -82,12 +83,8 @@ public class ActivityList extends AppCompatActivity {
         if(!prodSearchView.getQuery().toString().isEmpty()) {
             //Die Produkteigenschaften müssen über eine DB Query ermittelt werden
             Product prod = dbH.get_ProductFromDB(prodSearchView.getQuery().toString(), "Testmanufacturer");
-            //Product prod = new Product(prodSearchView.getQuery().toString(), "Testmanufacturer", 1);
             adapter.add(prod);
-            //myShoppingList.getMyProducts().add(prod);
-
-            TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
-            sumPrice.setText(myShoppingList.calcPrice(prodListItems) + "€");
+            displaySumPrice();
         }
     }
 
@@ -99,6 +96,10 @@ public class ActivityList extends AppCompatActivity {
 
         startActivity(intent);
 
+    }
+    public void displaySumPrice(){
+        TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
+        sumPrice.setText(myShoppingList.calcPrice(prodListItems) + "€");
     }
 
     /*public void test(View view) {

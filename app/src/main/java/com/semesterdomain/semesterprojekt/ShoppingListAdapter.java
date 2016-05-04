@@ -1,6 +1,7 @@
 package com.semesterdomain.semesterprojekt;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,8 @@ public class ShoppingListAdapter extends ArrayAdapter<Shopping_List> {
 
         // Populate the data into the template view using the data object
         tvListName.setText(slist.getName());
-        tvListPrice.setText(slist.getSumPrice()+""+ R.string.Euro);
+        Log.d("LOG", slist.calcPrice(slist.getMyProducts()) +"");
+        tvListPrice.setText(slist.calcPrice(slist.getMyProducts())+"");
 
         // Return the completed view to render on screen
         return convertView;
