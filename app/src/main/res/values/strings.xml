@@ -6,5 +6,6 @@
     <string name="title_activity_list">ListActivity</string>
     <string name="Euro">€</string>
     <string name="Dollar">$</string>
+    <string name="title_activity_show_pop_up">ShowPopUp</string>
 
 </resources>

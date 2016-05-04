@@ -54,12 +54,12 @@ public class HomeActivity extends AppCompatActivity {
         sadapter.addAll(myLists);
 
         //is there a new shopping List from ActivityList than add it
-        Intent intent = getIntent();
+        /*Intent intent = getIntent();
         Shopping_List tmp_list = (Shopping_List) intent.getSerializableExtra("shoppingList");
         if (tmp_list != null) {
             db.insertList(tmp_list);
             sadapter.add(tmp_list);
-        }
+        }*/
     }
 
     public void addList(View view) {

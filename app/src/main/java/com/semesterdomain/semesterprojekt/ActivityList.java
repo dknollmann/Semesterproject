@@ -1,14 +1,21 @@
 package com.semesterdomain.semesterprojekt;
 
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.SearchView;
 import android.widget.TextView;
 
@@ -27,6 +34,7 @@ public class ActivityList extends AppCompatActivity {
     Shopping_List myShoppingList;
     ArrayList<Product> prodListItems;
     ShoppingDBHelper dbH = new ShoppingDBHelper(this);
+    boolean isSaved = false;
 
     @Override
     protected void onRestart() {
@@ -84,32 +92,47 @@ public class ActivityList extends AppCompatActivity {
             //Die Produkteigenschaften müssen über eine DB Query ermittelt werden
             Product prod = dbH.get_ProductFromDB(prodSearchView.getQuery().toString(), "Testmanufacturer");
             adapter.add(prod);
+            myShoppingList.getMyProducts().add(prod);
             displaySumPrice();
+            isSaved = false;
         }
     }
 
-    public void passShoppingListToHomeActivity(View view) {
-        myShoppingList.setMyProducts(prodListItems);
-        Intent intent = new Intent(this, HomeActivity.class);
 
-        intent.putExtra("shoppingList", myShoppingList);
-
-        startActivity(intent);
-
+    public void saveByClick(View view) {
+        dbH.insertList(myShoppingList);
+        isSaved = true;
     }
+
+
     public void displaySumPrice(){
         TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
         sumPrice.setText(myShoppingList.calcPrice(prodListItems) + "€");
     }
 
-    /*public void test(View view) {
-        Intent intent = getIntent();
-        Log.d("LOG","before passing Shopping ListName");
-        Shopping_List shoppingList = (Shopping_List) intent.getSerializableExtra("shoppingList");
-        Log.d("shoppingList", shoppingList.getName());
-        Log.d("LOG","after passing Shopping List");
-        //sadapter = new ShoppingListAdapter(this, mainList);
-        //view_mainList.setAdapter(sadapter);
-        list_header.setText(shoppingList.getName());
-    }*/
+    @Override
+    public void onBackPressed(){
+        /*Log.d("LOG",""+isSaved);
+        if(isSaved==false) {
+
+            Intent intent = new Intent(this, ShowPopUp.class);
+            intent.putExtra("shoppingList", myShoppingList);
+            startActivity(intent);
+            return;
+        }
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+        super.onBackPressed();*/
+        new AlertDialog.Builder(this)
+                .setMessage("Wollen Sie die Liste speichern?")
+
+                .setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dbH.insertList(myShoppingList);
+                        ActivityList.super.onBackPressed();
+                    }
+                }).create().show();
+    }
 }
