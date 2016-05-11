@@ -42,7 +42,7 @@ public class ActivityList extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
 
         intent.putExtra("shoppingList", myShoppingList);
-        Log.d("LOG", "onRestart");
+        Log.d("LOG", "onRestartActivityList");
         startActivity(intent);
     }
 
@@ -83,7 +83,7 @@ public class ActivityList extends AppCompatActivity {
         list_header.setSingleLine();
         product_lv.addHeaderView(list_header);
 
-        Log.d("LOG", "onCreate");
+        Log.d("LOG", "onCreateListActivity");
 
     }
 

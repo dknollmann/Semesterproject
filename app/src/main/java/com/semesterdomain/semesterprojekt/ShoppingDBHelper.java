@@ -28,6 +28,8 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
     private static final String TBL_USER = "USER";
     private static final String TBL_PSEUDO = "PSEUDO";
     private static final String TBL_RIGHT = "RIGHT";
+    private static final String TBL_LIST_PRODUCT = "LIST_PRODUCT";
+    private static final String TBL_LIST_PSEUDO = "LIST_PSEUDO";
 
 
     private final Context mcontext;
@@ -112,8 +114,8 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         String[] args = {""+list.getList_id()};
 
         Cursor c = myDatabase.rawQuery("SELECT product_id, productname, manufacturer, productprice, posx, posy FROM LIST_PRODUCT " +
-                                        "JOIN PRODUCT ON LIST_PRODUCT.fk_product = PRODUCT.product_id " +
-                                        "WHERE LIST_PRODUCT.fk_list = ?",args);
+                "JOIN PRODUCT ON LIST_PRODUCT.fk_product = PRODUCT.product_id " +
+                "WHERE LIST_PRODUCT.fk_list = ?", args);
         list.getMyProducts().clear();
         if(c != null){
             if(c.moveToFirst()){
@@ -246,5 +248,76 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         close_database();
         return listArr;
     }
-}
 
+    public boolean deleteList(User user, Shopping_List clicked_list){
+        open_database();
+
+        Shopping_List list = getListById(clicked_list.getList_id());
+        long list_id = list.getList_id();
+        long id_check = user.getUser_id();
+
+        //is user owner?
+        if(id_check != list.getFk_user()){
+            Log.d("LOG", "user is not owner of list");
+            return false;
+        }
+
+        String[] args = {""+ list_id};
+
+        myDatabase.beginTransaction();
+        try {
+            //deletes all entries from LIST_PRODUCT for the current list
+            int check = myDatabase.delete(TBL_LIST_PRODUCT, "fk_list = ?", args);
+            if (check == 0){
+                Log.d("LOG", "No deletions from LIST_PRODUCT");
+            }
+
+            //deletes all entries from LIST_PSEUDO for the current list
+            check = myDatabase.delete(TBL_LIST_PSEUDO, "fk_list = ?", args);
+            if (check == 0){
+                Log.d("LOG", "No deletions from LIST_PSEUDO");
+            }
+
+            //deletes all entries from RIGHT for the current list
+            check = myDatabase.delete(TBL_RIGHT, "fk_list = ?", args);
+            if (check == 0){
+                Log.d("LOG", "No deletions from RIGHT");
+            }
+
+            //deletes current list in LIST
+            check = myDatabase.delete(TBL_LIST, "list_id = ?", args);
+            if (check == 0){
+                Log.d("LOG", "No deletions from LIST");
+            }
+            myDatabase.setTransactionSuccessful();
+        }catch(android.database.SQLException e){
+            Log.d("DB_LOG", list.getName() + " could not be deleted from DB");
+        }finally {
+            myDatabase.endTransaction();
+        }
+        close_database();
+
+        return true;
+    }
+
+    private Shopping_List getListById(long id){
+
+        Shopping_List list = null;
+
+        String[] args = {"" + id};
+
+        Cursor c = myDatabase.rawQuery("SELECT * FROM LIST WHERE list_id = ?", args );
+
+        if(c != null){
+            if(c.moveToFirst()){
+                list = new Shopping_List();
+                list.setList_id(c.getInt(0));
+                list.setName(c.getString(1));
+                list.setFk_user(c.getInt(2));
+            }
+        }
+        c.close();
+
+        return  list;
+    }
+}

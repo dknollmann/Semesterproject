@@ -19,12 +19,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HomeActivity extends AppCompatActivity {
+
     ArrayList<Shopping_List> mainList = new ArrayList<>();
     ListView view_mainList;
     ShoppingListAdapter sadapter;
     private ShoppingDBHelper db;
+    User user;
 
-    private ListView lv;
+    //private ListView view_mainList;
     private ArrayList array;
 
     //Swiping
@@ -41,58 +43,32 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        User user = new User("Testuser");
+        user = new User("Testuser");
 
+        view_mainList = (ListView) findViewById(R.id.mainList);
 
-        array = new ArrayList<>();
-        array.add("red");
-        array.add("green");
-        array.add("blue");
-        array.add("purple");
-        array.add("pink");
-        array.add("indigo");
-        array.add("brown");
-        array.add("black");
-        array.add("beige");
-        array.add("orange");
-        array.add("yellow");
-        array.add("blue");
-        array.add("magenta");
-        array.add("teal");
-        lv = (ListView) findViewById(R.id.mainList);
+        sadapter = new ShoppingListAdapter(HomeActivity.this, mainList, mTouchListener);
 
-        sadapter = new ShoppingListAdapter(HomeActivity.this, array, mTouchListener);
+        view_mainList.setAdapter(sadapter);
 
-        lv.setAdapter(sadapter);
-
-        /*view_mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(HomeActivity.this, ActivityList.class);
-                Shopping_List list = (Shopping_List) parent.getItemAtPosition(position);
-                Log.d("LOG", "ID: " + list.getList_id());
-                intent.putExtra("shoppingListForward", list);
-                startActivity(intent);
-            }
-        });*/
-        /*
         db = new ShoppingDBHelper(this.getApplicationContext());
 
         db.create_database();
 
+        Log.d("LOG", "onCreate");
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
         ArrayList<Shopping_List> myLists = db.getShoppingListsByUser(user);
         for(Shopping_List list: myLists){
             list.setMyProducts(db.getAllProductsOfList(list));
         }
+        sadapter.clear();
         sadapter.addAll(myLists);
-        */
-        //is there a new shopping List from ActivityList than add it
-        /*Intent intent = getIntent();
-        Shopping_List tmp_list = (Shopping_List) intent.getSerializableExtra("shoppingList");
-        if (tmp_list != null) {
-            db.insertList(tmp_list);
-            sadapter.add(tmp_list);
-        }*/
+
+        Log.d("LOG","onResume");
     }
 
     public void addList(View view) {
@@ -138,7 +114,7 @@ public class HomeActivity extends AppCompatActivity {
                         if (deltaXAbs > mSwipeSlop) // tells if user is actually swiping or just touching in sloppy manner
                         {
                             mSwiping = true;
-                            lv.requestDisallowInterceptTouchEvent(true);
+                            view_mainList.requestDisallowInterceptTouchEvent(true);
                         }
                     }
                     if (mSwiping && !swiped) // Need to make sure the user is both swiping and has not already completed a swipe action (hence mSwiping and swiped)
@@ -175,13 +151,15 @@ public class HomeActivity extends AppCompatActivity {
                                         {
                                             mSwiping = false;
                                             mItemPressed = false;
-                                            animateRemoval(lv, v);
+                                            animateRemoval(view_mainList, v);
                                         }
                                     });
                                 }
                             });
                             mDownX = x;
                             swiped = true;
+                            int i = view_mainList.getPositionForView(v);
+                            db.deleteList(user, mainList.get(i));
                             return true;
                         }
                     }
@@ -199,18 +177,23 @@ public class HomeActivity extends AppCompatActivity {
                             {
                                 mSwiping = false;
                                 mItemPressed = false;
-                                lv.setEnabled(true);
+                                view_mainList.setEnabled(true);
                             }
                         });
                     }
                     else // user was not swiping; registers as a click
                     {
                         mItemPressed = false;
-                        lv.setEnabled(true);
+                        view_mainList.setEnabled(true);
 
-                        int i = lv.getPositionForView(v);
+                        int i = view_mainList.getPositionForView(v);
+                        Intent intent = new Intent(HomeActivity.this, ActivityList.class);
+                        Shopping_List list = (Shopping_List) view_mainList.getItemAtPosition(i);
+                        Log.d("LOG", "ID: " + list.getList_id());
+                        intent.putExtra("shoppingListForward", list);
+                        startActivity(intent);
 
-                        Toast.makeText(HomeActivity.this, array.get(i).toString(), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(HomeActivity.this, array.get(i).toString(), Toast.LENGTH_LONG).show();
 
                         return false;
                     }
@@ -226,7 +209,7 @@ public class HomeActivity extends AppCompatActivity {
     private void animateRemoval(final ListView listView, View viewToRemove)
     {
         int firstVisiblePosition = listView.getFirstVisiblePosition();
-        final ArrayAdapter adapter = (ArrayAdapter)lv.getAdapter();
+        final ArrayAdapter adapter = (ArrayAdapter)view_mainList.getAdapter();
         for (int i = 0; i < listView.getChildCount(); ++i)
         {
             View child = listView.getChildAt(i);
@@ -261,7 +244,7 @@ public class HomeActivity extends AppCompatActivity {
                                 child.animate().withEndAction(new Runnable() {
                                     public void run() {
                                         mSwiping = false;
-                                        lv.setEnabled(true);
+                                        view_mainList.setEnabled(true);
                                     }
                                 });
                                 firstAnimation = false;
@@ -281,7 +264,7 @@ public class HomeActivity extends AppCompatActivity {
                                 public void run()
                                 {
                                     mSwiping = false;
-                                    lv.setEnabled(true);
+                                    view_mainList.setEnabled(true);
                                 }
                             });
                             firstAnimation = false;

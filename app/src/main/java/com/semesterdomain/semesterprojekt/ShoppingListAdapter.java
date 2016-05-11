@@ -9,18 +9,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
 
-public class ShoppingListAdapter extends ArrayAdapter<String> {
+public class ShoppingListAdapter extends ArrayAdapter<Shopping_List> {
 
 
     View.OnTouchListener mTouchListener;
 
-    public ShoppingListAdapter(Context context, ArrayList<String> values, View.OnTouchListener listener)
+    public ShoppingListAdapter(Context context, ArrayList<Shopping_List> values, View.OnTouchListener listener)
     {
         super(context, R.layout.list_item, values);
         mTouchListener = listener;
     }
 
-    /*@Override
+    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         // Get the data item for this position
@@ -46,8 +46,8 @@ public class ShoppingListAdapter extends ArrayAdapter<String> {
 
         // Return the completed view to render on screen
         return v;
-    }*/
-    @Override
+    }
+   /* @Override
     public View getView(int position, View convertView, ViewGroup parent)
     {
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -60,5 +60,5 @@ public class ShoppingListAdapter extends ArrayAdapter<String> {
         v.setOnTouchListener(mTouchListener);
 
         return v;
-    }
+    }*/
 }
