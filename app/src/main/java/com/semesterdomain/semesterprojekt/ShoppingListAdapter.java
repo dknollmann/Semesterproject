@@ -9,13 +9,18 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import java.util.ArrayList;
 
-public class ShoppingListAdapter extends ArrayAdapter<Shopping_List> {
+public class ShoppingListAdapter extends ArrayAdapter<String> {
 
-    public ShoppingListAdapter(Context context, ArrayList<Shopping_List> lists) {
-        super(context, 0, lists);
+
+    View.OnTouchListener mTouchListener;
+
+    public ShoppingListAdapter(Context context, ArrayList<String> values, View.OnTouchListener listener)
+    {
+        super(context, R.layout.list_item, values);
+        mTouchListener = listener;
     }
 
-    @Override
+    /*@Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
         // Get the data item for this position
@@ -25,16 +30,35 @@ public class ShoppingListAdapter extends ArrayAdapter<Shopping_List> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.shopping_list_item, parent, false);
         }
+
+        View v = LayoutInflater.from(getContext()).inflate(R.layout.shopping_list_item, parent, false);
+
         // Lookup view for data population
-        TextView tvListName = (TextView) convertView.findViewById(R.id.text_shoppingListname);
-        TextView tvListPrice = (TextView) convertView.findViewById(R.id.text_shoppingListPrice);
+        TextView tvListName = (TextView) v.findViewById(R.id.text_shoppingListname);
+        TextView tvListPrice = (TextView) v.findViewById(R.id.text_shoppingListPrice);
 
         // Populate the data into the template view using the data object
         tvListName.setText(slist.getName());
         Log.d("LOG", slist.calcPrice(slist.getMyProducts()) +"");
         tvListPrice.setText(slist.calcPrice(slist.getMyProducts())+"");
 
+        v.setOnTouchListener(mTouchListener);
+
         // Return the completed view to render on screen
-        return convertView;
+        return v;
+    }*/
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent)
+    {
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+
+        View v = inflater.inflate(R.layout.list_item, parent, false);
+
+        TextView b = (TextView) v.findViewById(R.id.list_tv);
+        b.setText(getItem(position));
+
+        v.setOnTouchListener(mTouchListener);
+
+        return v;
     }
 }
