@@ -2,27 +2,28 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/text_prodname" />
+        android:id="@+id/search_text_prodname"
+        />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/text_producer"
-        android:layout_below="@+id/text_prodname"/>
+        android:id="@+id/search_text_producer"
+        android:layout_below="@+id/search_text_prodname"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/text_prodprice"
+        android:id="@+id/search_text_prodprice"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignBottom="@+id/text_producer"
+        android:layout_alignBottom="@+id/search_text_producer"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
 
         android:textAlignment="center"/>

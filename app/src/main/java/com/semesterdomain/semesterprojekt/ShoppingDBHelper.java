@@ -13,6 +13,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ShoppingDBHelper extends SQLiteOpenHelper {
@@ -55,12 +56,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
     public boolean check_database(){
         File file = new File(DB_PATH + DB_NAME);
-        if(file.exists()){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return file.exists();
     }
 
     public void copy_database(){
@@ -161,6 +157,32 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         c.close();
         return product;
     }
+    public Product get_ProductFromDBbyID(String id){
+        open_database();
+
+        Product product = null;
+
+        String where_clause = "product_id = ?";
+        String[] args = {id};
+
+        Cursor c = myDatabase.query(TBL_PRODUCT, null, where_clause, args, null, null, null);
+        if(c != null){
+            if(c.moveToFirst()){
+                do{
+                    product = new Product("Dummy", "Dummy", 1);
+                    product.setProduct_id(c.getInt(0));
+                    product.setProductname(c.getString(1));
+                    product.setManufacturer(c.getString(2));
+                    product.setPrice(c.getInt(3));
+                    product.setPosX(c.getInt(4));
+                    product.setPosY(c.getInt(5));
+                }while(c.moveToNext());
+            }
+        }
+        Log.d("DBLOG", "productbyid");
+        c.close();
+        return product;
+    }
 
     //insert full List to database
     public boolean insertList(Shopping_List list) {
@@ -214,10 +236,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
             Log.d("DB_LOG", product.getProductname() + " could not be added to attached to DB");
         }
         values.clear();
-        if(list_prod_id == -1){
-            return false;
-        }
-        return true;
+        return list_prod_id != -1;
     }
 
     public ArrayList<Shopping_List> getShoppingListsByUser(User user){
@@ -320,4 +339,50 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
         return  list;
     }
+
+    public List<Product> getAllProductsBySearch(String searchTerm) {
+
+        List<Product> recordsList = new ArrayList<Product>();
+
+        // select query
+        String sql = "";
+        sql += "SELECT * FROM " + TBL_PRODUCT;
+        sql += " WHERE productname LIKE '%" + searchTerm + "%' OR manufacturer LIKE '%" + searchTerm + "%'";
+        sql += " ORDER BY productname DESC";
+        sql += " LIMIT 0,5";
+
+        Log.d("LOG SQL-Statement: ", sql);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // execute the query
+        Cursor c = db.rawQuery(sql, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+
+                // int productId = Integer.parseInt(cursor.getString(cursor.getColumnIndex(fieldProductId)));
+                //String productName = cursor.getString(cursor.getColumnIndex(fieldObjectName));
+                Product product = new Product("Dummy", "Dummy", 1);
+                product.setProduct_id(c.getInt(0));
+                product.setProductname(c.getString(1));
+                product.setManufacturer(c.getString(2));
+                product.setPrice(c.getInt(3));
+                product.setPosX(c.getInt(4));
+                product.setPosY(c.getInt(5));
+
+                // add to list
+                recordsList.add(product);
+
+            } while (c.moveToNext());
+        }
+
+        c.close();
+        db.close();
+
+        // return the list of records
+        return recordsList;
+    }
+
 }

@@ -7,5 +7,8 @@
     <string name="Euro">€</string>
     <string name="Dollar">$</string>
     <string name="title_activity_show_pop_up">ShowPopUp</string>
+    <string name="app_label">Shopping Helper</string>
+    <string name="search_hint">Search products and manufacturers</string>
+    <string name="title_activity_searchable">SearchableActivity</string>
 
 </resources>

@@ -13,6 +13,7 @@ public class SearchAutoCompleteTextChangedListener implements TextWatcher{
 
     public static final String TAG = "CustomAutoCompleteTextChangedListener.java";
     Context context;
+    ShoppingDBHelper dbH;
 
     public SearchAutoCompleteTextChangedListener(Context context){
         this.context = context;
@@ -25,8 +26,7 @@ public class SearchAutoCompleteTextChangedListener implements TextWatcher{
     }
 
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count,
-                                  int after) {
+    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         // TODO Auto-generated method stub
 
     }
@@ -43,9 +43,9 @@ public class SearchAutoCompleteTextChangedListener implements TextWatcher{
         activityList.item = activityList.getItemsFromDb(userInput.toString());
 
         // update the adapater
-        activityList.myAdapter.notifyDataSetChanged();
-        activityList.myAdapter = new ArrayAdapter<String>(activityList, android.R.layout.simple_dropdown_item_1line, activityList.item);
-        activityList.searchAutoComplete.setAdapter(activityList.myAdapter);
+        activityList.searchAutoCompleteAdapter.notifyDataSetChanged();
+        activityList.searchAutoCompleteAdapter = new SearchAutoCompleteAdapter(activityList, activityList.item);
+        activityList.searchAutoComplete.setAdapter(activityList.searchAutoCompleteAdapter);
 
     }
 

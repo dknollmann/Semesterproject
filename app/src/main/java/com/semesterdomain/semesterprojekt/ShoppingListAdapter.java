@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 public class ShoppingListAdapter extends ArrayAdapter<Shopping_List> {
 
-
     View.OnTouchListener mTouchListener;
 
     public ShoppingListAdapter(Context context, ArrayList<Shopping_List> values, View.OnTouchListener listener)
@@ -47,18 +46,4 @@ public class ShoppingListAdapter extends ArrayAdapter<Shopping_List> {
         // Return the completed view to render on screen
         return v;
     }
-   /* @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-
-        View v = inflater.inflate(R.layout.list_item, parent, false);
-
-        TextView b = (TextView) v.findViewById(R.id.list_tv);
-        b.setText(getItem(position));
-
-        v.setOnTouchListener(mTouchListener);
-
-        return v;
-    }*/
 }

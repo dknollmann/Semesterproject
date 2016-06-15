@@ -65,4 +65,9 @@ public class Product implements Serializable{
         this.posY = posY;
     }
 
+    @Override
+    public String toString(){
+        return ""+product_id;
+    }
+
 }
