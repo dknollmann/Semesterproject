@@ -11,8 +11,11 @@ import java.util.ArrayList;
 
 public class ProdListAdapter extends ArrayAdapter<Product> {
 
-    public ProdListAdapter(Context context, ArrayList<Product> products) {
-        super(context, 0, products);
+    View.OnTouchListener mTouchListener;
+
+    public ProdListAdapter(Context context, ArrayList<Product> products, View.OnTouchListener listener) {
+        super(context, R.layout.prod_list_item, products);
+        this.mTouchListener = listener;
     }
 
     @Override
@@ -35,6 +38,7 @@ public class ProdListAdapter extends ArrayAdapter<Product> {
         tvManufacturer.setText(product.getManufacturer());
         tvPrice.setText(product.getPrice() + "€");
 
+        convertView.setOnTouchListener(mTouchListener);
         // Return the completed view to render on screen
         return convertView;
     }

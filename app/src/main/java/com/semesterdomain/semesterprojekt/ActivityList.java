@@ -22,18 +22,14 @@ import java.util.List;
 
 public class ActivityList extends AppCompatActivity {
 
-    //LIST OF ARRAY STRINGS WHICH WILL SERVE AS LIST ITEMS
-
-
-    //DEFINING AN ADAPTER WHICH WILL HANDLE THE DATA OF THE LISTVIEW
-    ProdListAdapter adapter;
     SearchView prodSearchView;
     SearchAutoCompleteView searchAutoComplete;
-    //String[] item = new String[]{"Search here..."};
-    List<Product> item = new ArrayList<Product>();
+
+    ArrayList<Product> item = new ArrayList<Product>();
+
     // adapter for auto-complete
     SearchAutoCompleteAdapter searchAutoCompleteAdapter;
-    //ArrayAdapter<String> myAdapter;
+    ProdListAdapter adapter;
 
     ListView product_lv;
     EditText list_header;
@@ -70,19 +66,29 @@ public class ActivityList extends AppCompatActivity {
         searchAutoCompleteAdapter = new SearchAutoCompleteAdapter(ActivityList.this, item);
         searchAutoComplete.setAdapter(searchAutoCompleteAdapter);
 
+
+
         prodListItems=new ArrayList<Product>();
-        adapter = new ProdListAdapter(this, prodListItems);
 
         Intent intent = getIntent();
         myShoppingList = (Shopping_List) intent.getSerializableExtra("shoppingListForward");
 
-        product_lv.setAdapter(adapter);
 
         if(myShoppingList == null) {
             myShoppingList = new Shopping_List();
             myShoppingList.setName("Meine Einkaufsliste");
+
+            SwiperActivityList swiper = new SwiperActivityList(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList );
+            adapter = new ProdListAdapter(this, prodListItems, swiper);
+            product_lv.setAdapter(adapter);
+
+            //neuimplementierung
+            dbH.insertList(myShoppingList);
         }else{
-            //dbH = new ShoppingDBHelper(this);
+            SwiperActivityList swiper = new SwiperActivityList(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList );
+            adapter = new ProdListAdapter(this, prodListItems, swiper);
+            product_lv.setAdapter(adapter);
+
             adapter.clear();
             for(Product p : myShoppingList.getMyProducts()){ //dbH.getAllProductsOfList(myShoppingList)
                 adapter.add(p);
@@ -91,12 +97,16 @@ public class ActivityList extends AppCompatActivity {
             displaySumPrice();
         }
 
+
+
+
+
         //define Header of Productlist
         list_header = new EditText(this);
         list_header.addTextChangedListener(new MyTextWatcher(myShoppingList, list_header));
         list_header.setText(myShoppingList.getName());
         list_header.setSingleLine();
-        product_lv.addHeaderView(list_header);
+     //   product_lv.addHeaderView(list_header);
 
         //For the search widget
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
@@ -112,11 +122,13 @@ public class ActivityList extends AppCompatActivity {
         //if(!prodSearchView.getQuery().toString().isEmpty()) {
             //Die Produkteigenschaften müssen über eine DB Query ermittelt werden
             //Product prod = dbH.get_ProductFromDB(prodSearchView.getQuery().toString(), "Testmanufacturer");
-            adapter.add(searchAutoComplete.product);
+     //   Product p = searchAutoComplete.product;
+        adapter.add(searchAutoComplete.product);
             myShoppingList.getMyProducts().add(searchAutoComplete.product);
+            Log.d("LOG ", ""+myShoppingList.getList_id());
+            dbH.setProductToList(searchAutoComplete.product, myShoppingList.getList_id());
             displaySumPrice();
             isSaved = false;
-        //}
     }
 
 
@@ -133,50 +145,15 @@ public class ActivityList extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        LayoutInflater inflater = getLayoutInflater();
-        /*Log.d("LOG",""+isSaved);
-        if(isSaved==false) {
-
-            Intent intent = new Intent(this, ShowPopUp.class);
-            intent.putExtra("shoppingList", myShoppingList);
-            startActivity(intent);
-            return;
-        }
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
-        finish();
-        super.onBackPressed();*/
-        if(isSaved==false) {
-            new AlertDialog.Builder(this)
-                    .setView(inflater.inflate(R.layout.shopping_list_item,null))
-                    //.setMessage("Wollen Sie die Liste speichern?")
-                    .setPositiveButton("bla", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dbH.insertList(myShoppingList);
-                            ActivityList.super.onBackPressed();
-                        }
-                    })
-                    .setNegativeButton("Abbruch", null)
-                    .show();
-           /* .setPositiveButton("Speichern", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dbH.insertList(myShoppingList);
-                    ActivityList.super.onBackPressed();
-                        }
-                    }).create().show(); */
-        }else {
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
-        }
     }
 
     // this function is used in CustomAutoCompleteTextChangedListener.java
-   public List<Product> getItemsFromDb(String searchTerm){
+   public ArrayList<Product> getItemsFromDb(String searchTerm){
 
         // add items on the array dynamically
-        List<Product> products = dbH.getAllProductsBySearch(searchTerm);
+        ArrayList<Product> products = dbH.getAllProductsBySearch(searchTerm);
     /*    int rowCount = products.size();
 
 
@@ -194,5 +171,41 @@ public class ActivityList extends AppCompatActivity {
         return products;
     }
 
+    public void printArrayList(ArrayList<Product> list){
+        for(Product prod : list ){
+            Log.d("LOG", prod.getProductname());
+        }
+        Log.d("LOG", "______________");
+    }
 
+    public void sortByGA(View view) {
+        TourManager.destinationProducts = myShoppingList.getMyProducts();
+        printArrayList(myShoppingList.getMyProducts());
+        Population pop = new Population(5);
+        Log.d("LOG", "Population erstellt");
+
+        pop = TSP_GA.selection(pop);
+        Log.d("LOG", "1");
+        Tour bestTour = pop.getFittest();
+        for (int i = 0; i < 9; i++) {
+            pop = TSP_GA.selection(pop);
+            if (bestTour.getDistance() > pop.getFittest().getDistance()){
+                Log.d("LOG", ""+bestTour.getDistance());
+                double test = bestTour.getDistance();
+                bestTour = pop.getFittest();
+            }
+        }
+        ArrayList<Product> tempTour = bestTour.getTour();
+
+        //Remove entrance and cash register
+        tempTour.remove(0);
+        tempTour.remove(tempTour.size()-1);
+
+        myShoppingList.setMyProducts(tempTour);
+        adapter.clear();
+        adapter.addAll(myShoppingList.getMyProducts());
+        printArrayList(TourManager.destinationProducts);
+        printArrayList(myShoppingList.getMyProducts());
+
+    }
 }

@@ -11,10 +11,21 @@ public class Product implements Serializable{
     private double posX;
     private double posY;
 
+
+    //eigentlich nutzlos nochmal schauen ;)
     public Product (String name, String manufacturer, long price){
         this.productname = name;
         this.manufacturer = manufacturer;
         this.price = price;
+    }
+
+    //constructor for entrance and cash register
+    public Product (int posx, int posy){
+        this.posX = posx;
+        this.posY = posy;
+        this.productname = "dummy";
+        this.manufacturer = "dummyManufacturer";
+        this.price = 0;
     }
 
     public long getProduct_id() {
@@ -49,7 +60,7 @@ public class Product implements Serializable{
         this.price = price;
     }
 
-    public double getPosX() {
+    public double getX() {
         return posX;
     }
 
@@ -57,7 +68,7 @@ public class Product implements Serializable{
         this.posX = posX;
     }
 
-    public double getPosY() {
+    public double getY() {
         return posY;
     }
 
@@ -68,6 +79,15 @@ public class Product implements Serializable{
     @Override
     public String toString(){
         return ""+product_id;
+    }
+
+    // Gets the distance to given city
+    public double distanceTo(Product product){
+        double xDistance = Math.abs(getX() - product.getX());
+        double yDistance = Math.abs(getY() - product.getY());
+        double distance = Math.sqrt( (xDistance*xDistance) + (yDistance*yDistance) );
+
+        return distance;
     }
 
 }

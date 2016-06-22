@@ -13,15 +13,39 @@ import java.util.ArrayList;
 public class SwiperActivityList extends Swipe {
 
     ArrayList<Product> mainList;
+    Shopping_List list;
 
-    public SwiperActivityList(ListView view_mainList, Context context, User user, AppCompatActivity activity, ArrayList<Product> mainList){
-        super(view_mainList, context, user, activity);
+    public SwiperActivityList(ListView view_mainList, Context context, AppCompatActivity activity, ArrayList<Product> mainList, Shopping_List list){
+        super(view_mainList, context, activity);
         this.mainList = mainList;
+        this.list = list;
     }
 
     @Override
-    protected void onItemSwipeLeft(View v, float x) {
-        
+    protected void onItemSwipeLeft(final View v, float x) {
+        v.setEnabled(false); // need to disable the view for the animation to run
+
+        // stacked the animations to have the pause before the views flings off screen
+        v.animate().setDuration(ANIMATION_DURATION).translationX(-v.getWidth()/3).withEndAction(new Runnable() {
+            @Override
+            public void run()
+            {
+                v.animate().setDuration(ANIMATION_DURATION).alpha(0).translationX(-v.getWidth()).withEndAction(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mSwiping = false;
+                        mItemPressed = false;
+                        animateRemoval(view_mainList, v);
+                    }
+                });
+            }
+        });
+        mDownX = x;
+        swiped = true;
+        int i = view_mainList.getPositionForView(v);
+        dbH.deleteProductFromList(mainList.get(i-1), list);
     }
 
     @Override

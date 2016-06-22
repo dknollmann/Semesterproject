@@ -224,6 +224,8 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
     //match product to a List on database
     public boolean setProductToList(Product product, long list_id){
 
+        open_database();
+
         ContentValues values = new ContentValues();
         values.put("fk_product", product.getProduct_id());
         values.put("fk_list", list_id);
@@ -236,6 +238,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
             Log.d("DB_LOG", product.getProductname() + " could not be added to attached to DB");
         }
         values.clear();
+        close_database();
         return list_prod_id != -1;
     }
 
@@ -340,9 +343,9 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         return  list;
     }
 
-    public List<Product> getAllProductsBySearch(String searchTerm) {
+    public ArrayList<Product> getAllProductsBySearch(String searchTerm) {
 
-        List<Product> recordsList = new ArrayList<Product>();
+        ArrayList<Product> recordsList = new ArrayList<Product>();
 
         // select query
         String sql = "";
@@ -383,6 +386,22 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
         // return the list of records
         return recordsList;
+    }
+
+    public boolean deleteProductFromList(Product product, Shopping_List list){
+
+        String[] args = {""+product.getProduct_id(), ""+list.getList_id()};
+        open_database();
+
+        //delete all entry from LIST_PRODUCT for the current product
+        int check = myDatabase.delete(TBL_LIST_PRODUCT, "fk_product = ? AND fk_list = ?", args);
+        if (check == 0){
+            Log.d("LOG", "Deletion of product not possible");
+            return false;
+        }
+        close_database();
+        return true;
+
     }
 
 }

@@ -132,6 +132,9 @@ public class TSP_GA {
         public static Tour crossover(Tour parent1, Tour parent2) {
             // Create new child tour
             Tour child = new Tour();
+            child.getTour().add(0, Tour.entrance);
+            child.getTour().add(Tour.cashRegister);
+
             // Get start and end sub tour positions for parent1's tour
             /*int startPos = (int) (Math.random() * parent1.tourSize());
             int endPos = (int) (Math.random() * parent1.tourSize());
@@ -165,6 +168,8 @@ public class TSP_GA {
                     }
                 }
             }
+            //child.getTour().add(0, Tour.entrance);
+            //child.getTour().add(child.getTour().size()-1, Tour.cashRegister);
             return child;
         }
 

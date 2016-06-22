@@ -1,7 +1,6 @@
 package com.semesterdomain.semesterprojekt;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -11,10 +10,8 @@ import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+
 
 /**
  * Created by L 875 on 16.06.2016.
@@ -22,39 +19,40 @@ import java.util.List;
 public abstract class Swipe implements View.OnTouchListener{
 
     float mDownX;
-    private int mSwipeSlop = -1;
+    int mSwipeSlop = -1;
     boolean swiped;
 
     ListView view_mainList;
     Context context;
     ShoppingDBHelper dbH;
-    User user;
     AppCompatActivity activity;
-    ArrayList<Shopping_List> mainList;
 
     public Swipe(){
 
     }
 
-    public Swipe(ListView view_mainList, Context context, User user, AppCompatActivity activity, ArrayList<Shopping_List> mainList){
+    public Swipe(ListView view_mainList, Context context, AppCompatActivity activity){
         this.view_mainList = view_mainList;
         this.context = context;
         this.dbH = new ShoppingDBHelper(context);
-        this.user = user;
         this.activity = activity;
-        this.mainList = mainList;
-        Log.d("LOG","Constructor Swipe");
     }
 
-    private boolean mSwiping = false; // detects if user is swiping on ACTION_UP
-    private boolean mItemPressed = false; // Detects if user is currently holding down a view
-    private static final int SWIPE_DURATION = 250; // needed for velocity implementation
-    private static final int MOVE_DURATION = 150;
+
+    protected abstract void onItemSwipeLeft(final View v, float x);
+
+    protected abstract void onItemTouch(View v);
+
+    protected boolean mSwiping = false; // detects if user is swiping on ACTION_UP
+    protected boolean mItemPressed = false; // Detects if user is currently holding down a view
+    protected static final int SWIPE_DURATION = 250; // needed for velocity implementation
+    protected static final int MOVE_DURATION = 150;
+    protected static final long ANIMATION_DURATION = 300;
     HashMap<Long, Integer> mItemIdTopMap = new HashMap<Long, Integer>();
 
 
     // animates the removal of the view, also animates the rest of the view into position
-    private void animateRemoval(final ListView listView, View viewToRemove)
+    protected void animateRemoval(final ListView listView, View viewToRemove)
     {
         int firstVisiblePosition = listView.getFirstVisiblePosition();
         final ArrayAdapter adapter = (ArrayAdapter)view_mainList.getAdapter();
@@ -173,7 +171,7 @@ public abstract class Swipe implements View.OnTouchListener{
                         mItemPressed = false;
 
 
-                        v.animate().setDuration(300).translationX(v.getWidth()/3); // could pause here if you want, same way as delete
+                        v.animate().setDuration(ANIMATION_DURATION).translationX(v.getWidth()/3); // could pause here if you want, same way as delete
                         TextView tv = (TextView) v.findViewById(R.id.text_shoppingListname);
                         //tv.setText("Swiped!");
                         return true;
@@ -181,29 +179,7 @@ public abstract class Swipe implements View.OnTouchListener{
                     else if (deltaX < -1 * (v.getWidth() / 3)) // swipe to left
                     {
 
-                        v.setEnabled(false); // need to disable the view for the animation to run
-
-                        // stacked the animations to have the pause before the views flings off screen
-                        v.animate().setDuration(300).translationX(-v.getWidth()/3).withEndAction(new Runnable() {
-                            @Override
-                            public void run()
-                            {
-                                v.animate().setDuration(300).alpha(0).translationX(-v.getWidth()).withEndAction(new Runnable()
-                                {
-                                    @Override
-                                    public void run()
-                                    {
-                                        mSwiping = false;
-                                        mItemPressed = false;
-                                        animateRemoval(view_mainList, v);
-                                    }
-                                });
-                            }
-                        });
-                        mDownX = x;
-                        swiped = true;
-                        int i = view_mainList.getPositionForView(v);
-                        dbH.deleteList(user, mainList.get(i));
+                        onItemSwipeLeft(v, x);
                         return true;
                     }
                 }
@@ -214,7 +190,7 @@ public abstract class Swipe implements View.OnTouchListener{
             {
                 if (mSwiping) // if the user was swiping, don't go to the and just animate the view back into position
                 {
-                    v.animate().setDuration(300).translationX(0).withEndAction(new Runnable()
+                    v.animate().setDuration(ANIMATION_DURATION).translationX(0).withEndAction(new Runnable()
                     {
                         @Override
                         public void run()
@@ -241,9 +217,4 @@ public abstract class Swipe implements View.OnTouchListener{
         }
         return true;
     }
-
-    protected abstract void onItemTouch(View v);
-    
-
-
 }
