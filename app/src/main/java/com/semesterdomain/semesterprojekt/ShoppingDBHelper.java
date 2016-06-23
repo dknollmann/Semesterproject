@@ -261,7 +261,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
         String[] args = {""+user.getUser_id()};
 
-        Cursor c = myDatabase.rawQuery("SELECT list_id, listname, user_id FROM LIST " +
+        Cursor c = myDatabase.rawQuery("SELECT list_id, listname, user_id, budget FROM LIST " +
                 "JOIN USER ON USER.user_id = LIST.fk_user " +
                 "WHERE LIST.fk_user = ?", args);
 
@@ -272,6 +272,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
                     list.setList_id(c.getInt(0));
                     list.setName(c.getString(1));
                     list.setFk_user(c.getInt(2));
+                    list.setBudget(c.getInt(3));
                     listArr.add(list);
                 }while(c.moveToNext());
             }
@@ -440,4 +441,29 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         close_database();
     }
 
+    public void updateShoppingListName(Shopping_List list){
+
+        open_database();
+
+        ContentValues cv = new ContentValues();
+        cv.put("listname", list.getName());
+        String[] args = {""+list.getList_id()};
+        myDatabase.update(TBL_LIST, cv, "list_id = ? ", args);
+
+        close_database();
+    }
+
+    public void updateShoppingListBudget(Shopping_List list) {
+
+        open_database();
+
+        ContentValues cv = new ContentValues();
+        cv.put("budget", list.getBudget());
+        Log.d("LOGBudget",list.getBudget()+"");
+        Log.d("LOGBudget",list.getList_id()+"");
+        String[] args = {""+list.getList_id()};
+        myDatabase.update(TBL_LIST, cv, "list_id = ? ", args);
+
+        close_database();
+    }
 }

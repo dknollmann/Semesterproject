@@ -6,53 +6,80 @@
     android:paddingRight="16dp" >
 
 
-    <SearchView
-        android:layout_width="500px"
-        android:layout_height="wrap_content"
-        android:id="@+id/searchView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="10pt"
-        />
-    <TextView
+    <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="" />
+        android:layout_marginTop="9dp"
+        android:id="@+id/frameLayout"
+        android:layout_toLeftOf="@+id/btn_addProduct">
 
-    <com.semesterdomain.semesterprojekt.SearchAutoCompleteView
-        android:id="@+id/myautocomplete"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:completionThreshold="1" >
-    </com.semesterdomain.semesterprojekt.SearchAutoCompleteView>
+
+        <com.semesterdomain.semesterprojekt.SearchAutoCompleteView
+            android:id="@+id/myautocomplete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:completionThreshold="1"
+            android:layout_toLeftOf="@+id/clear"
+            android:layout_toStartOf="@+id/clear">
+        </com.semesterdomain.semesterprojekt.SearchAutoCompleteView>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/clear"
+
+            android:text="x"
+            android:layout_alignTop="@+id/myautocomplete"
+            android:layout_toLeftOf="@id/btn_addProduct"
+            android:layout_gravity="right|center_vertical"
+
+            android:onClick="deleteText"/>
+
+    </FrameLayout>
 
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        android:id="@+id/button"
+        android:id="@+id/btn_addProduct"
 
         android:onClick="addProduct"
 
         android:text="@string/add"
         android:textSize="26sp"
         android:background="@drawable/addbutton"
-        android:layout_alignTop="@+id/searchView"
-        android:layout_toRightOf="@id/searchView"
-        />
+        android:layout_alignTop="@+id/frameLayout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:id="@+id/et_shoppingListname"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/et_budget"
+        android:layout_below="@+id/frameLayout"/>
+
+    <EditText
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:id="@+id/et_budget"
+        android:text="0"
+        android:layout_alignTop="@+id/et_shoppingListname"/>
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/list"
 
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/btn_back"
-        android:layout_below="@+id/searchView"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/et_shoppingListname" />
 
     <Button
         android:layout_width="wrap_content"
@@ -74,8 +101,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@+id/btn_back"
-        android:layout_toEndOf="@+id/searchView"
-        android:layout_toRightOf="@+id/searchView" />
+        />
 
 </RelativeLayout>
 

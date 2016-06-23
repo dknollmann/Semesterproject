@@ -47,17 +47,12 @@ public class HomeActivity extends AppCompatActivity {
 
         view_mainList = (ListView) findViewById(R.id.mainList);
         SwiperHomeActivity swipe = new SwiperHomeActivity(view_mainList,this.getApplicationContext(), user, this, mainList);
-        //sadapter = new ShoppingListAdapter(HomeActivity.this, mainList, mTouchListener);
         sadapter = new ShoppingListAdapter(HomeActivity.this, mainList, swipe);
         view_mainList.setAdapter(sadapter);
 
         db = new ShoppingDBHelper(this.getApplicationContext());
 
         db.create_database();
-
-
-
-        Log.d("LOG", "onCreate");
     }
 
     @Override

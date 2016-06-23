@@ -1,28 +1,19 @@
 package com.semesterdomain.semesterprojekt;
 
 
-import android.app.AlertDialog;
-import android.app.SearchManager;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.SearchView;
 import android.widget.TextView;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class ActivityList extends AppCompatActivity {
 
-    SearchView prodSearchView;
+    //SearchView prodSearchView;
     SearchAutoCompleteView searchAutoComplete;
 
     ArrayList<Product> item = new ArrayList<Product>();
@@ -32,11 +23,14 @@ public class ActivityList extends AppCompatActivity {
     ProdListAdapter adapter;
 
     ListView product_lv;
-    EditText list_header;
+    //displays ShoppingListname
+    EditText et_list_name;
+    //displays budget
+    EditText et_budget;
+
     Shopping_List myShoppingList;
     ArrayList<Product> prodListItems;
     ShoppingDBHelper dbH = new ShoppingDBHelper(this);
-    boolean isSaved = false;
 
     @Override
     protected void onRestart() {
@@ -55,17 +49,19 @@ public class ActivityList extends AppCompatActivity {
 
         //define views
         product_lv = (ListView) findViewById(R.id.list);
-        prodSearchView=(SearchView) findViewById(R.id.searchView);
+        et_list_name = (EditText) findViewById(R.id.et_shoppingListname);
+        et_budget = (EditText) findViewById(R.id.et_budget);
 
         searchAutoComplete = (SearchAutoCompleteView) findViewById(R.id.myautocomplete);
 
         // add the listener so it will tries to suggest while the user types
         searchAutoComplete.addTextChangedListener(new SearchAutoCompleteTextChangedListener(this));
 
+
         //myAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, item);
         searchAutoCompleteAdapter = new SearchAutoCompleteAdapter(ActivityList.this, item);
         searchAutoComplete.setAdapter(searchAutoCompleteAdapter);
-
+        searchAutoComplete.setSingleLine();
 
 
         prodListItems=new ArrayList<Product>();
@@ -97,32 +93,58 @@ public class ActivityList extends AppCompatActivity {
             displaySumPrice();
         }
 
+        et_list_name.addTextChangedListener(new MyTextWatcher(myShoppingList, et_list_name));
+        et_list_name.setText(myShoppingList.getName());
+        et_list_name.setSingleLine();
+        et_list_name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    dbH.updateShoppingListName(myShoppingList);
+                }
+            }
+        });
+
+        et_budget.addTextChangedListener(new MyTextWatcher(myShoppingList, et_budget));
+        et_budget.setText(""+myShoppingList.getBudget());
+        et_budget.setSingleLine();
+        et_budget.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(!hasFocus){
+                    myShoppingList.setBudget(Integer.parseInt(et_budget.getText().toString()));
+                    dbH.updateShoppingListBudget(myShoppingList);
+                }
+            }
+        });
 
 
 
 
         //define Header of Productlist
-        list_header = new EditText(this);
+        /*list_header = new EditText(this);
         list_header.addTextChangedListener(new MyTextWatcher(myShoppingList, list_header));
         list_header.setText(myShoppingList.getName());
-        list_header.setSingleLine();
+        list_header.setSingleLine();*/
      //   product_lv.addHeaderView(list_header);
 
         //For the search widget
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        //SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         // Assumes current activity is the searchable activity
-        prodSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        prodSearchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        //prodSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        //prodSearchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
         Log.d("LOG", "onCreateListActivity");
 
     }
 
     public void addProduct(View view) {
-        adapter.add(searchAutoComplete.product);
+        if(searchAutoComplete.product != null) {
+            adapter.add(searchAutoComplete.product);
             myShoppingList.getMyProducts().add(searchAutoComplete.product);
-            Log.d("LOG ", ""+myShoppingList.getList_id());
+            Log.d("LOG ", "" + myShoppingList.getList_id());
             dbH.setProductToList(searchAutoComplete.product, myShoppingList);
+        }
             displaySumPrice();
     }
 
@@ -143,20 +165,6 @@ public class ActivityList extends AppCompatActivity {
 
         // add items on the array dynamically
         ArrayList<Product> products = dbH.getAllProductsBySearch(searchTerm);
-    /*    int rowCount = products.size();
-
-
-
-        String[] item = new String[rowCount];
-        int x = 0;
-
-        for (Product record : products) {
-
-            item[x] = record.getProductname();
-            Log.d("LOGgetItemsFromDb", item[x]);
-            x++;
-        }
-     */
         return products;
     }
 
@@ -170,13 +178,13 @@ public class ActivityList extends AppCompatActivity {
     public void sortByGA(View view) {
         TourManager.destinationProducts = myShoppingList.getMyProducts();
         printArrayList(myShoppingList.getMyProducts());
-        Population pop = new Population(5);
+        Population pop = new Population(30);
         Log.d("LOG", "Population erstellt");
 
         pop = TSP_GA.selection(pop);
         Log.d("LOG", "1");
         Tour bestTour = pop.getFittest();
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 30; i++) {
             pop = TSP_GA.selection(pop);
             if (bestTour.getDistance() > pop.getFittest().getDistance()){
                 Log.d("LOG", ""+bestTour.getDistance());
@@ -199,5 +207,10 @@ public class ActivityList extends AppCompatActivity {
         printArrayList(TourManager.destinationProducts);
         printArrayList(myShoppingList.getMyProducts());
 
+    }
+
+    public void deleteText(View view) {
+        searchAutoComplete.setText("");
+        searchAutoComplete.product = null;
     }
 }

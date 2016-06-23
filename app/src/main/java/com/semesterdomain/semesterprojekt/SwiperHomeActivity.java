@@ -60,7 +60,6 @@ public class SwiperHomeActivity extends Swipe {
         int i = view_mainList.getPositionForView(v);
         Intent intent = new Intent(context, ActivityList.class);
         Shopping_List list = (Shopping_List) view_mainList.getItemAtPosition(i);
-        Log.d("LOG", "ID: " + list.getList_id());
         intent.putExtra("shoppingListForward", list);
         activity.startActivity(intent);
     }
