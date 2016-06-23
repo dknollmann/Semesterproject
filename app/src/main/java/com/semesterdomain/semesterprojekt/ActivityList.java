@@ -119,22 +119,11 @@ public class ActivityList extends AppCompatActivity {
     }
 
     public void addProduct(View view) {
-        //if(!prodSearchView.getQuery().toString().isEmpty()) {
-            //Die Produkteigenschaften müssen über eine DB Query ermittelt werden
-            //Product prod = dbH.get_ProductFromDB(prodSearchView.getQuery().toString(), "Testmanufacturer");
-     //   Product p = searchAutoComplete.product;
         adapter.add(searchAutoComplete.product);
             myShoppingList.getMyProducts().add(searchAutoComplete.product);
             Log.d("LOG ", ""+myShoppingList.getList_id());
-            dbH.setProductToList(searchAutoComplete.product, myShoppingList.getList_id());
+            dbH.setProductToList(searchAutoComplete.product, myShoppingList);
             displaySumPrice();
-            isSaved = false;
-    }
-
-
-    public void saveByClick(View view) {
-        dbH.insertList(myShoppingList);
-        isSaved = true;
     }
 
 
@@ -202,6 +191,9 @@ public class ActivityList extends AppCompatActivity {
         tempTour.remove(tempTour.size()-1);
 
         myShoppingList.setMyProducts(tempTour);
+
+        //Update position in Database
+        dbH.updateProductPositionsInList(myShoppingList);
         adapter.clear();
         adapter.addAll(myShoppingList.getMyProducts());
         printArrayList(TourManager.destinationProducts);

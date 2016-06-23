@@ -20,7 +20,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
     //DB Data
     private static final int DATABASE_VERSION = 1;
-    private static final String DB_NAME = "ShoppingDB.sqlite";
+    private static final String DB_NAME = "bla.sqlite";
     private static final String DB_PATH = "/data/data/com.semesterdomain.semesterprojekt/databases/";
 
     //Tables
@@ -109,11 +109,15 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         Product product;
         String[] args = {""+list.getList_id()};
 
-        Cursor c = myDatabase.rawQuery("SELECT product_id, productname, manufacturer, productprice, posx, posy FROM LIST_PRODUCT " +
+        Cursor c = myDatabase.rawQuery("SELECT product_id, productname, manufacturer, productprice, posx, posy, listposition FROM LIST_PRODUCT " +
                 "JOIN PRODUCT ON LIST_PRODUCT.fk_product = PRODUCT.product_id " +
-                "WHERE LIST_PRODUCT.fk_list = ?", args);
+                "WHERE LIST_PRODUCT.fk_list = ?" +
+                "ORDER BY listposition ASC", args);
         list.getMyProducts().clear();
         if(c != null){
+            /*c.getCount();
+            ArrayList<Product> al = new ArrayList<>();
+            */
             if(c.moveToFirst()){
                 do{
                     product = new Product("Dummy", "Dummy", 1);
@@ -123,7 +127,11 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
                     product.setPrice(c.getInt(3));
                     product.setPosX(c.getInt(4));
                     product.setPosY(c.getInt(5));
+                    Log.d("LOGBla", ""+c.getInt(6));
                     list.getMyProducts().add(product);
+
+
+
                 }while(c.moveToNext());
             }
         }
@@ -207,7 +215,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
             for(Product p : list.getMyProducts()){
 
-                setProductToList(get_ProductFromDB(p.getProductname(), p.getManufacturer()), list_id);
+                setProductToList(get_ProductFromDB(p.getProductname(), p.getManufacturer()), list);
                 Log.d("DB_LOG", p.getProductname() + " attached to "+list.getName()+ " on db");
             }
             myDatabase.setTransactionSuccessful();
@@ -222,15 +230,17 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
     }
 
     //match product to a List on database
-    public boolean setProductToList(Product product, long list_id){
+    public boolean setProductToList(Product product, Shopping_List list){
 
         open_database();
 
         ContentValues values = new ContentValues();
         values.put("fk_product", product.getProduct_id());
-        values.put("fk_list", list_id);
-        long list_prod_id = 0;
+        values.put("fk_list", list.getList_id());
+        values.put("listposition", list.getMyProducts().indexOf(product));
+        Log.d("LOG Productplatz:", ""+list.getMyProducts().indexOf(product));
 
+        long list_prod_id = 0;
 
         try {
             list_prod_id = myDatabase.insert("LIST_PRODUCT", null, values);
@@ -285,7 +295,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         }
 
         String[] args = {""+ list_id};
-
+        open_database();
         myDatabase.beginTransaction();
         try {
             //deletes all entries from LIST_PRODUCT for the current list
@@ -336,13 +346,16 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
                 list.setList_id(c.getInt(0));
                 list.setName(c.getString(1));
                 list.setFk_user(c.getInt(2));
+                list.setBudget(c.getInt(3));
             }
         }
         c.close();
+        list.setMyProducts(getAllProductsOfList(list));
 
         return  list;
     }
 
+    //for the Product search
     public ArrayList<Product> getAllProductsBySearch(String searchTerm) {
 
         ArrayList<Product> recordsList = new ArrayList<Product>();
@@ -402,6 +415,29 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         close_database();
         return true;
 
+    }
+
+    public void updateProductPositionsInList(Shopping_List list){
+
+        open_database();
+
+        ArrayList<Product> tmpList = list.getMyProducts();
+        myDatabase.beginTransaction();
+        try {
+            for (Product product : tmpList) {
+                ContentValues cv = new ContentValues();
+                cv.put("listposition", "" + tmpList.indexOf(product));
+                String[] args = {"" + list.getList_id(), "" + product.getProduct_id()};
+
+                myDatabase.update(TBL_LIST_PRODUCT, cv, "fk_list = ? AND fk_product = ?", args);
+            }
+            myDatabase.setTransactionSuccessful();
+        }catch(android.database.SQLException e){
+            Log.d("DB_LOG", list.getName() + " could not update productposition");
+        }finally {
+            myDatabase.endTransaction();
+        }
+        close_database();
     }
 
 }

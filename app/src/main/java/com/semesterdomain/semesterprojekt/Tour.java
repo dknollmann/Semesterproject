@@ -87,9 +87,9 @@ public class Tour{
                 if(productIndex+1 < tourSize()){
                     destinationProduct = getProduct(productIndex+1);
                 }
-                /*else{
-                    destinationProduct = getProduct(productIndex);
-                }*/
+                else{
+                    break;
+                }
                 // Get the distance between the two products
                 tourDistance += fromProduct.distanceTo(destinationProduct);
             }
