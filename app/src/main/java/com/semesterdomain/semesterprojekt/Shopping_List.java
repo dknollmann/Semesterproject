@@ -8,6 +8,7 @@ public class Shopping_List implements Serializable{
     private long list_id;
     private ArrayList<Product> myProducts = new ArrayList<>();
     private int sumPrice;
+    private int budget;
     private String name;
     //id of the owner of the shopping list
     private int fk_user;
@@ -61,4 +62,13 @@ public class Shopping_List implements Serializable{
     public void setList_id(long list_id) {
         this.list_id = list_id;
     }
+
+   public int getBudget() {
+        return budget;
+    }
+
+    public void setBudget(int budget) {
+        this.budget = budget;
+    }
+
 }
