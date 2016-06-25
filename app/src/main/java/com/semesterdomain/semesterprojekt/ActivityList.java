@@ -168,7 +168,7 @@ public class ActivityList extends AppCompatActivity {
 
     public void printArrayList(ArrayList<Product> list) {
         for (Product prod : list) {
-            Log.d("LOG", prod.getProductname());
+            Log.d("LOG", prod.getProductName());
         }
         Log.d("LOG", "______________");
     }

@@ -82,7 +82,7 @@ public class EATour {
                     break;
                 }
                 //Get the distance between the two products
-                tourDistance += fromProduct.distanceTo(destinationProduct);
+                tourDistance += fromProduct.getDistanceTo(destinationProduct);
             }
             distance = tourDistance;
         }

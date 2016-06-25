@@ -122,7 +122,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
                 do {
                     product = new Product("Dummy", "Dummy", 1);
                     product.setProductId(dbCursor.getInt(0));
-                    product.setProductname(dbCursor.getString(1));
+                    product.setProductName(dbCursor.getString(1));
                     product.setManufacturer(dbCursor.getString(2));
                     product.setPrice(dbCursor.getInt(3));
                     product.setPosX(dbCursor.getInt(4));
@@ -152,7 +152,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
                 do {
                     product = new Product("Dummy", "Dummy", 1);
                     product.setProductId(c.getInt(0));
-                    product.setProductname(c.getString(1));
+                    product.setProductName(c.getString(1));
                     product.setManufacturer(c.getString(2));
                     product.setPrice(c.getInt(3));
                     product.setPosX(c.getInt(4));
@@ -178,7 +178,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
                 do {
                     product = new Product("Dummy", "Dummy", 1);
                     product.setProductId(dbCursor.getInt(0));
-                    product.setProductname(dbCursor.getString(1));
+                    product.setProductName(dbCursor.getString(1));
                     product.setManufacturer(dbCursor.getString(2));
                     product.setPrice(dbCursor.getInt(3));
                     product.setPosX(dbCursor.getInt(4));
@@ -214,8 +214,8 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
             for (Product p : list.getMyProducts()) {
 
-                setProductToList(getDBProductByProductNameAndManufaturer(p.getProductname(), p.getManufacturer()), list);
-                //Log.d("DB_LOG", p.getProductname() + " attached to " + list.getName() + " on db");
+                setProductToList(getDBProductByProductNameAndManufaturer(p.getProductName(), p.getManufacturer()), list);
+                //Log.d("DB_LOG", p.getProductName() + " attached to " + list.getName() + " on db");
             }
             SQLiteDatabase.setTransactionSuccessful();
         } catch (android.database.SQLException e) {
@@ -244,7 +244,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         try {
             listProdId = SQLiteDatabase.insert("LIST_PRODUCT", null, values);
         } catch (android.database.SQLException e) {
-            Log.d("DB_LOG", product.getProductname() + " could not be added to attached to DB");
+            Log.d("DB_LOG", product.getProductName() + " could not be added to attached to DB");
         }
         values.clear();
         closeDatabase();
@@ -382,7 +382,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
                 //String productName = cursor.getString(cursor.getColumnIndex(fieldObjectName));
                 Product product = new Product("Dummy", "Dummy", 1);
                 product.setProductId(dbCursor.getInt(0));
-                product.setProductname(dbCursor.getString(1));
+                product.setProductName(dbCursor.getString(1));
                 product.setManufacturer(dbCursor.getString(2));
                 product.setPrice(dbCursor.getInt(3));
                 product.setPosX(dbCursor.getInt(4));

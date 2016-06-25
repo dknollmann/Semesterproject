@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 public class Product implements Serializable {
 
-    private long product_id;
-    private String productname;
+    private long productId;
+    private String productName;
     private String manufacturer;
     private long price;
     private double posX;
@@ -14,7 +14,7 @@ public class Product implements Serializable {
 
     //eigentlich nutzlos nochmal schauen ;)
     public Product(String name, String manufacturer, long price) {
-        this.productname = name;
+        this.productName = name;
         this.manufacturer = manufacturer;
         this.price = price;
     }
@@ -23,25 +23,25 @@ public class Product implements Serializable {
     public Product(int posx, int posy) {
         this.posX = posx;
         this.posY = posy;
-        this.productname = "dummy";
+        this.productName = "dummy";
         this.manufacturer = "dummyManufacturer";
         this.price = 0;
     }
 
     public long getProductId() {
-        return product_id;
+        return productId;
     }
 
     public void setProductId(long product_id) {
-        this.product_id = product_id;
+        this.productId = product_id;
     }
 
-    public String getProductname() {
-        return productname;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setProductname(String productname) {
-        this.productname = productname;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public String getManufacturer() {
@@ -78,11 +78,11 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "" + product_id;
+        return "" + productId;
     }
 
     // Gets the distance to given city
-    public double distanceTo(Product product) {
+    public double getDistanceTo(Product product) {
         double xDistance = Math.abs(getX() - product.getX());
         double yDistance = Math.abs(getY() - product.getY());
         double distance = Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
