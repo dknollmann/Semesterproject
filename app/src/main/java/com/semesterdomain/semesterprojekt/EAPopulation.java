@@ -1,18 +1,15 @@
 package com.semesterdomain.semesterprojekt;
 
-/**
- * Created by L 875 on 22.06.2016.
- */
 public class EAPopulation {
 
-    // Holds population of EATours
+    //Holds population of EATours
     EATour[] EATours;
 
-    // Construct a population
+    //Construct a population
     public EAPopulation(int populationSize) {
         EATours = new EATour[populationSize];
 
-        // Loop and create individuals
+        //Loop and create individuals
         for (int i = 0; i < populationSize(); i++) {
             EATour newEATour = new EATour();
             newEATour.generateIndividual();
@@ -20,17 +17,17 @@ public class EAPopulation {
         }
     }
 
-    // Saves a EATour
+    //Saves a EATour
     public void saveTour(int index, EATour EATour) {
         EATours[index] = EATour;
     }
 
-    // Gets a tour from population
+    //Gets a tour from population
     public EATour getTour(int index) {
         return EATours[index];
     }
 
-    // Gets the best tour in the population
+    //Gets the best tour in the population
     public EATour getFittest() {
         EATour fittest = EATours[0];
         // Loop through individuals to find fittest
@@ -43,7 +40,7 @@ public class EAPopulation {
     }
 
     public double getAverageDistance() {
-        // Loop through individuals to find fittest
+        //Loop through individuals to find fittest
         double averageDistance = 0;
         int completeDistance = 0;
 

@@ -106,7 +106,7 @@ public class ActivityList extends AppCompatActivity {
         });
 
         et_budget.addTextChangedListener(new AfterTextChangedWatcher(myShoppingList, et_budget));
-        et_budget.setText("" + myShoppingList.getBudget());
+        et_budget.setText(String.valueOf(myShoppingList.getBudget()));
         et_budget.setSingleLine();
         et_budget.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
