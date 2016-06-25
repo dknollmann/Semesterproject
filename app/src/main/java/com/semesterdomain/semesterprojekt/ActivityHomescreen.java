@@ -3,7 +3,6 @@ package com.semesterdomain.semesterprojekt;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -13,13 +12,13 @@ import java.util.HashMap;
 public class ActivityHomescreen extends AppCompatActivity {
 
     ArrayList<ShoppingList> mainList = new ArrayList<>();
-    ListView view_mainList;
-    ShoppingListAdapter sadapter;
-    private ShoppingDBHelper db;
+    ListView viewMainList;
+    ShoppingListAdapter shoppingListAdapter;
+    private ShoppingDBHelper dbHelper;
     User user;
 
-    //private ListView view_mainList;
-    private ArrayList array;
+    //private ListView viewMainList;
+    private ArrayList arrayList;
 
     //Swiping
     private boolean mSwiping = false; // detects if user is swiping on ACTION_UP
@@ -36,30 +35,30 @@ public class ActivityHomescreen extends AppCompatActivity {
 
         user = new User("Testuser");
 
-        view_mainList = (ListView) findViewById(R.id.mainList);
-        SwiperActivityHomescreen swipe = new SwiperActivityHomescreen(view_mainList, this.getApplicationContext(), user, this, mainList);
-        sadapter = new ShoppingListAdapter(ActivityHomescreen.this, mainList, swipe);
-        view_mainList.setAdapter(sadapter);
+        viewMainList = (ListView) findViewById(R.id.mainList);
+        SwiperActivityHomescreen swipe = new SwiperActivityHomescreen(viewMainList, this.getApplicationContext(), user, this, mainList);
+        shoppingListAdapter = new ShoppingListAdapter(ActivityHomescreen.this, mainList, swipe);
+        viewMainList.setAdapter(shoppingListAdapter);
 
-        db = new ShoppingDBHelper(this.getApplicationContext());
+        dbHelper = new ShoppingDBHelper(this.getApplicationContext());
 
-        db.create_database();
+        dbHelper.importDatabase();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        ArrayList<ShoppingList> myLists = db.getShoppingListsByUser(user);
-        for (ShoppingList list : myLists) {
-            list.setMyProducts(db.getAllProductsOfList(list));
+        ArrayList<ShoppingList> shoppingListsForUser = dbHelper.getShoppingListsByUser(user);
+        for (ShoppingList list : shoppingListsForUser) {
+            list.setMyProducts(dbHelper.getDBProductsFromList(list));
         }
-        sadapter.clear();
-        sadapter.addAll(myLists);
+        shoppingListAdapter.clear();
+        shoppingListAdapter.addAll(shoppingListsForUser);
 
-        Log.d("LOG", "onResume");
+        //Log.d("LOG", "onResume");
     }
 
-    public void addList(View view) {
+    public void addShoppingList(View view) {
         Intent intent = new Intent(this, ActivityList.class);
         startActivity(intent);
     }

@@ -48,7 +48,7 @@ public class ShoppingList implements Serializable {
         this.name = name;
     }
 
-    public int getFk_user() {
+    public int getDBFk_user() {
         return fk_user;
     }
 

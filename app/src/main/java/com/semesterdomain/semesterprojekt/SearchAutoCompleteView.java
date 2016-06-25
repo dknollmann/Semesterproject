@@ -45,7 +45,7 @@ public class SearchAutoCompleteView extends AutoCompleteTextView {
     protected void replaceText(final CharSequence text) {
         super.replaceText(text);
 
-        product = dbH.get_ProductFromDBbyID("" + text);
+        product = dbH.getDBProductById("" + text);
 
         setText(product.getProductname());
     }

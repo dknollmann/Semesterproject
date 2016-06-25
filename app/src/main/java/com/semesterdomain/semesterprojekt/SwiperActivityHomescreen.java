@@ -44,7 +44,7 @@ public class SwiperActivityHomescreen extends Swiper {
         mDownX = x;
         swiped = true;
         int i = view_mainList.getPositionForView(v);
-        dbH.deleteList(user, mainList.get(i));
+        dbH.deleteDBList(user, mainList.get(i));
 
     }
 

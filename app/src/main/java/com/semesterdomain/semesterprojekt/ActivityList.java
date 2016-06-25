@@ -87,7 +87,7 @@ public class ActivityList extends AppCompatActivity {
             product_lv.setAdapter(adapter);
 
             adapter.clear();
-            for (Product p : myShoppingList.getMyProducts()) { //dbH.getAllProductsOfList(myShoppingList)
+            for (Product p : myShoppingList.getMyProducts()) { //dbH.getDBProductsFromList(myShoppingList)
                 adapter.add(p);
                 Log.d("LOG", "add");
             }
@@ -163,7 +163,7 @@ public class ActivityList extends AppCompatActivity {
     public ArrayList<Product> getItemsFromDb(String searchTerm) {
 
         // add items on the array dynamically
-        ArrayList<Product> products = dbH.getAllProductsBySearch(searchTerm);
+        ArrayList<Product> products = dbH.getDBProductsBySearchTerm(searchTerm);
         return products;
     }
 

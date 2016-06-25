@@ -19,7 +19,7 @@
             android:textColor="@color/black"
             android:layout_column="0"
             android:background="@drawable/addbutton"
-            android:onClick="addList"
+            android:onClick="addShoppingList"
             android:layout_alignParentTop="true"
             android:layout_toRightOf="@+id/textView_ShoppingLists"
             android:layout_alignTop="@+id/textView_ShoppingLists"
