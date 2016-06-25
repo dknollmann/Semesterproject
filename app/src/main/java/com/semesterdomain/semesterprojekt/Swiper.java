@@ -10,13 +10,14 @@ import android.view.ViewTreeObserver;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import java.util.HashMap;
 
 
 /**
  * Created by L 875 on 16.06.2016.
  */
-public abstract class Swipe implements View.OnTouchListener{
+public abstract class Swiper implements View.OnTouchListener {
 
     float mDownX;
     int mSwipeSlop = -1;
@@ -27,11 +28,11 @@ public abstract class Swipe implements View.OnTouchListener{
     ShoppingDBHelper dbH;
     AppCompatActivity activity;
 
-    public Swipe(){
+    public Swiper() {
 
     }
 
-    public Swipe(ListView view_mainList, Context context, AppCompatActivity activity){
+    public Swiper(ListView view_mainList, Context context, AppCompatActivity activity) {
         this.view_mainList = view_mainList;
         this.context = context;
         this.dbH = new ShoppingDBHelper(context);
@@ -52,12 +53,10 @@ public abstract class Swipe implements View.OnTouchListener{
 
 
     // animates the removal of the view, also animates the rest of the view into position
-    protected void animateRemoval(final ListView listView, View viewToRemove)
-    {
+    protected void animateRemoval(final ListView listView, View viewToRemove) {
         int firstVisiblePosition = listView.getFirstVisiblePosition();
-        final ArrayAdapter adapter = (ArrayAdapter)view_mainList.getAdapter();
-        for (int i = 0; i < listView.getChildCount(); ++i)
-        {
+        final ArrayAdapter adapter = (ArrayAdapter) view_mainList.getAdapter();
+        for (int i = 0; i < listView.getChildCount(); ++i) {
             View child = listView.getChildAt(i);
             if (child != viewToRemove) {
                 int position = firstVisiblePosition + i;
@@ -107,8 +106,7 @@ public abstract class Swipe implements View.OnTouchListener{
                         child.animate().setDuration(MOVE_DURATION).translationY(0);
                         if (firstAnimation) {
                             child.animate().withEndAction(new Runnable() {
-                                public void run()
-                                {
+                                public void run() {
                                     mSwiping = false;
                                     view_mainList.setEnabled(true);
                                 }
@@ -125,15 +123,13 @@ public abstract class Swipe implements View.OnTouchListener{
 
     @Override
     public boolean onTouch(final View v, MotionEvent event) {
-        if (mSwipeSlop < 0)
-        {
+        if (mSwipeSlop < 0) {
             mSwipeSlop = ViewConfiguration.get(context).getScaledTouchSlop();
 
         }
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (mItemPressed)
-                {
+                if (mItemPressed) {
                     // Doesn't allow swiping two items at same time
                     return false;
                 }
@@ -145,14 +141,12 @@ public abstract class Swipe implements View.OnTouchListener{
                 v.setTranslationX(0);
                 mItemPressed = false;
                 break;
-            case MotionEvent.ACTION_MOVE:
-            {
+            case MotionEvent.ACTION_MOVE: {
                 float x = event.getX() + v.getTranslationX();
                 float deltaX = x - mDownX;
                 float deltaXAbs = Math.abs(deltaX);
 
-                if (!mSwiping)
-                {
+                if (!mSwiping) {
                     if (deltaXAbs > mSwipeSlop) // tells if user is actually swiping or just touching in sloppy manner
                     {
                         mSwiping = true;
@@ -171,12 +165,11 @@ public abstract class Swipe implements View.OnTouchListener{
                         mItemPressed = false;
 
 
-                        v.animate().setDuration(ANIMATION_DURATION).translationX(v.getWidth()/3); // could pause here if you want, same way as delete
+                        v.animate().setDuration(ANIMATION_DURATION).translationX(v.getWidth() / 3); // could pause here if you want, same way as delete
                         TextView tv = (TextView) v.findViewById(R.id.text_shoppingListname);
                         //tv.setText("Swiped!");
                         return true;
-                    }
-                    else if (deltaX < -1 * (v.getWidth() / 3)) // swipe to left
+                    } else if (deltaX < -1 * (v.getWidth() / 3)) // swipe to left
                     {
 
                         onItemSwipeLeft(v, x);
@@ -186,28 +179,24 @@ public abstract class Swipe implements View.OnTouchListener{
 
             }
             break;
-            case MotionEvent.ACTION_UP:
-            {
+            case MotionEvent.ACTION_UP: {
                 if (mSwiping) // if the user was swiping, don't go to the and just animate the view back into position
                 {
-                    v.animate().setDuration(ANIMATION_DURATION).translationX(0).withEndAction(new Runnable()
-                    {
+                    v.animate().setDuration(ANIMATION_DURATION).translationX(0).withEndAction(new Runnable() {
                         @Override
-                        public void run()
-                        {
+                        public void run() {
                             mSwiping = false;
                             mItemPressed = false;
                             view_mainList.setEnabled(true);
                         }
                     });
-                }
-                else // user was not swiping; registers as a click
+                } else // user was not swiping; registers as a click
                 {
                     mItemPressed = false;
 
                     onItemTouch(v);
 
-                    //Toast.makeText(HomeActivity.this, array.get(i).toString(), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(ActivityHomescreen.this, array.get(i).toString(), Toast.LENGTH_LONG).show();
 
                     return false;
                 }

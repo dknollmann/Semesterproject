@@ -3,36 +3,36 @@ package com.semesterdomain.semesterprojekt;
 /**
  * Created by L 875 on 22.06.2016.
  */
-public class Population {
+public class EAPopulation {
 
-    // Holds population of tours
-    Tour[] tours;
+    // Holds population of EATours
+    EATour[] EATours;
 
     // Construct a population
-    public Population(int populationSize) {
-        tours = new Tour[populationSize];
+    public EAPopulation(int populationSize) {
+        EATours = new EATour[populationSize];
 
         // Loop and create individuals
         for (int i = 0; i < populationSize(); i++) {
-            Tour newTour = new Tour();
-            newTour.generateIndividual();
-            saveTour(i, newTour);
+            EATour newEATour = new EATour();
+            newEATour.generateIndividual();
+            saveTour(i, newEATour);
         }
     }
 
-    // Saves a tour
-    public void saveTour(int index, Tour tour) {
-        tours[index] = tour;
+    // Saves a EATour
+    public void saveTour(int index, EATour EATour) {
+        EATours[index] = EATour;
     }
 
     // Gets a tour from population
-    public Tour getTour(int index) {
-        return tours[index];
+    public EATour getTour(int index) {
+        return EATours[index];
     }
 
     // Gets the best tour in the population
-    public Tour getFittest() {
-        Tour fittest = tours[0];
+    public EATour getFittest() {
+        EATour fittest = EATours[0];
         // Loop through individuals to find fittest
         for (int i = 1; i < populationSize(); i++) {
             if (fittest.getFitness() <= getTour(i).getFitness()) {
@@ -41,20 +41,21 @@ public class Population {
         }
         return fittest;
     }
+
     public double getAverageDistance() {
         // Loop through individuals to find fittest
         double averageDistance = 0;
         int completeDistance = 0;
 
         for (int i = 0; i < populationSize(); i++) {
-            completeDistance += tours[i].getDistance();
+            completeDistance += EATours[i].getDistance();
         }
-        averageDistance = completeDistance/populationSize();
+        averageDistance = completeDistance / populationSize();
         return averageDistance;
     }
 
     // Gets population size
     public int populationSize() {
-        return tours.length;
+        return EATours.length;
     }
 }

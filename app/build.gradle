@@ -28,3 +28,18 @@ dependencies {
     compile 'com.readystatesoftware.sqliteasset:sqliteassethelper:+'
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
 }
+
+//tast to delete the old jar
+//task deleteOldJar(type: Delete) {
+//    delete 'release/AndroidPlugin.jar'
+//}
+
+//task exportJar(type: Copy){
+//    from('build/intermediates/bundles/release/')
+//    into('release/')
+//   inculde('classes.jar')
+    //Name for the exported jar
+//    rename('classes.jar', 'AndroidPlugin.jar')
+//}
+
+//exportJar.dependsOn(deleteOldjar, build)

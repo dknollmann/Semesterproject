@@ -2,7 +2,7 @@ package com.semesterdomain.semesterprojekt;
 
 import java.io.Serializable;
 
-public class Product implements Serializable{
+public class Product implements Serializable {
 
     private long product_id;
     private String productname;
@@ -13,14 +13,14 @@ public class Product implements Serializable{
 
 
     //eigentlich nutzlos nochmal schauen ;)
-    public Product (String name, String manufacturer, long price){
+    public Product(String name, String manufacturer, long price) {
         this.productname = name;
         this.manufacturer = manufacturer;
         this.price = price;
     }
 
     //constructor for entrance and cash register
-    public Product (int posx, int posy){
+    public Product(int posx, int posy) {
         this.posX = posx;
         this.posY = posy;
         this.productname = "dummy";
@@ -77,15 +77,15 @@ public class Product implements Serializable{
     }
 
     @Override
-    public String toString(){
-        return ""+product_id;
+    public String toString() {
+        return "" + product_id;
     }
 
     // Gets the distance to given city
-    public double distanceTo(Product product){
+    public double distanceTo(Product product) {
         double xDistance = Math.abs(getX() - product.getX());
         double yDistance = Math.abs(getY() - product.getY());
-        double distance = Math.sqrt( (xDistance*xDistance) + (yDistance*yDistance) );
+        double distance = Math.sqrt((xDistance * xDistance) + (yDistance * yDistance));
 
         return distance;
     }

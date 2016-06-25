@@ -4,14 +4,14 @@ package com.semesterdomain.semesterprojekt;
  * Created by L 875 on 22.06.2016.
  */
 /*
-* TourManager.java
+* EATourManager.java
 * Holds the products of a tour
 */
 
 
 import java.util.ArrayList;
 
-public class TourManager {
+public class EATourManager {
 
     // Holds our products
     public static ArrayList<Product> destinationProducts = new ArrayList<Product>();
@@ -22,12 +22,12 @@ public class TourManager {
     }
 
     // Get a product
-    public static Product getProduct(int index){
+    public static Product getProduct(int index) {
         return (Product) destinationProducts.get(index);
     }
 
     // Get the number of destination products
-    public static int numberOfProducts(){
+    public static int numberOfProducts() {
         return destinationProducts.size();
     }
 

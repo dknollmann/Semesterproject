@@ -9,11 +9,11 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ProdListAdapter extends ArrayAdapter<Product> {
+public class ProductListAdapter extends ArrayAdapter<Product> {
 
     View.OnTouchListener mTouchListener;
 
-    public ProdListAdapter(Context context, ArrayList<Product> products, View.OnTouchListener listener) {
+    public ProductListAdapter(Context context, ArrayList<Product> products, View.OnTouchListener listener) {
         super(context, R.layout.prod_list_item, products);
         this.mTouchListener = listener;
     }

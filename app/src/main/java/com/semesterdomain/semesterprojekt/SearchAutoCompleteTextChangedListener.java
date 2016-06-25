@@ -3,19 +3,20 @@ package com.semesterdomain.semesterprojekt;
 /**
  * Created by L 875 on 15.06.2016.
  */
+
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 
-public class SearchAutoCompleteTextChangedListener implements TextWatcher{
+public class SearchAutoCompleteTextChangedListener implements TextWatcher {
 
     public static final String TAG = "CustomAutoCompleteTextChangedListener.java";
     Context context;
     ShoppingDBHelper dbH;
 
-    public SearchAutoCompleteTextChangedListener(Context context){
+    public SearchAutoCompleteTextChangedListener(Context context) {
         this.context = context;
     }
 
@@ -35,7 +36,7 @@ public class SearchAutoCompleteTextChangedListener implements TextWatcher{
     public void onTextChanged(CharSequence userInput, int start, int before, int count) {
 
         // if you want to see in the logcat what the user types
-        Log.d("User input: ",""+userInput);
+        Log.d("User input: ", "" + userInput);
 
         ActivityList activityList = ((ActivityList) context);
 

@@ -4,12 +4,7 @@ import android.app.*;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.Gravity;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
-import android.widget.*;
 
 public class ShowPopUp extends Activity {
 
@@ -26,21 +21,21 @@ public class ShowPopUp extends Activity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int)(width*0.8), (int)(height*0.2));
+        getWindow().setLayout((int) (width * 0.8), (int) (height * 0.2));
         getWindow().setDimAmount((float) 0.3);
     }
 
-    public void popUpSave(View view){
+    public void popUpSave(View view) {
         Intent intent = getIntent();
-        Shopping_List tmp_list = (Shopping_List) intent.getSerializableExtra("shoppingList");
+        ShoppingList tmp_list = (ShoppingList) intent.getSerializableExtra("shoppingList");
         dbH.insertList(tmp_list);
-        intent = new Intent(this, HomeActivity.class);
+        intent = new Intent(this, ActivityHomescreen.class);
         startActivity(intent);
         finish();
     }
 
-    public void popUpThrow(View view){
-        Intent intent = new Intent(this, HomeActivity.class);
+    public void popUpThrow(View view) {
+        Intent intent = new Intent(this, ActivityHomescreen.class);
         startActivity(intent);
         finish();
     }

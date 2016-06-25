@@ -3,7 +3,7 @@ package com.semesterdomain.semesterprojekt;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Shopping_List implements Serializable{
+public class ShoppingList implements Serializable {
 
     private long list_id;
     private ArrayList<Product> myProducts = new ArrayList<>();
@@ -13,16 +13,16 @@ public class Shopping_List implements Serializable{
     //id of the owner of the shopping list
     private int fk_user;
 
-    public Shopping_List(){
+    public ShoppingList() {
         this.fk_user = 1;
         sumPrice = 0;
         myProducts = new ArrayList<>();
         this.budget = 0;
     }
 
-    public int calcPrice(ArrayList<Product> products){
+    public int calcPrice(ArrayList<Product> products) {
         sumPrice = 0;
-        for (Product p: products) {
+        for (Product p : products) {
             this.sumPrice += p.getPrice();
         }
         return this.sumPrice;
@@ -64,7 +64,7 @@ public class Shopping_List implements Serializable{
         this.list_id = list_id;
     }
 
-   public int getBudget() {
+    public int getBudget() {
         return budget;
     }
 

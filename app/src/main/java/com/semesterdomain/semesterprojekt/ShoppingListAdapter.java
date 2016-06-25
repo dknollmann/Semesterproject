@@ -7,14 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 
-public class ShoppingListAdapter extends ArrayAdapter<Shopping_List> {
+public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
 
     View.OnTouchListener mTouchListener;
 
-    public ShoppingListAdapter(Context context, ArrayList<Shopping_List> values, View.OnTouchListener listener)
-    {
+    public ShoppingListAdapter(Context context, ArrayList<ShoppingList> values, View.OnTouchListener listener) {
         super(context, R.layout.list_item, values);
         mTouchListener = listener;
     }
@@ -23,7 +23,7 @@ public class ShoppingListAdapter extends ArrayAdapter<Shopping_List> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         // Get the data item for this position
-        Shopping_List slist = getItem(position);
+        ShoppingList slist = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
@@ -38,8 +38,8 @@ public class ShoppingListAdapter extends ArrayAdapter<Shopping_List> {
 
         // Populate the data into the template view using the data object
         tvListName.setText(slist.getName());
-        Log.d("LOG", slist.calcPrice(slist.getMyProducts()) +"");
-        tvListPrice.setText(slist.calcPrice(slist.getMyProducts())+"");
+        Log.d("LOG", slist.calcPrice(slist.getMyProducts()) + "");
+        tvListPrice.setText(slist.calcPrice(slist.getMyProducts()) + "");
 
         v.setOnTouchListener(mTouchListener);
 

@@ -19,6 +19,7 @@ public class SearchAutoCompleteAdapter extends ArrayAdapter<Product> {
         super(context, 0, products);
 
     }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

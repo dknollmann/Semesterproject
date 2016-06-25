@@ -4,12 +4,12 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
-public class MyTextWatcher implements TextWatcher {
+public class AfterTextChangedWatcher implements TextWatcher {
 
-    Shopping_List shopping_list;
+    ShoppingList shopping_list;
     EditText et;
 
-    public MyTextWatcher(Shopping_List sl, EditText et) {
+    public AfterTextChangedWatcher(ShoppingList sl, EditText et) {
         this.shopping_list = sl;
         this.et = et;
     }
@@ -27,6 +27,6 @@ public class MyTextWatcher implements TextWatcher {
     @Override
     public void afterTextChanged(Editable s) {
 
-        shopping_list.setName(""+et.getText());
+        shopping_list.setName("" + et.getText());
     }
 }

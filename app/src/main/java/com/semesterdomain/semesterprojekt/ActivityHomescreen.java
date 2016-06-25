@@ -4,23 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewConfiguration;
-import android.view.ViewTreeObserver;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class HomeActivity extends AppCompatActivity {
+public class ActivityHomescreen extends AppCompatActivity {
 
-    ArrayList<Shopping_List> mainList = new ArrayList<>();
+    ArrayList<ShoppingList> mainList = new ArrayList<>();
     ListView view_mainList;
     ShoppingListAdapter sadapter;
     private ShoppingDBHelper db;
@@ -37,7 +29,6 @@ public class HomeActivity extends AppCompatActivity {
     HashMap<Long, Integer> mItemIdTopMap = new HashMap<Long, Integer>();
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +37,8 @@ public class HomeActivity extends AppCompatActivity {
         user = new User("Testuser");
 
         view_mainList = (ListView) findViewById(R.id.mainList);
-        SwiperHomeActivity swipe = new SwiperHomeActivity(view_mainList,this.getApplicationContext(), user, this, mainList);
-        sadapter = new ShoppingListAdapter(HomeActivity.this, mainList, swipe);
+        SwiperActivityHomescreen swipe = new SwiperActivityHomescreen(view_mainList, this.getApplicationContext(), user, this, mainList);
+        sadapter = new ShoppingListAdapter(ActivityHomescreen.this, mainList, swipe);
         view_mainList.setAdapter(sadapter);
 
         db = new ShoppingDBHelper(this.getApplicationContext());
@@ -56,16 +47,16 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume(){
+    protected void onResume() {
         super.onResume();
-        ArrayList<Shopping_List> myLists = db.getShoppingListsByUser(user);
-        for(Shopping_List list: myLists){
+        ArrayList<ShoppingList> myLists = db.getShoppingListsByUser(user);
+        for (ShoppingList list : myLists) {
             list.setMyProducts(db.getAllProductsOfList(list));
         }
         sadapter.clear();
         sadapter.addAll(myLists);
 
-        Log.d("LOG","onResume");
+        Log.d("LOG", "onResume");
     }
 
     public void addList(View view) {
