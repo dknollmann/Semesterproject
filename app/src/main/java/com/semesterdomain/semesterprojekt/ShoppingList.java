@@ -5,16 +5,16 @@ import java.util.ArrayList;
 
 public class ShoppingList implements Serializable {
 
-    private long list_id;
+    private long listId;
     private ArrayList<Product> myProducts = new ArrayList<>();
     private int sumPrice;
     private int budget;
     private String name;
     //id of the owner of the shopping list
-    private int fk_user;
+    private int fkUser;
 
     public ShoppingList() {
-        this.fk_user = 1;
+        this.fkUser = 1;
         sumPrice = 0;
         myProducts = new ArrayList<>();
         this.budget = 0;
@@ -49,19 +49,19 @@ public class ShoppingList implements Serializable {
     }
 
     public int getFkUser() {
-        return fk_user;
+        return fkUser;
     }
 
     public void setFkUser(int fk_user) {
-        this.fk_user = fk_user;
+        this.fkUser = fk_user;
     }
 
     public long getListId() {
-        return list_id;
+        return listId;
     }
 
     public void setListId(long list_id) {
-        this.list_id = list_id;
+        this.listId = list_id;
     }
 
     public int getBudget() {
