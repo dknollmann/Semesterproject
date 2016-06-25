@@ -10,7 +10,7 @@ import android.widget.AutoCompleteTextView;
 
 public class SearchAutoCompleteView extends AutoCompleteTextView {
 
-    ShoppingDBHelper dbH = new ShoppingDBHelper(null);
+    SQLiteDBHelper dbH = new SQLiteDBHelper(null);
     Product product;
     ShoppingList shopping_list;
 

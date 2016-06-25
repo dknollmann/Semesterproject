@@ -2,7 +2,6 @@ package com.semesterdomain.semesterprojekt;
 
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -25,7 +24,7 @@ public abstract class Swiper implements View.OnTouchListener {
 
     ListView view_mainList;
     Context context;
-    ShoppingDBHelper dbH;
+    SQLiteDBHelper dbH;
     AppCompatActivity activity;
 
     public Swiper() {
@@ -35,7 +34,7 @@ public abstract class Swiper implements View.OnTouchListener {
     public Swiper(ListView view_mainList, Context context, AppCompatActivity activity) {
         this.view_mainList = view_mainList;
         this.context = context;
-        this.dbH = new ShoppingDBHelper(context);
+        this.dbH = new SQLiteDBHelper(context);
         this.activity = activity;
     }
 

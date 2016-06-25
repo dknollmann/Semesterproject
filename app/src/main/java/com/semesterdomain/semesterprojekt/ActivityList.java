@@ -30,7 +30,7 @@ public class ActivityList extends AppCompatActivity {
 
     ShoppingList myShoppingList;
     ArrayList<Product> prodListItems;
-    ShoppingDBHelper dbH = new ShoppingDBHelper(this);
+    SQLiteDBHelper dbH = new SQLiteDBHelper(this);
 
     @Override
     protected void onRestart() {

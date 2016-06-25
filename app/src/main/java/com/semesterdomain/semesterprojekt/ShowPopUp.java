@@ -8,7 +8,7 @@ import android.view.View;
 
 public class ShowPopUp extends Activity {
 
-    ShoppingDBHelper dbH = new ShoppingDBHelper(this);
+    SQLiteDBHelper dbH = new SQLiteDBHelper(this);
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

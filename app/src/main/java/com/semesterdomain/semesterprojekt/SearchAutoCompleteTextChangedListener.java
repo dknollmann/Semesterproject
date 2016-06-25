@@ -8,13 +8,12 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.widget.ArrayAdapter;
 
 public class SearchAutoCompleteTextChangedListener implements TextWatcher {
 
     public static final String TAG = "CustomAutoCompleteTextChangedListener.java";
     Context context;
-    ShoppingDBHelper dbH;
+    SQLiteDBHelper dbH;
 
     public SearchAutoCompleteTextChangedListener(Context context) {
         this.context = context;

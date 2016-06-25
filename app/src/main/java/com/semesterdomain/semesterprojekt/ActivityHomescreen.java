@@ -14,7 +14,7 @@ public class ActivityHomescreen extends AppCompatActivity {
     ArrayList<ShoppingList> mainList = new ArrayList<>();
     ListView viewMainList;
     ShoppingListAdapter shoppingListAdapter;
-    private ShoppingDBHelper dbHelper;
+    private SQLiteDBHelper dbHelper;
     User user;
 
     //private ListView viewMainList;
@@ -40,7 +40,7 @@ public class ActivityHomescreen extends AppCompatActivity {
         shoppingListAdapter = new ShoppingListAdapter(ActivityHomescreen.this, mainList, swipe);
         viewMainList.setAdapter(shoppingListAdapter);
 
-        dbHelper = new ShoppingDBHelper(this.getApplicationContext());
+        dbHelper = new SQLiteDBHelper(this.getApplicationContext());
 
         dbHelper.importDatabase();
     }

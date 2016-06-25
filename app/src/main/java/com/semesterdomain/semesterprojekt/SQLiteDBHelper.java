@@ -15,7 +15,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 
-public class ShoppingDBHelper extends SQLiteOpenHelper {
+public class SQLiteDBHelper extends SQLiteOpenHelper {
 
     //DB Data
     private static final int DATABASE_VERSION = 1;
@@ -33,19 +33,19 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
     private static final String TBL_LIST_PSEUDO = "LIST_PSEUDO";
 
 
-    private final Context mcontext;
-    private SQLiteDatabase myDatabase;
+    private final Context dbHelperContext;
+    private SQLiteDatabase SQLiteDatabase;
 
 
-    ShoppingDBHelper(Context context) {
+    SQLiteDBHelper(Context context) {
         super(context, DB_NAME, null, DATABASE_VERSION);
-        this.mcontext = context;
+        this.dbHelperContext = context;
     }
 
     public void importDatabase() {
 
         if (checkDatabaseFile()) {
-            //Log.d("LOG", "Database already on device");
+            //Log.d("DB_LOG", "Database already on device");
         } else {
             this.getReadableDatabase();
             copyDatabase();
@@ -61,7 +61,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
     public void copyDatabase() {
 
         try {
-            InputStream is = mcontext.getResources().getAssets().open(DB_NAME);
+            InputStream is = dbHelperContext.getResources().getAssets().open(DB_NAME);
             OutputStream os = new FileOutputStream(DB_PATH + DB_NAME);
             byte[] buffer = new byte[BUFFER_SIZE];
             int length;
@@ -72,22 +72,22 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
             os.close();
             is.close();
         } catch (IOException e) {
-            //Log.d("LOG", "Copy Failure");
+            Log.d("DB_LOG", "Copy Failure");
             e.printStackTrace();
         }
         //Log.d("LOG", "Database copied on device");
     }
 
     public void openDatabase() {
-        if (!(myDatabase != null && myDatabase.isOpen())) {
-            myDatabase = SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
+        if (!(SQLiteDatabase != null && SQLiteDatabase.isOpen())) {
+            SQLiteDatabase = SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
             //Log.d("LOG", DB_NAME + " opened");
         }
     }
 
     public void closeDatabase() {
-        if (myDatabase != null) {
-            myDatabase.close();
+        if (SQLiteDatabase != null) {
+            SQLiteDatabase.close();
             //Log.d("LOG", DB_NAME + " closed");
         }
     }
@@ -109,30 +109,30 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         Product product;
         String[] args = {"" + list.getListId()};
 
-        Cursor c = myDatabase.rawQuery("SELECT product_id, productname, manufacturer, productprice, posx, posy, listposition FROM LIST_PRODUCT " +
+        Cursor dbCursor = SQLiteDatabase.rawQuery("SELECT product_id, productname, manufacturer, productprice, posx, posy, listposition FROM LIST_PRODUCT " +
                 "JOIN PRODUCT ON LIST_PRODUCT.fk_product = PRODUCT.product_id " +
                 "WHERE LIST_PRODUCT.fk_list = ?" +
                 "ORDER BY listposition ASC", args);
         list.getMyProducts().clear();
-        if (c != null) {
+        if (dbCursor != null) {
             /*c.getCount();
             ArrayList<Product> al = new ArrayList<>();
             */
-            if (c.moveToFirst()) {
+            if (dbCursor.moveToFirst()) {
                 do {
                     product = new Product("Dummy", "Dummy", 1);
-                    product.setProductId(c.getInt(0));
-                    product.setProductname(c.getString(1));
-                    product.setManufacturer(c.getString(2));
-                    product.setPrice(c.getInt(3));
-                    product.setPosX(c.getInt(4));
-                    product.setPosY(c.getInt(5));
+                    product.setProductId(dbCursor.getInt(0));
+                    product.setProductname(dbCursor.getString(1));
+                    product.setManufacturer(dbCursor.getString(2));
+                    product.setPrice(dbCursor.getInt(3));
+                    product.setPosX(dbCursor.getInt(4));
+                    product.setPosY(dbCursor.getInt(5));
                     //Log.d("LOGBla", "" + c.getInt(6));
                     list.getMyProducts().add(product);
-                } while (c.moveToNext());
+                } while (dbCursor.moveToNext());
             }
         }
-        c.close();
+        dbCursor.close();
         closeDatabase();
         return list.getMyProducts();
     }
@@ -146,7 +146,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         String whereClause = "productname = ? AND manufacturer = ?";
         String[] args = {productname, manufacturer};
 
-        Cursor c = myDatabase.query(TBL_PRODUCT, null, whereClause, args, null, null, null);
+        Cursor c = SQLiteDatabase.query(TBL_PRODUCT, null, whereClause, args, null, null, null);
         if (c != null) {
             if (c.moveToFirst()) {
                 do {
@@ -172,22 +172,22 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         String whereClause = "product_id = ?";
         String[] args = {id};
 
-        Cursor c = myDatabase.query(TBL_PRODUCT, null, whereClause, args, null, null, null);
-        if (c != null) {
-            if (c.moveToFirst()) {
+        Cursor dbCursor = SQLiteDatabase.query(TBL_PRODUCT, null, whereClause, args, null, null, null);
+        if (dbCursor != null) {
+            if (dbCursor.moveToFirst()) {
                 do {
                     product = new Product("Dummy", "Dummy", 1);
-                    product.setProductId(c.getInt(0));
-                    product.setProductname(c.getString(1));
-                    product.setManufacturer(c.getString(2));
-                    product.setPrice(c.getInt(3));
-                    product.setPosX(c.getInt(4));
-                    product.setPosY(c.getInt(5));
-                } while (c.moveToNext());
+                    product.setProductId(dbCursor.getInt(0));
+                    product.setProductname(dbCursor.getString(1));
+                    product.setManufacturer(dbCursor.getString(2));
+                    product.setPrice(dbCursor.getInt(3));
+                    product.setPosX(dbCursor.getInt(4));
+                    product.setPosY(dbCursor.getInt(5));
+                } while (dbCursor.moveToNext());
             }
         }
         //Log.d("DBLOG", "productbyid");
-        c.close();
+        dbCursor.close();
         return product;
     }
 
@@ -202,9 +202,9 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         values.put("fk_user", list.getFkUser());
 
         //make transaction that only full list would be added or no list
-        myDatabase.beginTransaction();
+        SQLiteDatabase.beginTransaction();
         try {
-            long listId = myDatabase.insert("LIST", null, values);
+            long listId = SQLiteDatabase.insert("LIST", null, values);
             if (listId == -1) {
                 //Log.d("DB_LOG", "insert List Failure");
                 return false;
@@ -217,11 +217,11 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
                 setProductToList(getDBProductByProductNameAndManufaturer(p.getProductname(), p.getManufacturer()), list);
                 //Log.d("DB_LOG", p.getProductname() + " attached to " + list.getName() + " on db");
             }
-            myDatabase.setTransactionSuccessful();
+            SQLiteDatabase.setTransactionSuccessful();
         } catch (android.database.SQLException e) {
-            //Log.d("DB_LOG", list.getName() + " could not be added to DB");
+            Log.d("DB_LOG", list.getName() + " could not be added to DB");
         } finally {
-            myDatabase.endTransaction();
+            SQLiteDatabase.endTransaction();
         }
         closeDatabase();
 
@@ -242,9 +242,9 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         long listProdId = 0;
 
         try {
-            listProdId = myDatabase.insert("LIST_PRODUCT", null, values);
+            listProdId = SQLiteDatabase.insert("LIST_PRODUCT", null, values);
         } catch (android.database.SQLException e) {
-            //Log.d("DB_LOG", product.getProductname() + " could not be added to attached to DB");
+            Log.d("DB_LOG", product.getProductname() + " could not be added to attached to DB");
         }
         values.clear();
         closeDatabase();
@@ -260,23 +260,23 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
         String[] args = {"" + user.getUserId()};
 
-        Cursor c = myDatabase.rawQuery("SELECT list_id, listname, user_id, budget FROM LIST " +
+        Cursor dbCurser = SQLiteDatabase.rawQuery("SELECT list_id, listname, user_id, budget FROM LIST " +
                 "JOIN USER ON USER.user_id = LIST.fk_user " +
                 "WHERE LIST.fk_user = ?", args);
 
-        if (c != null) {
-            if (c.moveToFirst()) {
+        if (dbCurser != null) {
+            if (dbCurser.moveToFirst()) {
                 do {
                     shoppingList = new ShoppingList();
-                    shoppingList.setListId(c.getInt(0));
-                    shoppingList.setName(c.getString(1));
-                    shoppingList.setFkUser(c.getInt(2));
-                    shoppingList.setBudget(c.getInt(3));
+                    shoppingList.setListId(dbCurser.getInt(0));
+                    shoppingList.setName(dbCurser.getString(1));
+                    shoppingList.setFkUser(dbCurser.getInt(2));
+                    shoppingList.setBudget(dbCurser.getInt(3));
                     shoppingArrayList.add(shoppingList);
-                } while (c.moveToNext());
+                } while (dbCurser.moveToNext());
             }
         }
-        c.close();
+        dbCurser.close();
         closeDatabase();
         return shoppingArrayList;
     }
@@ -296,36 +296,36 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
         String[] args = {"" + listId};
         openDatabase();
-        myDatabase.beginTransaction();
+        SQLiteDatabase.beginTransaction();
         try {
             //deletes all entries from LIST_PRODUCT for the current list
-            int check = myDatabase.delete(TBL_LIST_PRODUCT, "fk_list = ?", args);
+            int check = SQLiteDatabase.delete(TBL_LIST_PRODUCT, "fk_list = ?", args);
             if (check == 0) {
-                Log.d("LOG", "No deletions from LIST_PRODUCT");
+                //Log.d("LOG", "No deletions from LIST_PRODUCT");
             }
 
             //deletes all entries from LIST_PSEUDO for the current list
-            check = myDatabase.delete(TBL_LIST_PSEUDO, "fk_list = ?", args);
+            check = SQLiteDatabase.delete(TBL_LIST_PSEUDO, "fk_list = ?", args);
             if (check == 0) {
-                Log.d("LOG", "No deletions from LIST_PSEUDO");
+                Log.d("DB_LOG", "No deletions from LIST_PSEUDO");
             }
 
             //deletes all entries from RIGHT for the current list
-            check = myDatabase.delete(TBL_RIGHT, "fk_list = ?", args);
+            check = SQLiteDatabase.delete(TBL_RIGHT, "fk_list = ?", args);
             if (check == 0) {
-                Log.d("LOG", "No deletions from RIGHT");
+                Log.d("DB_LOG", "No deletions from RIGHT");
             }
 
             //deletes current list in LIST
-            check = myDatabase.delete(TBL_LIST, "list_id = ?", args);
+            check = SQLiteDatabase.delete(TBL_LIST, "list_id = ?", args);
             if (check == 0) {
-                Log.d("LOG", "No deletions from LIST");
+                Log.d("DB_LOG", "No deletions from LIST");
             }
-            myDatabase.setTransactionSuccessful();
+            SQLiteDatabase.setTransactionSuccessful();
         } catch (android.database.SQLException e) {
             Log.d("DB_LOG", list.getName() + " could not be deleted from DB");
         } finally {
-            myDatabase.endTransaction();
+            SQLiteDatabase.endTransaction();
         }
         closeDatabase();
 
@@ -338,7 +338,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
         String[] args = {"" + id};
 
-        Cursor dbCursor = myDatabase.rawQuery("SELECT * FROM LIST WHERE list_id = ?", args);
+        Cursor dbCursor = SQLiteDatabase.rawQuery("SELECT * FROM LIST WHERE list_id = ?", args);
 
         if (dbCursor != null) {
             if (dbCursor.moveToFirst()) {
@@ -407,9 +407,9 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         openDatabase();
 
         //delete all entry from LIST_PRODUCT for the current product
-        int check = myDatabase.delete(TBL_LIST_PRODUCT, "fk_product = ? AND fk_list = ?", args);
+        int check = SQLiteDatabase.delete(TBL_LIST_PRODUCT, "fk_product = ? AND fk_list = ?", args);
         if (check == 0) {
-            Log.d("LOG", "Deletion of product not possible");
+            Log.d("DB_LOG", "Deletion of product not possible");
             return false;
         }
         closeDatabase();
@@ -422,20 +422,20 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         openDatabase();
 
         ArrayList<Product> tmpList = list.getMyProducts();
-        myDatabase.beginTransaction();
+        SQLiteDatabase.beginTransaction();
         try {
             for (Product product : tmpList) {
                 ContentValues cv = new ContentValues();
                 cv.put("listposition", "" + tmpList.indexOf(product));
                 String[] args = {"" + list.getListId(), "" + product.getProductId()};
 
-                myDatabase.update(TBL_LIST_PRODUCT, cv, "fk_list = ? AND fk_product = ?", args);
+                SQLiteDatabase.update(TBL_LIST_PRODUCT, cv, "fk_list = ? AND fk_product = ?", args);
             }
-            myDatabase.setTransactionSuccessful();
+            SQLiteDatabase.setTransactionSuccessful();
         } catch (android.database.SQLException e) {
             Log.d("DB_LOG", list.getName() + " could not update productposition");
         } finally {
-            myDatabase.endTransaction();
+            SQLiteDatabase.endTransaction();
         }
         closeDatabase();
     }
@@ -447,7 +447,7 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
         ContentValues cv = new ContentValues();
         cv.put("listname", shoppingList.getName());
         String[] args = {"" + shoppingList.getListId()};
-        myDatabase.update(TBL_LIST, cv, "list_id = ? ", args);
+        SQLiteDatabase.update(TBL_LIST, cv, "list_id = ? ", args);
 
         closeDatabase();
     }
@@ -456,12 +456,12 @@ public class ShoppingDBHelper extends SQLiteOpenHelper {
 
         openDatabase();
 
-        ContentValues cv = new ContentValues();
-        cv.put("budget", shoppingList.getBudget());
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("budget", shoppingList.getBudget());
         //Log.d("LOGBudget", list.getBudget() + "");
         //Log.d("LOGBudget", list.getListId() + "");
         String[] args = {"" + shoppingList.getListId()};
-        myDatabase.update(TBL_LIST, cv, "list_id = ? ", args);
+        SQLiteDatabase.update(TBL_LIST, contentValues, "list_id = ? ", args);
 
         closeDatabase();
     }
