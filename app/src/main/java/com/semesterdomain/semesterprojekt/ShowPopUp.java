@@ -8,6 +8,10 @@ import android.view.View;
 
 public class ShowPopUp extends Activity {
 
+    private static double WINDOW_WIDTH = 0.8;
+    private static double WINDOW_HEIGHT = 0.2;
+    private static double WINDOW_DimAmount = 0.3;
+
     SQLiteDBHelper dbH = new SQLiteDBHelper(this);
 
     public void onCreate(Bundle savedInstanceState) {
@@ -21,8 +25,8 @@ public class ShowPopUp extends Activity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout((int) (width * 0.8), (int) (height * 0.2));
-        getWindow().setDimAmount((float) 0.3);
+        getWindow().setLayout((int) (width * WINDOW_WIDTH), (int) (height * WINDOW_HEIGHT));
+        getWindow().setDimAmount((float) WINDOW_DimAmount);
     }
 
     public void popUpSave(View view) {

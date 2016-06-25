@@ -20,7 +20,7 @@ public class ShoppingList implements Serializable {
         this.budget = 0;
     }
 
-    public int calcPrice(ArrayList<Product> products) {
+    public int calculateSumPrice(ArrayList<Product> products) {
         sumPrice = 0;
         for (Product p : products) {
             this.sumPrice += p.getPrice();

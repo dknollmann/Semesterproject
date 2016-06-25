@@ -7,9 +7,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-/**
- * Created by L 875 on 16.06.2016.
- */
+
 public class SwiperActivityList extends Swiper {
 
     ArrayList<Product> mainList;
@@ -34,14 +32,14 @@ public class SwiperActivityList extends Swiper {
                     public void run() {
                         mSwiping = false;
                         mItemPressed = false;
-                        animateRemoval(view_mainList, v);
+                        animateRemoval(listView, v);
                     }
                 });
             }
         });
         mDownX = x;
         swiped = true;
-        int i = view_mainList.getPositionForView(v);
+        int i = listView.getPositionForView(v);
         dbH.deleteProductFromList(mainList.get(i - 1), list);
     }
 

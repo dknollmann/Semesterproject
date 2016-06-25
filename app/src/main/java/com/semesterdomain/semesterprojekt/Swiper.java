@@ -12,17 +12,13 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
-
-/**
- * Created by L 875 on 16.06.2016.
- */
 public abstract class Swiper implements View.OnTouchListener {
 
     float mDownX;
     int mSwipeSlop = -1;
     boolean swiped;
 
-    ListView view_mainList;
+    ListView listView;
     Context context;
     SQLiteDBHelper dbH;
     AppCompatActivity activity;
@@ -31,8 +27,8 @@ public abstract class Swiper implements View.OnTouchListener {
 
     }
 
-    public Swiper(ListView view_mainList, Context context, AppCompatActivity activity) {
-        this.view_mainList = view_mainList;
+    public Swiper(ListView listView, Context context, AppCompatActivity activity) {
+        this.listView = listView;
         this.context = context;
         this.dbH = new SQLiteDBHelper(context);
         this.activity = activity;
@@ -43,18 +39,18 @@ public abstract class Swiper implements View.OnTouchListener {
 
     protected abstract void onItemTouch(View v);
 
-    protected boolean mSwiping = false; // detects if user is swiping on ACTION_UP
-    protected boolean mItemPressed = false; // Detects if user is currently holding down a view
-    protected static final int SWIPE_DURATION = 250; // needed for velocity implementation
+    protected boolean mSwiping = false; //detects if user is swiping on ACTION_UP
+    protected boolean mItemPressed = false; //Detects if user is currently holding down a view
+    protected static final int SWIPE_DURATION = 250; //needed for velocity implementation
     protected static final int MOVE_DURATION = 150;
     protected static final long ANIMATION_DURATION = 300;
     HashMap<Long, Integer> mItemIdTopMap = new HashMap<Long, Integer>();
 
 
-    // animates the removal of the view, also animates the rest of the view into position
+    //animates the removal of the view, also animates the rest of the view into position
     protected void animateRemoval(final ListView listView, View viewToRemove) {
         int firstVisiblePosition = listView.getFirstVisiblePosition();
-        final ArrayAdapter adapter = (ArrayAdapter) view_mainList.getAdapter();
+        final ArrayAdapter adapter = (ArrayAdapter) this.listView.getAdapter();
         for (int i = 0; i < listView.getChildCount(); ++i) {
             View child = listView.getChildAt(i);
             if (child != viewToRemove) {
@@ -88,16 +84,16 @@ public abstract class Swiper implements View.OnTouchListener {
                                 child.animate().withEndAction(new Runnable() {
                                     public void run() {
                                         mSwiping = false;
-                                        view_mainList.setEnabled(true);
+                                        Swiper.this.listView.setEnabled(true);
                                     }
                                 });
                                 firstAnimation = false;
                             }
                         }
                     } else {
-                        // Animate new views along with the others. The catch is that they did not
-                        // exist in the start state, so we must calculate their starting position
-                        // based on neighboring views.
+                        //Animate new views along with the others. The catch is that they did not
+                        //exist in the start state, so we must calculate their starting position
+                        //based on neighboring views.
                         int childHeight = child.getHeight() + listView.getDividerHeight();
                         startTop = top + (i > 0 ? childHeight : -childHeight);
                         int delta = startTop - top;
@@ -107,7 +103,7 @@ public abstract class Swiper implements View.OnTouchListener {
                             child.animate().withEndAction(new Runnable() {
                                 public void run() {
                                     mSwiping = false;
-                                    view_mainList.setEnabled(true);
+                                    Swiper.this.listView.setEnabled(true);
                                 }
                             });
                             firstAnimation = false;
@@ -124,12 +120,12 @@ public abstract class Swiper implements View.OnTouchListener {
     public boolean onTouch(final View v, MotionEvent event) {
         if (mSwipeSlop < 0) {
             mSwipeSlop = ViewConfiguration.get(context).getScaledTouchSlop();
-
         }
+
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (mItemPressed) {
-                    // Doesn't allow swiping two items at same time
+                    //Doesn't allow swiping two items at same time
                     return false;
                 }
                 mItemPressed = true;
@@ -146,17 +142,17 @@ public abstract class Swiper implements View.OnTouchListener {
                 float deltaXAbs = Math.abs(deltaX);
 
                 if (!mSwiping) {
-                    if (deltaXAbs > mSwipeSlop) // tells if user is actually swiping or just touching in sloppy manner
+                    if (deltaXAbs > mSwipeSlop) //tells if user is actually swiping or just touching in sloppy manner
                     {
                         mSwiping = true;
-                        view_mainList.requestDisallowInterceptTouchEvent(true);
+                        listView.requestDisallowInterceptTouchEvent(true);
                     }
                 }
-                if (mSwiping && !swiped) // Need to make sure the user is both swiping and has not already completed a swipe action (hence mSwiping and swiped)
+                if (mSwiping && !swiped) //Need to make sure the user is both swiping and has not already completed a swipe action (hence mSwiping and swiped)
                 {
-                    v.setTranslationX((x - mDownX)); // moves the view as long as the user is swiping and has not already swiped
+                    v.setTranslationX((x - mDownX)); //moves the view as long as the user is swiping and has not already swiped
 
-                    if (deltaX > v.getWidth() / 3) // swipe to right
+                    if (deltaX > v.getWidth() / 3) //swipe to right
                     {
                         mDownX = x;
                         swiped = true;
@@ -164,13 +160,12 @@ public abstract class Swiper implements View.OnTouchListener {
                         mItemPressed = false;
 
 
-                        v.animate().setDuration(ANIMATION_DURATION).translationX(v.getWidth() / 3); // could pause here if you want, same way as delete
+                        v.animate().setDuration(ANIMATION_DURATION).translationX(v.getWidth() / 3); //could pause here, same way as delete
                         TextView tv = (TextView) v.findViewById(R.id.text_shoppingListname);
                         //tv.setText("Swiped!");
                         return true;
                     } else if (deltaX < -1 * (v.getWidth() / 3)) // swipe to left
                     {
-
                         onItemSwipeLeft(v, x);
                         return true;
                     }
@@ -179,17 +174,17 @@ public abstract class Swiper implements View.OnTouchListener {
             }
             break;
             case MotionEvent.ACTION_UP: {
-                if (mSwiping) // if the user was swiping, don't go to the and just animate the view back into position
+                if (mSwiping) //if the user was swiping, don't go to the and just animate the view back into position
                 {
                     v.animate().setDuration(ANIMATION_DURATION).translationX(0).withEndAction(new Runnable() {
                         @Override
                         public void run() {
                             mSwiping = false;
                             mItemPressed = false;
-                            view_mainList.setEnabled(true);
+                            listView.setEnabled(true);
                         }
                     });
-                } else // user was not swiping; registers as a click
+                } else //user was not swiping; registers as a click
                 {
                     mItemPressed = false;
 

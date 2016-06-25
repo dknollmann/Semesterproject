@@ -23,7 +23,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         // Get the data item for this position
-        ShoppingList slist = getItem(position);
+        ShoppingList shoppingList = getItem(position);
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
@@ -37,9 +37,9 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
         TextView tvListPrice = (TextView) v.findViewById(R.id.text_shoppingListPrice);
 
         // Populate the data into the template view using the data object
-        tvListName.setText(slist.getName());
-        Log.d("LOG", slist.calcPrice(slist.getMyProducts()) + "");
-        tvListPrice.setText(slist.calcPrice(slist.getMyProducts()) + "");
+        tvListName.setText(shoppingList.getName());
+        //Log.d("LOG", shoppingList.calculateSumPrice(shoppingList.getMyProducts()) + "");
+        tvListPrice.setText(String.valueOf(shoppingList.calculateSumPrice(shoppingList.getMyProducts())));
 
         v.setOnTouchListener(mTouchListener);
 

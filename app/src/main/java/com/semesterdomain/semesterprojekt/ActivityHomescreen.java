@@ -17,7 +17,7 @@ public class ActivityHomescreen extends AppCompatActivity {
     private SQLiteDBHelper dbHelper;
     User user;
 
-    //private ListView viewMainList;
+    //private ListView listView;
     private ArrayList arrayList;
 
     //Swiping

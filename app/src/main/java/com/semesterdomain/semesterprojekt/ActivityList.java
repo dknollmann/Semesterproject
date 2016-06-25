@@ -149,7 +149,7 @@ public class ActivityList extends AppCompatActivity {
 
     public void displaySumPrice() {
         TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
-        sumPrice.setText(myShoppingList.calcPrice(prodListItems) + "€");
+        sumPrice.setText(myShoppingList.calculateSumPrice(prodListItems) + "€");
     }
 
     @Override

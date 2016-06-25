@@ -8,9 +8,6 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
-/**
- * Created by L 875 on 16.06.2016.
- */
 public class SwiperActivityHomescreen extends Swiper {
 
     ArrayList<ShoppingList> mainList;
@@ -36,14 +33,14 @@ public class SwiperActivityHomescreen extends Swiper {
                     public void run() {
                         mSwiping = false;
                         mItemPressed = false;
-                        animateRemoval(view_mainList, v);
+                        animateRemoval(listView, v);
                     }
                 });
             }
         });
         mDownX = x;
         swiped = true;
-        int i = view_mainList.getPositionForView(v);
+        int i = listView.getPositionForView(v);
         dbH.deleteDBList(user, mainList.get(i));
 
     }
@@ -51,11 +48,11 @@ public class SwiperActivityHomescreen extends Swiper {
     @Override
     protected void onItemTouch(View v) {
 
-        view_mainList.setEnabled(true);
+        listView.setEnabled(true);
 
-        int i = view_mainList.getPositionForView(v);
+        int i = listView.getPositionForView(v);
         Intent intent = new Intent(context, ActivityList.class);
-        ShoppingList list = (ShoppingList) view_mainList.getItemAtPosition(i);
+        ShoppingList list = (ShoppingList) listView.getItemAtPosition(i);
         intent.putExtra("shoppingListForward", list);
         activity.startActivity(intent);
     }
