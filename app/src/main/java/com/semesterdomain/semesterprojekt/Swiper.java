@@ -137,67 +137,77 @@ public abstract class Swiper implements View.OnTouchListener {
                 mItemPressed = false;
                 break;
             case MotionEvent.ACTION_MOVE: {
-                float x = event.getX() + v.getTranslationX();
-                float deltaX = x - mDownX;
-                float deltaXAbs = Math.abs(deltaX);
-
-                if (!mSwiping) {
-                    if (deltaXAbs > mSwipeSlop) //tells if user is actually swiping or just touching in sloppy manner
-                    {
-                        mSwiping = true;
-                        listView.requestDisallowInterceptTouchEvent(true);
-                    }
-                }
-                if (mSwiping && !swiped) //Need to make sure the user is both swiping and has not already completed a swipe action (hence mSwiping and swiped)
-                {
-                    v.setTranslationX((x - mDownX)); //moves the view as long as the user is swiping and has not already swiped
-
-                    if (deltaX > v.getWidth() / 3) //swipe to right
-                    {
-                        mDownX = x;
-                        swiped = true;
-                        mSwiping = false;
-                        mItemPressed = false;
-
-
-                        v.animate().setDuration(ANIMATION_DURATION).translationX(v.getWidth() / 3); //could pause here, same way as delete
-                        TextView tv = (TextView) v.findViewById(R.id.text_shoppingListname);
-                        //tv.setText("Swiped!");
-                        return true;
-                    } else if (deltaX < -1 * (v.getWidth() / 3)) // swipe to left
-                    {
-                        onItemSwipeLeft(v, x);
-                        return true;
-                    }
-                }
+                if (motionEventActionMoveDetected(v, event)) return true;
 
             }
             break;
             case MotionEvent.ACTION_UP: {
-                if (mSwiping) //if the user was swiping, don't go to the and just animate the view back into position
-                {
-                    v.animate().setDuration(ANIMATION_DURATION).translationX(0).withEndAction(new Runnable() {
-                        @Override
-                        public void run() {
-                            mSwiping = false;
-                            mItemPressed = false;
-                            listView.setEnabled(true);
-                        }
-                    });
-                } else //user was not swiping; registers as a click
-                {
-                    mItemPressed = false;
-
-                    onItemTouch(v);
-
-                    //Toast.makeText(ActivityHomescreen.this, array.get(i).toString(), Toast.LENGTH_LONG).show();
-
-                    return false;
-                }
+                if (motionEventActionUpDetected(v)) return false;
             }
             default:
                 return false;
         }
         return true;
+    }
+
+    private boolean motionEventActionMoveDetected(View v, MotionEvent event) {
+        float x = event.getX() + v.getTranslationX();
+        float deltaX = x - mDownX;
+        float deltaXAbs = Math.abs(deltaX);
+
+        if (!mSwiping) {
+            if (deltaXAbs > mSwipeSlop) //tells if user is actually swiping or just touching in sloppy manner
+            {
+                mSwiping = true;
+                listView.requestDisallowInterceptTouchEvent(true);
+            }
+        }
+        if (mSwiping && !swiped) //Need to make sure the user is both swiping and has not already completed a swipe action (hence mSwiping and swiped)
+        {
+            v.setTranslationX((x - mDownX)); //moves the view as long as the user is swiping and has not already swiped
+
+            if (deltaX > v.getWidth() / 3) //swipe to right
+            {
+                mDownX = x;
+                swiped = true;
+                mSwiping = false;
+                mItemPressed = false;
+
+
+                v.animate().setDuration(ANIMATION_DURATION).translationX(v.getWidth() / 3); //could pause here, same way as delete
+                TextView tv = (TextView) v.findViewById(R.id.text_shoppingListname);
+                //tv.setText("Swiped!");
+                return true;
+            } else if (deltaX < -1 * (v.getWidth() / 3)) //swipe to left
+            {
+                onItemSwipeLeft(v, x);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean motionEventActionUpDetected(View v) {
+        if (mSwiping) //if the user was swiping, don't go to the and just animate the view back into position
+        {
+            v.animate().setDuration(ANIMATION_DURATION).translationX(0).withEndAction(new Runnable() {
+                @Override
+                public void run() {
+                    mSwiping = false;
+                    mItemPressed = false;
+                    listView.setEnabled(true);
+                }
+            });
+        } else //user was not swiping; registers as a click
+        {
+            mItemPressed = false;
+
+            onItemTouch(v);
+
+            //Toast.makeText(ActivityHomescreen.this, array.get(i).toString(), Toast.LENGTH_LONG).show();
+
+            return true;
+        }
+        return false;
     }
 }

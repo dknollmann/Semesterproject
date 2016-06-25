@@ -13,16 +13,16 @@ public class SwiperActivityHomescreen extends Swiper {
     ArrayList<ShoppingList> mainList;
     User user;
 
-    public SwiperActivityHomescreen(ListView view_mainList, Context context, User user, AppCompatActivity activity, ArrayList<ShoppingList> mainList) {
+    public SwiperActivityHomescreen(ListView view_mainList, Context context, User user, AppCompatActivity activity, ArrayList<ShoppingList> homescreenList) {
         super(view_mainList, context, activity);
-        this.mainList = mainList;
+        this.mainList = homescreenList;
         this.user = user;
     }
 
     @Override
     protected void onItemSwipeLeft(final View v, float x) {
 
-        v.setEnabled(false); // need to disable the view for the animation to run
+        v.setEnabled(false); //need to disable the view for the animation to run
 
         // stacked the animations to have the pause before the views flings off screen
         v.animate().setDuration(ANIMATION_DURATION).translationX(-v.getWidth() / 3).withEndAction(new Runnable() {
@@ -51,9 +51,9 @@ public class SwiperActivityHomescreen extends Swiper {
         listView.setEnabled(true);
 
         int i = listView.getPositionForView(v);
-        Intent intent = new Intent(context, ActivityList.class);
-        ShoppingList list = (ShoppingList) listView.getItemAtPosition(i);
-        intent.putExtra("shoppingListForward", list);
+        Intent intent = new Intent(context, ActivityListEditor.class);
+        ShoppingList shoppingList = (ShoppingList) listView.getItemAtPosition(i);
+        intent.putExtra("shoppingListForward", shoppingList);
         activity.startActivity(intent);
     }
 }

@@ -3,7 +3,6 @@ package com.semesterdomain.semesterprojekt;
 import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 
 public class SearchAutoCompleteTextChangedListener implements TextWatcher {
 
@@ -29,15 +28,15 @@ public class SearchAutoCompleteTextChangedListener implements TextWatcher {
     public void onTextChanged(CharSequence userInput, int start, int before, int count) {
         //Log.d("User input: ", "" + userInput);
 
-        ActivityList activityList = ((ActivityList) context);
+        ActivityListEditor activityListEditor = ((ActivityListEditor) context);
 
         //query the database based on the user input
-        activityList.item = activityList.getItemsFromDb(userInput.toString());
+        activityListEditor.item = activityListEditor.getItemsFromDb(userInput.toString());
 
         //update the adapater
-        activityList.searchAutoCompleteAdapter.notifyDataSetChanged();
-        activityList.searchAutoCompleteAdapter = new SearchAutoCompleteAdapter(activityList, activityList.item);
-        activityList.searchAutoComplete.setAdapter(activityList.searchAutoCompleteAdapter);
+        activityListEditor.searchAutoCompleteAdapter.notifyDataSetChanged();
+        activityListEditor.searchAutoCompleteAdapter = new SearchAutoCompleteAdapter(activityListEditor, activityListEditor.item);
+        activityListEditor.searchAutoComplete.setAdapter(activityListEditor.searchAutoCompleteAdapter);
 
     }
 

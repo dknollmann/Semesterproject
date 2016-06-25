@@ -8,15 +8,15 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 
-public class SwiperActivityList extends Swiper {
+public class SwiperActivityListEditor extends Swiper {
 
     ArrayList<Product> mainList;
     ShoppingList list;
 
-    public SwiperActivityList(ListView view_mainList, Context context, AppCompatActivity activity, ArrayList<Product> mainList, ShoppingList list) {
+    public SwiperActivityListEditor(ListView view_mainList, Context context, AppCompatActivity activity, ArrayList<Product> listEditorList, ShoppingList shoppingList) {
         super(view_mainList, context, activity);
-        this.mainList = mainList;
-        this.list = list;
+        this.mainList = listEditorList;
+        this.list = shoppingList;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class SwiperActivityList extends Swiper {
         mDownX = x;
         swiped = true;
         int i = listView.getPositionForView(v);
-        dbH.deleteProductFromList(mainList.get(i - 1), list);
+        dbH.deleteDBProductFromList(mainList.get(i - 1), list);
     }
 
     @Override

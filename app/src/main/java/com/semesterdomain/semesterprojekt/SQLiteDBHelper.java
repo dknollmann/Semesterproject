@@ -401,7 +401,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return recordsList;
     }
 
-    public boolean deleteProductFromList(Product product, ShoppingList list) {
+    public boolean deleteDBProductFromList(Product product, ShoppingList list) {
 
         String[] args = {"" + product.getProductId(), "" + list.getListId()};
         openDatabase();

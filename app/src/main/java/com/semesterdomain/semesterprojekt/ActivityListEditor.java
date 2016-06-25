@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class ActivityList extends AppCompatActivity {
+public class ActivityListEditor extends AppCompatActivity {
 
     //SearchView prodSearchView;
     SearchAutoCompleteView searchAutoComplete;
@@ -59,7 +59,7 @@ public class ActivityList extends AppCompatActivity {
 
 
         //myAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, item);
-        searchAutoCompleteAdapter = new SearchAutoCompleteAdapter(ActivityList.this, item);
+        searchAutoCompleteAdapter = new SearchAutoCompleteAdapter(ActivityListEditor.this, item);
         searchAutoComplete.setAdapter(searchAutoCompleteAdapter);
         searchAutoComplete.setSingleLine();
 
@@ -74,14 +74,14 @@ public class ActivityList extends AppCompatActivity {
             myShoppingList = new ShoppingList();
             myShoppingList.setName("Meine Einkaufsliste");
 
-            SwiperActivityList swiper = new SwiperActivityList(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList);
+            SwiperActivityListEditor swiper = new SwiperActivityListEditor(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList);
             adapter = new ProductListAdapter(this, prodListItems, swiper);
             product_lv.setAdapter(adapter);
 
             //neuimplementierung
             dbH.insertList(myShoppingList);
         } else {
-            SwiperActivityList swiper = new SwiperActivityList(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList);
+            SwiperActivityListEditor swiper = new SwiperActivityListEditor(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList);
             adapter = new ProductListAdapter(this, prodListItems, swiper);
             product_lv.setAdapter(adapter);
 
