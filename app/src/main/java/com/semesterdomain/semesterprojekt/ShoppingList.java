@@ -48,19 +48,19 @@ public class ShoppingList implements Serializable {
         this.name = name;
     }
 
-    public int getDBFk_user() {
+    public int getFkUser() {
         return fk_user;
     }
 
-    public void setFk_user(int fk_user) {
+    public void setFkUser(int fk_user) {
         this.fk_user = fk_user;
     }
 
-    public long getList_id() {
+    public long getListId() {
         return list_id;
     }
 
-    public void setList_id(long list_id) {
+    public void setListId(long list_id) {
         this.list_id = list_id;
     }
 

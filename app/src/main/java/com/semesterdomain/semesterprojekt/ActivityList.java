@@ -1,6 +1,5 @@
 package com.semesterdomain.semesterprojekt;
 
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -89,7 +88,7 @@ public class ActivityList extends AppCompatActivity {
             adapter.clear();
             for (Product p : myShoppingList.getMyProducts()) { //dbH.getDBProductsFromList(myShoppingList)
                 adapter.add(p);
-                Log.d("LOG", "add");
+                //Log.d("LOG", "add");
             }
             displaySumPrice();
         }
@@ -114,7 +113,7 @@ public class ActivityList extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     myShoppingList.setBudget(Integer.parseInt(et_budget.getText().toString()));
-                    dbH.updateShoppingListBudget(myShoppingList);
+                    dbH.updateDBBudgetForList(myShoppingList);
                 }
             }
         });
@@ -133,7 +132,7 @@ public class ActivityList extends AppCompatActivity {
         //prodSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         //prodSearchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
-        Log.d("LOG", "onCreateListActivity");
+        //Log.d("LOG", "onCreateListActivity");
 
     }
 
@@ -141,7 +140,7 @@ public class ActivityList extends AppCompatActivity {
         if (searchAutoComplete.product != null) {
             adapter.add(searchAutoComplete.product);
             myShoppingList.getMyProducts().add(searchAutoComplete.product);
-            Log.d("LOG ", "" + myShoppingList.getList_id());
+            Log.d("LOG ", "" + myShoppingList.getListId());
             dbH.setProductToList(searchAutoComplete.product, myShoppingList);
         }
         displaySumPrice();

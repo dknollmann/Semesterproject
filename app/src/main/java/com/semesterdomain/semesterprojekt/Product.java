@@ -28,11 +28,11 @@ public class Product implements Serializable {
         this.price = 0;
     }
 
-    public long getProduct_id() {
+    public long getProductId() {
         return product_id;
     }
 
-    public void setProduct_id(long product_id) {
+    public void setProductId(long product_id) {
         this.product_id = product_id;
     }
 

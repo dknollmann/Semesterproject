@@ -20,7 +20,7 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public int getUser_id() {
+    public int getUserId() {
         return user_id;
     }
 
