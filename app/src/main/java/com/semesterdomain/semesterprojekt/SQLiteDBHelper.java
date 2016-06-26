@@ -35,7 +35,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     /**
      * The constant DB_NAME simply stores the filename of the SQLite DB which is used for App.
      */
-    private static final String DB_NAME = "ShoppingDB_32k.sqlite";
+    private static final String DB_NAME = "ShoppingDB32kRecords.sqlite";
     /**
      * The constant DB_PATH stores the filepath to the SQLite DB file which should be loaded.
      */

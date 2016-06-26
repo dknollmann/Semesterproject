@@ -13,7 +13,8 @@ import android.widget.TextView;
 import java.util.HashMap;
 
 /**
- * The type Swiper.
+ * The type Swiper is used to implement other Swipers for ListViews it supports swiping left,
+ * swiping right and selecting the ListView element.
  */
 public abstract class Swiper implements View.OnTouchListener {
 
