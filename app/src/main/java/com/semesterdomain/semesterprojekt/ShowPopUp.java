@@ -57,7 +57,7 @@ public class ShowPopUp extends Activity {
     public void popUpSave(View view) {
         Intent intent = getIntent();
         ShoppingList tmp_list = (ShoppingList) intent.getSerializableExtra("shoppingList");
-        dbH.insertList(tmp_list);
+        dbH.addDBList(tmp_list);
         intent = new Intent(this, ActivityHomescreen.class);
         startActivity(intent);
         finish();

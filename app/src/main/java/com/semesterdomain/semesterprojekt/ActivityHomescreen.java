@@ -92,7 +92,7 @@ public class ActivityHomescreen extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        ArrayList<ShoppingList> shoppingListsForUser = dbHelper.getShoppingListsByUser(user);
+        ArrayList<ShoppingList> shoppingListsForUser = dbHelper.getDBShoppingListsByUser(user);
         for (ShoppingList list : shoppingListsForUser) {
             list.setMyProducts(dbHelper.getDBProductsFromList(list));
         }

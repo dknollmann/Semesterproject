@@ -3,7 +3,6 @@ package com.semesterdomain.semesterprojekt;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -120,7 +119,7 @@ public class ActivityListEditor extends AppCompatActivity {
             product_lv.setAdapter(adapter);
 
             //neuimplementierung
-            dbH.insertList(myShoppingList);
+            dbH.addDBList(myShoppingList);
         } else {
             SwiperActivityListEditor swiper = new SwiperActivityListEditor(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList);
             adapter = new ProductListAdapter(this, prodListItems, swiper);
@@ -187,7 +186,7 @@ public class ActivityListEditor extends AppCompatActivity {
             adapter.add(searchAutoComplete.product);
             myShoppingList.getMyProducts().add(searchAutoComplete.product);
             //Log.d("LOG ", "" + myShoppingList.getListId());
-            dbH.setProductToList(searchAutoComplete.product, myShoppingList);
+            dbH.addDBProductToList(searchAutoComplete.product, myShoppingList);
         }
         displaySumPrice();
     }

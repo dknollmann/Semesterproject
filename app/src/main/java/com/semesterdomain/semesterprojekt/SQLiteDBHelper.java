@@ -17,12 +17,14 @@ import java.util.ArrayList;
 
 /**
  * The type SQLiteDBHelper handles connecting, copying, checking, opening and closing the SQLite DB
- * on the useres device. The SQLiteDBHelper is also used for storing, deleting and updating DB records.
+ * on the useres device. The SQLiteDBHelper is also used for storing, deleting and
+ * updating DB records.
  */
 public class SQLiteDBHelper extends SQLiteOpenHelper {
 
     /**
-     * The constant DATABASE_VERSION is only used for the super constructor from the SQLiteOpenHelper.
+     * The constant DATABASE_VERSION is only used for the super constructor from
+     * the SQLiteOpenHelper.
      */
 //DB Data
     private static final int DATABASE_VERSION = 1;
@@ -220,7 +222,8 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Gets potentially multiple products from the DB and they are searched by their productName and manufacturer.
+     * Gets potentially multiple products from the DB and they are searched by their productName
+     * and manufacturer.
      *
      * @param productname  the productname which is used to search products.
      * @param manufacturer the manufacturer of a product wich is used to search products.
@@ -287,13 +290,14 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Insert list boolean.
+     * Adds a user created shoppinglist and all the products in it to the DB. To avoid an
+     * inconsistent DB the is done ins an transaction.
      *
-     * @param list the list
-     * @return the boolean
+     * @param list the shoppinglist which should be added.
+     * @return the boolean is false when the transaction failed.
      */
 //insert full List to database
-    public boolean insertList(ShoppingList list) {
+    public boolean addDBList(ShoppingList list) {
 
         openDatabase();
 
@@ -315,7 +319,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
             for (Product p : list.getMyProducts()) {
 
-                setProductToList(getDBProductByProductNameAndManufaturer(p.getProductName(), p.getManufacturer()), list);
+                addDBProductToList(getDBProductByProductNameAndManufaturer(p.getProductName(), p.getManufacturer()), list);
                 //Log.d("DB_LOG", p.getProductName() + " attached to " + list.getName() + " on db");
             }
             SQLiteDatabase.setTransactionSuccessful();
@@ -330,42 +334,43 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Sets product to list.
+     * Adds a product to the shoppinglist inside the DB.
      *
-     * @param product the product
-     * @param list    the list
-     * @return the product to list
+     * @param product the product which should be added.
+     * @param list    the list where the products should be added to.
+     * @return is false when the insert of the products failed.
      */
-//match product to a List on database
-    public boolean setProductToList(Product product, ShoppingList list) {
+
+    public boolean addDBProductToList(Product product, ShoppingList list) {
 
         openDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put("fk_product", product.getProductId());
-        values.put("fk_list", list.getListId());
-        values.put("listposition", list.getMyProducts().indexOf(product));
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("fk_product", product.getProductId());
+        contentValues.put("fk_list", list.getListId());
+        contentValues.put("listposition", list.getMyProducts().indexOf(product));
         //Log.d("LOG Productplatz:", "" + list.getMyProducts().indexOf(product));
 
         long listProdId = 0;
 
         try {
-            listProdId = SQLiteDatabase.insert("LIST_PRODUCT", null, values);
+            listProdId = SQLiteDatabase.insert("LIST_PRODUCT", null, contentValues);
         } catch (android.database.SQLException e) {
             Log.d("DB_LOG", product.getProductName() + " could not be added to attached to DB");
         }
-        values.clear();
+        contentValues.clear();
         closeDatabase();
         return listProdId != -1;
     }
 
     /**
-     * Gets shopping lists by user.
+     * Gets all shoppinglists for a users from the DB, which is done with a query based on
+     * the users ID.
      *
-     * @param user the user
-     * @return the shopping lists by user
+     * @param user the user for the query based on his ID.
+     * @return the queried shoppinglists.
      */
-    public ArrayList<ShoppingList> getShoppingListsByUser(User user) {
+    public ArrayList<ShoppingList> getDBShoppingListsByUser(User user) {
 
         openDatabase();
 
@@ -374,42 +379,44 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
         String[] args = {String.valueOf(user.getUserId())};
 
-        Cursor dbCurser = SQLiteDatabase.rawQuery("SELECT list_id, listname, user_id, budget FROM LIST " +
+        Cursor dbCursor = SQLiteDatabase.rawQuery("SELECT list_id, listname, user_id, budget FROM LIST " +
                 "JOIN USER ON USER.user_id = LIST.fk_user " +
                 "WHERE LIST.fk_user = ?", args);
 
-        if (dbCurser != null) {
-            if (dbCurser.moveToFirst()) {
+        if (dbCursor != null) {
+            if (dbCursor.moveToFirst()) {
                 do {
                     shoppingList = new ShoppingList();
-                    shoppingList.setListId(dbCurser.getInt(0));
-                    shoppingList.setName(dbCurser.getString(1));
-                    shoppingList.setFkUser(dbCurser.getInt(2));
-                    shoppingList.setBudget(dbCurser.getInt(3));
+                    shoppingList.setListId(dbCursor.getInt(0));
+                    shoppingList.setName(dbCursor.getString(1));
+                    shoppingList.setFkUser(dbCursor.getInt(2));
+                    shoppingList.setBudget(dbCursor.getInt(3));
                     shoppingArrayList.add(shoppingList);
-                } while (dbCurser.moveToNext());
+                } while (dbCursor.moveToNext());
             }
         }
-        dbCurser.close();
+        dbCursor.close();
         closeDatabase();
         return shoppingArrayList;
     }
 
     /**
-     * Delete db list boolean.
+     * Deletes a shoppinglist and the references in the other tables of the DB (LIST_PRODUCT,
+     * LIST_PSEUDO, RIGHT). For this operation the owner (user) of the shoppinglist is needed
+     * because only the owner can delete his own shoppinglists.
      *
-     * @param user        the user
-     * @param clickedList the clicked list
-     * @return the boolean
+     * @param user        the user who might be the rightfull owner of the shoppinglist.
+     * @param ToBeDeletedList the shoppinglist which gets removed from the DB.
+     * @return the boolean is false when the user is not the owner.
      */
-    public boolean deleteDBList(User user, ShoppingList clickedList) {
+    public boolean deleteDBList(User user, ShoppingList ToBeDeletedList) {
         openDatabase();
 
-        ShoppingList list = getDBListById(clickedList.getListId());
+        ShoppingList list = getDBListById(ToBeDeletedList.getListId());
         long listId = list.getListId();
         long idCheck = user.getUserId();
 
-        //is user owner?
+        //is the user the owner?
         if (idCheck != list.getFkUser()) {
             //Log.d("LOG", "user is not owner of list");
             return false;
