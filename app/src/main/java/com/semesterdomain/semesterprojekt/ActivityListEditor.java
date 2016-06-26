@@ -140,7 +140,7 @@ public class ActivityListEditor extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    dbH.updateShoppingListName(myShoppingList);
+                    dbH.updateDBShoppingListName(myShoppingList);
                 }
             }
         });
@@ -193,7 +193,7 @@ public class ActivityListEditor extends AppCompatActivity {
 
 
     /**
-     * Display sum price.
+     * Displays the SumPrice inside the view.
      */
     public void displaySumPrice() {
         TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
@@ -266,7 +266,7 @@ public class ActivityListEditor extends AppCompatActivity {
         myShoppingList.setMyProducts(tempTour);
 
         //Update position in Database
-        dbH.updateProductPositionsInList(myShoppingList);
+        dbH.updateDBProductPositionsInList(myShoppingList);
         adapter.clear();
         adapter.addAll(myShoppingList.getMyProducts());
         printArrayList(EATourManager.destinationProducts);

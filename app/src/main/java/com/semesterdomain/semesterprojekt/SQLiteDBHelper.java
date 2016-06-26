@@ -182,7 +182,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Gets all the products for a singel shoppinglist from the databse.
+     * Gets all the products for a single shoppinglist from the DB.
      *
      * @param list the list from which the products should be queried.
      * @return the queried products.
@@ -296,17 +296,15 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
      * @param list the shoppinglist which should be added.
      * @return the boolean is false when the transaction failed.
      */
-//insert full List to database
+
     public boolean addDBList(ShoppingList list) {
 
         openDatabase();
-
-        //write listvalues to database
         ContentValues values = new ContentValues();
         values.put("listname", list.getName());
         values.put("fk_user", list.getFkUser());
 
-        //make transaction that only full list would be added or no list
+        //starting a transaction that only all elements or none of elements at all get added.
         SQLiteDatabase.beginTransaction();
         try {
             long listId = SQLiteDatabase.insert("LIST", null, values);
@@ -401,9 +399,9 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Deletes a shoppinglist and the references in the other tables of the DB (LIST_PRODUCT,
-     * LIST_PSEUDO, RIGHT). For this operation the owner (user) of the shoppinglist is needed
-     * because only the owner can delete his own shoppinglists.
+     * Deletes a shoppinglist and the references in the other tables (LIST_PRODUCT, LIST_PSEUDO and
+     * RIGHT) from the DB. For this operation the owner (user) of the shoppinglist is needed
+     * because only the owner is supposed to delete his own shoppinglists.
      *
      * @param user        the user who might be the rightfull owner of the shoppinglist.
      * @param ToBeDeletedList the shoppinglist which gets removed from the DB.
@@ -426,32 +424,32 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         openDatabase();
         SQLiteDatabase.beginTransaction();
         try {
-            //deletes all entries from LIST_PRODUCT for the current list
+            //deletes all entries from LIST_PRODUCT for the current shoppinglist
             int check = SQLiteDatabase.delete(TBL_LIST_PRODUCT, "fk_list = ?", args);
             if (check == 0) {
                 //Log.d("LOG", "No deletions from LIST_PRODUCT");
             }
 
-            //deletes all entries from LIST_PSEUDO for the current list
+            //deletes all entries from LIST_PSEUDO for the current shoppinglist
             check = SQLiteDatabase.delete(TBL_LIST_PSEUDO, "fk_list = ?", args);
             if (check == 0) {
-                Log.d("DB_LOG", "No deletions from LIST_PSEUDO");
+                //Log.d("DB_LOG", "No deletions from LIST_PSEUDO.");
             }
 
-            //deletes all entries from RIGHT for the current list
+            //deletes all entries from RIGHT for the current shoppinglist
             check = SQLiteDatabase.delete(TBL_RIGHT, "fk_list = ?", args);
             if (check == 0) {
-                Log.d("DB_LOG", "No deletions from RIGHT");
+                //Log.d("DB_LOG", "No deletions from RIGHT.");
             }
 
-            //deletes current list in LIST
+            //deletes current shoppinglist in LIST
             check = SQLiteDatabase.delete(TBL_LIST, "list_id = ?", args);
             if (check == 0) {
-                Log.d("DB_LOG", "No deletions from LIST");
+                //Log.d("DB_LOG", "No deletions from LIST.");
             }
             SQLiteDatabase.setTransactionSuccessful();
         } catch (android.database.SQLException e) {
-            Log.d("DB_LOG", list.getName() + " could not be deleted from DB");
+            Log.d("DB_LOG", list.getName() + " could not be deleted from DB.");
         } finally {
             SQLiteDatabase.endTransaction();
         }
@@ -461,10 +459,10 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Gets db list by id.
+     * Gets a shoppinglist from the DB which is queried with its own ID.
      *
-     * @param id the id
-     * @return the db list by id
+     * @param id the ID of the shoppinglist
+     * @return the shoppinglist which got queried with the ID given to this method.
      */
     private ShoppingList getDBListById(long id) {
 
@@ -490,36 +488,36 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Gets db products by search term.
+     * Gets products from the DB queried with the searchTerm parameter. The products are queried by
+     * a LIKE query for the productName and the manufacturer of the product.
      *
-     * @param searchTerm the search term
-     * @return the db products by search term
+     * @param searchTerm the search string which should be used to query the productName and the manufacturer.
+     * @return a ArrayList with all queried products.
      */
-//for the Product search
+
     public ArrayList<Product> getDBProductsBySearchTerm(String searchTerm) {
 
-        ArrayList<Product> recordsList = new ArrayList<Product>();
+        ArrayList<Product> queriedProducts = new ArrayList<Product>();
 
-        // select query
+        //build sql query
         String sql = "";
         sql += "SELECT * FROM " + TBL_PRODUCT;
         sql += " WHERE productname LIKE '%" + searchTerm + "%' OR manufacturer LIKE '%" + searchTerm + "%'";
         sql += " ORDER BY productname DESC";
         sql += " LIMIT 0,5";
-
-        //Log.d("LOG SQL-Statement: ", sql);
+        //Log.d("DB_LOG", "SQL-Statement: " + sql);
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        // execute the query
+        //execute the query
         Cursor dbCursor = db.rawQuery(sql, null);
 
-        // looping through all rows and adding to list
+        //looping through all rows and adding to list
         if (dbCursor.moveToFirst()) {
             do {
-
-                // int productId = Integer.parseInt(cursor.getString(cursor.getColumnIndex(fieldProductId)));
+                //int productId = Integer.parseInt(cursor.getString(cursor.getColumnIndex(fieldProductId)));
                 //String productName = cursor.getString(cursor.getColumnIndex(fieldObjectName));
+                //build the products from the query's return.
                 Product product = new Product("Dummy", "Dummy", 1);
                 product.setProductId(dbCursor.getInt(0));
                 product.setProductName(dbCursor.getString(1));
@@ -527,36 +525,34 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
                 product.setPrice(dbCursor.getInt(3));
                 product.setPosX(dbCursor.getInt(4));
                 product.setPosY(dbCursor.getInt(5));
-
-                // add to list
-                recordsList.add(product);
+                //add products to list
+                queriedProducts.add(product);
 
             } while (dbCursor.moveToNext());
         }
 
         dbCursor.close();
         db.close();
-
         // return the list of records
-        return recordsList;
+        return queriedProducts;
     }
 
     /**
-     * Delete db product from list boolean.
+     * Deletes a single products from the DB record for a single shoppinglist.
      *
      * @param product the product
-     * @param list    the list
-     * @return the boolean
+     * @param shoppingList    the shoppinglist where the product should be deleted from.
+     * @return the boolean indicates if the deletion was succesfull or not.
      */
-    public boolean deleteDBProductFromList(Product product, ShoppingList list) {
+    public boolean deleteDBProductFromList(Product product, ShoppingList shoppingList) {
 
-        String[] args = {String.valueOf(product.getProductId()), String.valueOf(list.getListId())};
+        String[] args = {String.valueOf(product.getProductId()), String.valueOf(shoppingList.getListId())};
         openDatabase();
 
         //delete all entry from LIST_PRODUCT for the current product
         int check = SQLiteDatabase.delete(TBL_LIST_PRODUCT, "fk_product = ? AND fk_list = ?", args);
         if (check == 0) {
-            Log.d("DB_LOG", "Deletion of product not possible");
+            Log.d("DB_LOG", "Deletion of product failed.");
             return false;
         }
         closeDatabase();
@@ -565,27 +561,28 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Update product positions in list.
+     * Updates the product position for all products of a single shoppinglist. This is done in an
+     * transaction because all positions should be updated or none to avoide inconsistent DB records.
      *
-     * @param list the list
+     * @param shoppingList the shoppinglist where the products positions should be updated.
      */
-    public void updateProductPositionsInList(ShoppingList list) {
+    public void updateDBProductPositionsInList(ShoppingList shoppingList) {
 
         openDatabase();
 
-        ArrayList<Product> tmpList = list.getMyProducts();
+        ArrayList<Product> tmpList = shoppingList.getMyProducts();
         SQLiteDatabase.beginTransaction();
         try {
             for (Product product : tmpList) {
                 ContentValues cv = new ContentValues();
                 cv.put("listposition", String.valueOf(tmpList.indexOf(product)));
-                String[] args = {String.valueOf(list.getListId()), String.valueOf(product.getProductId())};
+                String[] args = {String.valueOf(shoppingList.getListId()), String.valueOf(product.getProductId())};
 
                 SQLiteDatabase.update(TBL_LIST_PRODUCT, cv, "fk_list = ? AND fk_product = ?", args);
             }
             SQLiteDatabase.setTransactionSuccessful();
         } catch (android.database.SQLException e) {
-            Log.d("DB_LOG", list.getName() + " could not update productposition");
+            Log.d("DB_LOG", "Failed to update productposition of the shoppinglist: " + shoppingList.getName());
         } finally {
             SQLiteDatabase.endTransaction();
         }
@@ -593,11 +590,11 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Update shopping list name.
+     * Updates the name of the single shoppinglist.
      *
-     * @param shoppingList the shopping list
+     * @param shoppingList the shoppinglist of which the name should be updated.
      */
-    public void updateShoppingListName(ShoppingList shoppingList) {
+    public void updateDBShoppingListName(ShoppingList shoppingList) {
 
         openDatabase();
 
@@ -610,9 +607,9 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Update db budget for list.
+     * Updates budget for a single shoppinglist.
      *
-     * @param shoppingList the shopping list
+     * @param shoppingList the shoppinglist of which the budget should be updated.
      */
     public void updateDBBudgetForList(ShoppingList shoppingList) {
 

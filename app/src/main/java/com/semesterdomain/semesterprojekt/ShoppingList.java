@@ -22,23 +22,23 @@ public class ShoppingList implements Serializable {
      */
     private int sumPrice;
     /**
-     * The Budget is a value set by the user and is used to warm the user if the sumPrice exceeds budget.
+     * The Budget is a value set by the user and is used to warn the user if the sumPrice exceeds budget.
      */
     private int budget;
     /**
-     * The Name is a value set by the user when he edites the shoppinglist. There is also a default
-     * value if user does not edit the default value.
+     * The Name is the shoppinglist name set by the user when he edits a shoppinglist. This Field
+     * also got a default value until the user edits the name for the first time.
      */
     private String name;
     /**
-     * The Fk user is the id of the user (foreign key) who is the owner of the shopping list. Only this user can
-     * delete the shoppinglist.
+     * The Fk user is the ID of the user (foreign key) who is the owner of the shopping list.
+     * Only this user can delete the his shoppinglists.
      */
 //id of the owner of the shopping list
     private int fkUser;
 
     /**
-     * Instantiates a new Shopping list.
+     * Instantiates a new shoppinglist.
      */
     public ShoppingList() {
         this.fkUser = 1;
@@ -48,10 +48,10 @@ public class ShoppingList implements Serializable {
     }
 
     /**
-     * Calculate sum price int.
+     * Calculate sumPrice for the whole shoppinglist.
      *
      * @param products The products for which the sumPrice is calculated.
-     * @return the int
+     * @return the int value of the sumPrice.
      */
     public int calculateSumPrice(ArrayList<Product> products) {
         sumPrice = 0;
@@ -73,16 +73,16 @@ public class ShoppingList implements Serializable {
     /**
      * Sets my products.
      *
-     * @param myProducts the my products
+     * @param myProducts the my products.
      */
     public void setMyProducts(ArrayList<Product> myProducts) {
         this.myProducts = myProducts;
     }
 
     /**
-     * Gets sum price.
+     * Gets sumPrice.
      *
-     * @return the sum price
+     * @return the sumPrice.
      */
     public int getSumPrice() {
         return sumPrice;
@@ -91,7 +91,7 @@ public class ShoppingList implements Serializable {
     /**
      * Gets name.
      *
-     * @return the name
+     * @return the name.
      */
     public String getName() {
         return name;
@@ -100,7 +100,7 @@ public class ShoppingList implements Serializable {
     /**
      * Sets name.
      *
-     * @param name the name
+     * @param name the name.
      */
     public void setName(String name) {
         this.name = name;
@@ -109,7 +109,7 @@ public class ShoppingList implements Serializable {
     /**
      * Gets fk user (foreign key).
      *
-     * @return the fk user (foreign key)
+     * @return the fk user (foreign key).
      */
     public int getFkUser() {
         return fkUser;
@@ -118,41 +118,41 @@ public class ShoppingList implements Serializable {
     /**
      * Sets fk user (foreign key).
      *
-     * @param fk_user the fk user (foreign key)
+     * @param fkUser the fk user (foreign key).
      */
-    public void setFkUser(int fk_user) {
-        this.fkUser = fk_user;
+    public void setFkUser(int fkUser) {
+        this.fkUser = fkUser;
     }
 
     /**
-     * Gets list id.
+     * Gets id of the shoppinglist.
      *
-     * @return the list id
+     * @return the shoppinglist id
      */
     public long getListId() {
         return listId;
     }
 
     /**
-     * Sets list id.
+     * Sets id of the shoppinglist.
      *
-     * @param list_id the list id
+     * @param listId the shoppinglist id
      */
-    public void setListId(long list_id) {
-        this.listId = list_id;
+    public void setListId(long listId) {
+        this.listId = listId;
     }
 
     /**
-     * Gets budget.
+     * Gets the budget for a shoppinglist.
      *
-     * @return the budget
+     * @return the budget.
      */
     public int getBudget() {
         return budget;
     }
 
     /**
-     * Sets budget.
+     * Sets the budget for a shoppinglist.
      *
      * @param budget the budget
      */
