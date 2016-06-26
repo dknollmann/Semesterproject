@@ -26,7 +26,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
      * The constant DATABASE_VERSION is only used for the super constructor from
      * the SQLiteOpenHelper.
      */
-//DB Data
+
     private static final int DATABASE_VERSION = 1;
     /**
      * The constant BUFFER_SIZE is used for coping the DB.
@@ -35,7 +35,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     /**
      * The constant DB_NAME simply stores the filename of the SQLite DB which is used for App.
      */
-    private static final String DB_NAME = "bla.sqlite";
+    private static final String DB_NAME = "ShoppingDB_32k.sqlite";
     /**
      * The constant DB_PATH stores the filepath to the SQLite DB file which should be loaded.
      */
@@ -44,7 +44,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     /**
      * The constant TBL_PRODUCT.
      */
-//Tables
+
     private static final String TBL_PRODUCT = "PRODUCT";
     /**
      * The constant TBL_LIST.
@@ -379,7 +379,8 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
         Cursor dbCursor = SQLiteDatabase.rawQuery("SELECT list_id, listname, user_id, budget FROM LIST " +
                 "JOIN USER ON USER.user_id = LIST.fk_user " +
-                "WHERE LIST.fk_user = ?", args);
+                "WHERE LIST.fk_user = ?" +
+                "ORDER BY listname ASC", args);
 
         if (dbCursor != null) {
             if (dbCursor.moveToFirst()) {
@@ -414,7 +415,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         long listId = list.getListId();
         long idCheck = user.getUserId();
 
-        //is the user the owner?
+        //is the user the owner of the list?
         if (idCheck != list.getFkUser()) {
             //Log.d("LOG", "user is not owner of list");
             return false;
@@ -517,6 +518,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
             do {
                 //int productId = Integer.parseInt(cursor.getString(cursor.getColumnIndex(fieldProductId)));
                 //String productName = cursor.getString(cursor.getColumnIndex(fieldObjectName));
+
                 //build the products from the query's return.
                 Product product = new Product("Dummy", "Dummy", 1);
                 product.setProductId(dbCursor.getInt(0));
