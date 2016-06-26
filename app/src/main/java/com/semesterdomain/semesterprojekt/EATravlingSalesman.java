@@ -2,10 +2,22 @@ package com.semesterdomain.semesterprojekt;
 
 import java.util.Random;
 
+/**
+ * The type Ea travling salesman.
+ */
 public class EATravlingSalesman {
 
+    /**
+     * The constant mutationRate.
+     */
     private static final double mutationRate = 0.00001;
 
+    /**
+     * Selection ea population.
+     *
+     * @param pop the pop
+     * @return the ea population
+     */
     public static EAPopulation selection(EAPopulation pop) {
 
         EATour[] newEATours = new EATour[pop.populationSize()];
@@ -29,13 +41,25 @@ public class EATravlingSalesman {
         return pop;
     }
 
+    /**
+     * Rand int int.
+     *
+     * @param min the min
+     * @param max the max
+     * @return the int
+     */
     private static int randInt(int min, int max) {
         Random rand = new Random();
         int randomNum = rand.nextInt((max - min)) + min;
         return randomNum;
     }
 
-    //Mutate a EATour using swap mutation
+    /**
+     * Mutate.
+     *
+     * @param EATour the ea tour
+     */
+//Mutate a EATour using swap mutation
     private static void mutate(EATour EATour) {
         //Loop through EATour products
         for (int tourPos1 = 1; tourPos1 < EATour.tourSize() - 1; tourPos1++) {
@@ -56,6 +80,12 @@ public class EATravlingSalesman {
         }
     }
 
+    /**
+     * Choose parent ea tour.
+     *
+     * @param pop the pop
+     * @return the ea tour
+     */
     public static EATour chooseParent(EAPopulation pop) {
 
         double selection = Math.random();
@@ -124,6 +154,13 @@ public class EATravlingSalesman {
     }*/
 
 
+    /**
+     * Crossover ea tour.
+     *
+     * @param parent1 the parent 1
+     * @param parent2 the parent 2
+     * @return the ea tour
+     */
     public static EATour crossover(EATour parent1, EATour parent2) {
         //Create new child tour
         EATour child = new EATour();

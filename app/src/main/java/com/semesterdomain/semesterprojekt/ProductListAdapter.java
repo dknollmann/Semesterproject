@@ -9,15 +9,36 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * The type Product list adapter.
+ */
 public class ProductListAdapter extends ArrayAdapter<Product> {
 
+    /**
+     * The M touch listener.
+     */
     View.OnTouchListener mTouchListener;
 
+    /**
+     * Instantiates a new Product list adapter.
+     *
+     * @param context  the context
+     * @param products the products
+     * @param listener the listener
+     */
     public ProductListAdapter(Context context, ArrayList<Product> products, View.OnTouchListener listener) {
         super(context, R.layout.prod_list_item, products);
         this.mTouchListener = listener;
     }
 
+    /**
+     * Gets view.
+     *
+     * @param position    the position
+     * @param convertView the convert view
+     * @param parent      the parent
+     * @return the view
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

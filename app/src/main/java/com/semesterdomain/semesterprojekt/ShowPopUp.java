@@ -6,14 +6,34 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
+/**
+ * The type Show pop up.
+ */
 public class ShowPopUp extends Activity {
 
+    /**
+     * The constant WINDOW_WIDTH.
+     */
     private static double WINDOW_WIDTH = 0.8;
+    /**
+     * The constant WINDOW_HEIGHT.
+     */
     private static double WINDOW_HEIGHT = 0.2;
+    /**
+     * The constant WINDOW_DimAmount.
+     */
     private static double WINDOW_DimAmount = 0.3;
 
+    /**
+     * The Db h.
+     */
     SQLiteDBHelper dbH = new SQLiteDBHelper(this);
 
+    /**
+     * On create.
+     *
+     * @param savedInstanceState the saved instance state
+     */
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -29,6 +49,11 @@ public class ShowPopUp extends Activity {
         getWindow().setDimAmount((float) WINDOW_DimAmount);
     }
 
+    /**
+     * Pop up save.
+     *
+     * @param view the view
+     */
     public void popUpSave(View view) {
         Intent intent = getIntent();
         ShoppingList tmp_list = (ShoppingList) intent.getSerializableExtra("shoppingList");
@@ -38,6 +63,11 @@ public class ShowPopUp extends Activity {
         finish();
     }
 
+    /**
+     * Pop up throw.
+     *
+     * @param view the view
+     */
     public void popUpThrow(View view) {
         Intent intent = new Intent(this, ActivityHomescreen.class);
         startActivity(intent);

@@ -11,27 +11,63 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * The type Activity list editor.
+ */
 public class ActivityListEditor extends AppCompatActivity {
 
-    //SearchView prodSearchView;
+    /**
+     * The Search auto complete.
+     */
+//SearchView prodSearchView;
     SearchAutoCompleteView searchAutoComplete;
 
+    /**
+     * The Item.
+     */
     ArrayList<Product> item = new ArrayList<Product>();
 
-    // adapter for auto-complete
+    /**
+     * The Search auto complete adapter.
+     */
+// adapter for auto-complete
     SearchAutoCompleteAdapter searchAutoCompleteAdapter;
+    /**
+     * The Adapter.
+     */
     ProductListAdapter adapter;
 
+    /**
+     * The Product lv.
+     */
     ListView product_lv;
-    //displays ShoppingListname
+    /**
+     * The Et list name.
+     */
+//displays ShoppingListname
     EditText et_list_name;
-    //displays budget
+    /**
+     * The Et budget.
+     */
+//displays budget
     EditText et_budget;
 
+    /**
+     * The My shopping list.
+     */
     ShoppingList myShoppingList;
+    /**
+     * The Prod list items.
+     */
     ArrayList<Product> prodListItems;
+    /**
+     * The Db h.
+     */
     SQLiteDBHelper dbH = new SQLiteDBHelper(this);
 
+    /**
+     * On restart.
+     */
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -42,6 +78,11 @@ public class ActivityListEditor extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /**
+     * On create.
+     *
+     * @param savedInstanceState the saved instance state
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -136,6 +177,11 @@ public class ActivityListEditor extends AppCompatActivity {
 
     }
 
+    /**
+     * Add product.
+     *
+     * @param view the view
+     */
     public void addProduct(View view) {
         if (searchAutoComplete.product != null) {
             adapter.add(searchAutoComplete.product);
@@ -147,18 +193,30 @@ public class ActivityListEditor extends AppCompatActivity {
     }
 
 
+    /**
+     * Display sum price.
+     */
     public void displaySumPrice() {
         TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
         sumPrice.setText(myShoppingList.calculateSumPrice(prodListItems) + "€");
     }
 
+    /**
+     * On back pressed.
+     */
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this, ActivityHomescreen.class);
         startActivity(intent);
     }
 
-    // this function is used in CustomAutoCompleteTextChangedListener.java
+    /**
+     * Gets items from db.
+     *
+     * @param searchTerm the search term
+     * @return the items from db
+     */
+// this function is used in CustomAutoCompleteTextChangedListener.java
     public ArrayList<Product> getItemsFromDb(String searchTerm) {
 
         // add items on the array dynamically
@@ -166,6 +224,11 @@ public class ActivityListEditor extends AppCompatActivity {
         return products;
     }
 
+    /**
+     * Print array list.
+     *
+     * @param list the list
+     */
     public void printArrayList(ArrayList<Product> list) {
         for (Product prod : list) {
             //Log.d("LOG", prod.getProductName());
@@ -173,6 +236,11 @@ public class ActivityListEditor extends AppCompatActivity {
         //Log.d("LOG", "printArrayList");
     }
 
+    /**
+     * Sort by ga.
+     *
+     * @param view the view
+     */
     public void sortByGA(View view) {
         EATourManager.destinationProducts = myShoppingList.getMyProducts();
         printArrayList(myShoppingList.getMyProducts());
@@ -207,6 +275,11 @@ public class ActivityListEditor extends AppCompatActivity {
 
     }
 
+    /**
+     * Delete text.
+     *
+     * @param view the view
+     */
     public void deleteText(View view) {
         searchAutoComplete.setText("");
         searchAutoComplete.product = null;

@@ -15,33 +15,84 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 
+/**
+ * The type SQLiteDBHelper handles connecting, copying, checking, opening and closing the SQLite DB
+ * on the useres device. The SQLiteDBHelper is also used for storing, deleting and updating DB records.
+ */
 public class SQLiteDBHelper extends SQLiteOpenHelper {
 
-    //DB Data
+    /**
+     * The constant DATABASE_VERSION is only used for the super constructor from the SQLiteOpenHelper.
+     */
+//DB Data
     private static final int DATABASE_VERSION = 1;
+    /**
+     * The constant BUFFER_SIZE is used for coping the DB.
+     */
     private static final int BUFFER_SIZE = 1024;
+    /**
+     * The constant DB_NAME simply stores the filename of the SQLite DB which is used for App.
+     */
     private static final String DB_NAME = "bla.sqlite";
+    /**
+     * The constant DB_PATH stores the filepath to the SQLite DB file which should be loaded.
+     */
     private static final String DB_PATH = "/data/data/com.semesterdomain.semesterprojekt/databases/";
 
-    //Tables
+    /**
+     * The constant TBL_PRODUCT.
+     */
+//Tables
     private static final String TBL_PRODUCT = "PRODUCT";
+    /**
+     * The constant TBL_LIST.
+     */
     private static final String TBL_LIST = "LIST";
+    /**
+     * The constant TBL_USER.
+     */
     private static final String TBL_USER = "USER";
+    /**
+     * The constant TBL_PSEUDO.
+     */
     private static final String TBL_PSEUDO = "PSEUDO";
+    /**
+     * The constant TBL_RIGHT.
+     */
     private static final String TBL_RIGHT = "RIGHT";
+    /**
+     * The constant TBL_LIST_PRODUCT.
+     */
     private static final String TBL_LIST_PRODUCT = "LIST_PRODUCT";
+    /**
+     * The constant TBL_LIST_PSEUDO.
+     */
     private static final String TBL_LIST_PSEUDO = "LIST_PSEUDO";
 
 
+    /**
+     * The Db helper context.
+     */
     private final Context dbHelperContext;
+    /**
+     * The SQLiteDatabase is used in many other classed for operating with the DB.
+     */
     private SQLiteDatabase SQLiteDatabase;
 
 
+    /**
+     * Instantiates a new SQLiteDBHelper.
+     *
+     * @param context the context
+     */
     SQLiteDBHelper(Context context) {
         super(context, DB_NAME, null, DATABASE_VERSION);
         this.dbHelperContext = context;
     }
 
+    /**
+     * Imports the DB and if the databasefile exists the DB will be copied.
+     */
     public void importDatabase() {
 
         if (checkDatabaseFile()) {
@@ -53,11 +104,19 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Checks if the databasefile exists.
+     *
+     * @return the boolean
+     */
     public boolean checkDatabaseFile() {
         File file = new File(DB_PATH + DB_NAME);
         return file.exists();
     }
 
+    /**
+     * Copys the database using streams.
+     */
     public void copyDatabase() {
 
         try {
@@ -78,6 +137,9 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         //Log.d("LOG", "Database copied on device");
     }
 
+    /**
+     * Opens the databse and checks if the database is already open if the database object is null.
+     */
     public void openDatabase() {
         if (!(SQLiteDatabase != null && SQLiteDatabase.isOpen())) {
             SQLiteDatabase = SQLiteDatabase.openDatabase(DB_PATH + DB_NAME, null, SQLiteDatabase.OPEN_READWRITE);
@@ -85,6 +147,9 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Closes the database and checks if the database object is null.
+     */
     public void closeDatabase() {
         if (SQLiteDatabase != null) {
             SQLiteDatabase.close();
@@ -92,17 +157,34 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * Not implemented.
+     *
+     * @param db the db.
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
 
     }
 
+    /**
+     * Not implemented.
+     *
+     * @param db         the db.
+     * @param oldVersion the old version.
+     * @param newVersion the new version.
+     */
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //must be filled:
         //increase Version with every update
     }
 
+    /**
+     * Gets all the products for a singel shoppinglist from the databse.
+     *
+     * @param list the list from which the products should be queried.
+     * @return the queried products.
+     */
     public ArrayList<Product> getDBProductsFromList(ShoppingList list) {
         openDatabase();
 
@@ -137,7 +219,14 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return list.getMyProducts();
     }
 
-    //get Single Productdata
+    /**
+     * Gets potentially multiple products from the DB and they are searched by their productName and manufacturer.
+     *
+     * @param productname  the productname which is used to search products.
+     * @param manufacturer the manufacturer of a product wich is used to search products.
+     * @return the queried products.
+     */
+
     public Product getDBProductByProductNameAndManufaturer(String productname, String manufacturer) {
         openDatabase();
 
@@ -164,6 +253,12 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return product;
     }
 
+    /**
+     * Gets a single product by its id from the DB.
+     *
+     * @param id the id of the searched product.
+     * @return the queried product.
+     */
     public Product getDBProductById(String id) {
         openDatabase();
 
@@ -191,7 +286,13 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return product;
     }
 
-    //insert full List to database
+    /**
+     * Insert list boolean.
+     *
+     * @param list the list
+     * @return the boolean
+     */
+//insert full List to database
     public boolean insertList(ShoppingList list) {
 
         openDatabase();
@@ -228,7 +329,14 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    //match product to a List on database
+    /**
+     * Sets product to list.
+     *
+     * @param product the product
+     * @param list    the list
+     * @return the product to list
+     */
+//match product to a List on database
     public boolean setProductToList(Product product, ShoppingList list) {
 
         openDatabase();
@@ -251,6 +359,12 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return listProdId != -1;
     }
 
+    /**
+     * Gets shopping lists by user.
+     *
+     * @param user the user
+     * @return the shopping lists by user
+     */
     public ArrayList<ShoppingList> getShoppingListsByUser(User user) {
 
         openDatabase();
@@ -281,6 +395,13 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return shoppingArrayList;
     }
 
+    /**
+     * Delete db list boolean.
+     *
+     * @param user        the user
+     * @param clickedList the clicked list
+     * @return the boolean
+     */
     public boolean deleteDBList(User user, ShoppingList clickedList) {
         openDatabase();
 
@@ -332,6 +453,12 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    /**
+     * Gets db list by id.
+     *
+     * @param id the id
+     * @return the db list by id
+     */
     private ShoppingList getDBListById(long id) {
 
         ShoppingList shoppingList = null;
@@ -355,7 +482,13 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return shoppingList;
     }
 
-    //for the Product search
+    /**
+     * Gets db products by search term.
+     *
+     * @param searchTerm the search term
+     * @return the db products by search term
+     */
+//for the Product search
     public ArrayList<Product> getDBProductsBySearchTerm(String searchTerm) {
 
         ArrayList<Product> recordsList = new ArrayList<Product>();
@@ -401,6 +534,13 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         return recordsList;
     }
 
+    /**
+     * Delete db product from list boolean.
+     *
+     * @param product the product
+     * @param list    the list
+     * @return the boolean
+     */
     public boolean deleteDBProductFromList(Product product, ShoppingList list) {
 
         String[] args = {String.valueOf(product.getProductId()), String.valueOf(list.getListId())};
@@ -417,6 +557,11 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Update product positions in list.
+     *
+     * @param list the list
+     */
     public void updateProductPositionsInList(ShoppingList list) {
 
         openDatabase();
@@ -440,6 +585,11 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         closeDatabase();
     }
 
+    /**
+     * Update shopping list name.
+     *
+     * @param shoppingList the shopping list
+     */
     public void updateShoppingListName(ShoppingList shoppingList) {
 
         openDatabase();
@@ -452,6 +602,11 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         closeDatabase();
     }
 
+    /**
+     * Update db budget for list.
+     *
+     * @param shoppingList the shopping list
+     */
     public void updateDBBudgetForList(ShoppingList shoppingList) {
 
         openDatabase();

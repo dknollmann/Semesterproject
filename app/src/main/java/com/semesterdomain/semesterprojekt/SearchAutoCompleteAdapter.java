@@ -9,13 +9,30 @@ import android.widget.TextView;
 
 import java.util.List;
 
+/**
+ * The type Search auto complete adapter.
+ */
 public class SearchAutoCompleteAdapter extends ArrayAdapter<Product> {
 
+    /**
+     * Instantiates a new Search auto complete adapter.
+     *
+     * @param context  the context
+     * @param products the products
+     */
     public SearchAutoCompleteAdapter(Context context, List<Product> products) {
         super(context, 0, products);
 
     }
 
+    /**
+     * Gets view.
+     *
+     * @param position    the position
+     * @param convertView the convert view
+     * @param parent      the parent
+     * @return the view
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

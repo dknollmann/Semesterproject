@@ -8,17 +8,41 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+/**
+ * The type Swiper activity homescreen.
+ */
 public class SwiperActivityHomescreen extends Swiper {
 
+    /**
+     * The Main list.
+     */
     ArrayList<ShoppingList> mainList;
+    /**
+     * The User.
+     */
     User user;
 
+    /**
+     * Instantiates a new Swiper activity homescreen.
+     *
+     * @param view_mainList  the view main list
+     * @param context        the context
+     * @param user           the user
+     * @param activity       the activity
+     * @param homescreenList the homescreen list
+     */
     public SwiperActivityHomescreen(ListView view_mainList, Context context, User user, AppCompatActivity activity, ArrayList<ShoppingList> homescreenList) {
         super(view_mainList, context, activity);
         this.mainList = homescreenList;
         this.user = user;
     }
 
+    /**
+     * On item swipe left.
+     *
+     * @param v the v
+     * @param x the x
+     */
     @Override
     protected void onItemSwipeLeft(final View v, float x) {
 
@@ -45,6 +69,11 @@ public class SwiperActivityHomescreen extends Swiper {
 
     }
 
+    /**
+     * On item touch.
+     *
+     * @param v the v
+     */
     @Override
     protected void onItemTouch(View v) {
 

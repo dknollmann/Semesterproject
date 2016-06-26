@@ -12,21 +12,55 @@ import android.widget.TextView;
 
 import java.util.HashMap;
 
+/**
+ * The type Swiper.
+ */
 public abstract class Swiper implements View.OnTouchListener {
 
+    /**
+     * The M down x.
+     */
     float mDownX;
+    /**
+     * The M swipe slop.
+     */
     int mSwipeSlop = -1;
+    /**
+     * The Swiped.
+     */
     boolean swiped;
 
+    /**
+     * The List view.
+     */
     ListView listView;
+    /**
+     * The Context.
+     */
     Context context;
+    /**
+     * The Db h.
+     */
     SQLiteDBHelper dbH;
+    /**
+     * The Activity.
+     */
     AppCompatActivity activity;
 
+    /**
+     * Instantiates a new Swiper.
+     */
     public Swiper() {
 
     }
 
+    /**
+     * Instantiates a new Swiper.
+     *
+     * @param listView the list view
+     * @param context  the context
+     * @param activity the activity
+     */
     public Swiper(ListView listView, Context context, AppCompatActivity activity) {
         this.listView = listView;
         this.context = context;
@@ -35,19 +69,54 @@ public abstract class Swiper implements View.OnTouchListener {
     }
 
 
+    /**
+     * On item swipe left.
+     *
+     * @param v the v
+     * @param x the x
+     */
     protected abstract void onItemSwipeLeft(final View v, float x);
 
+    /**
+     * On item touch.
+     *
+     * @param v the v
+     */
     protected abstract void onItemTouch(View v);
 
+    /**
+     * The M swiping.
+     */
     protected boolean mSwiping = false; //detects if user is swiping on ACTION_UP
+    /**
+     * The M item pressed.
+     */
     protected boolean mItemPressed = false; //Detects if user is currently holding down a view
+    /**
+     * The constant SWIPE_DURATION.
+     */
     protected static final int SWIPE_DURATION = 250; //needed for velocity implementation
+    /**
+     * The constant MOVE_DURATION.
+     */
     protected static final int MOVE_DURATION = 150;
+    /**
+     * The constant ANIMATION_DURATION.
+     */
     protected static final long ANIMATION_DURATION = 300;
+    /**
+     * The M item id top map.
+     */
     HashMap<Long, Integer> mItemIdTopMap = new HashMap<Long, Integer>();
 
 
-    //animates the removal of the view, also animates the rest of the view into position
+    /**
+     * Animate removal.
+     *
+     * @param listView     the list view
+     * @param viewToRemove the view to remove
+     */
+//animates the removal of the view, also animates the rest of the view into position
     protected void animateRemoval(final ListView listView, View viewToRemove) {
         int firstVisiblePosition = listView.getFirstVisiblePosition();
         final ArrayAdapter adapter = (ArrayAdapter) this.listView.getAdapter();
@@ -116,6 +185,13 @@ public abstract class Swiper implements View.OnTouchListener {
         });
     }
 
+    /**
+     * On touch boolean.
+     *
+     * @param v     the v
+     * @param event the event
+     * @return the boolean
+     */
     @Override
     public boolean onTouch(final View v, MotionEvent event) {
         if (mSwipeSlop < 0) {
@@ -150,6 +226,13 @@ public abstract class Swiper implements View.OnTouchListener {
         return true;
     }
 
+    /**
+     * Motion event action move detected boolean.
+     *
+     * @param v     the v
+     * @param event the event
+     * @return the boolean
+     */
     private boolean motionEventActionMoveDetected(View v, MotionEvent event) {
         float x = event.getX() + v.getTranslationX();
         float deltaX = x - mDownX;
@@ -187,6 +270,12 @@ public abstract class Swiper implements View.OnTouchListener {
         return false;
     }
 
+    /**
+     * Motion event action up detected boolean.
+     *
+     * @param v the v
+     * @return the boolean
+     */
     private boolean motionEventActionUpDetected(View v) {
         if (mSwiping) //if the user was swiping, don't go to the and just animate the view back into position
         {

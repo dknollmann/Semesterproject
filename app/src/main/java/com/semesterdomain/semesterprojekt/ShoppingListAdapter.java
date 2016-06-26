@@ -10,15 +10,36 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+/**
+ * The type Shopping list adapter is for handling the shoppinglists added by the user in the ActivityListEditor.
+ */
 public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
 
+    /**
+     * The M touch listener.
+     */
     View.OnTouchListener mTouchListener;
 
+    /**
+     * Instantiates a new Shopping list adapter.
+     *
+     * @param context  the context
+     * @param values   the values
+     * @param listener the listener
+     */
     public ShoppingListAdapter(Context context, ArrayList<ShoppingList> values, View.OnTouchListener listener) {
         super(context, R.layout.list_item, values);
         mTouchListener = listener;
     }
 
+    /**
+     * Gets view.
+     *
+     * @param position    the position
+     * @param convertView the convert view
+     * @param parent      the parent
+     * @return the view
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
