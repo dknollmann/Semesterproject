@@ -29,6 +29,13 @@ dependencies {
     compile 'com.daimajia.swipelayout:library:1.2.0@aar'
 }
 
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../javadoc/")
+    failOnError false
+}
+
 //tast to delete the old jar
 //task deleteOldJar(type: Delete) {
 //    delete 'release/AndroidPlugin.jar'
