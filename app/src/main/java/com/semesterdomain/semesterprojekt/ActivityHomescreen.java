@@ -10,62 +10,52 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * The type Activity homescreen.
+ * The type Activity homescreen is used for handling the user interaction on the Homescreen.
  */
 public class ActivityHomescreen extends AppCompatActivity {
 
     /**
-     * The Main list.
+     * The Main list holds all shoppinglists for the user of the App.
      */
     ArrayList<ShoppingList> mainList = new ArrayList<>();
     /**
-     * The View main list.
+     * The View main list is the view for the list of shoppinglists.
      */
     ListView viewMainList;
     /**
-     * The Shopping list adapter.
+     * The adapter for shoppinglists.
      */
     ShoppingListAdapter shoppingListAdapter;
     /**
-     * The Db helper.
+     * The dbHelper is used to query the shoppinglists from DB.
      */
     private SQLiteDBHelper dbHelper;
     /**
-     * The User.
+     * The User that is using the app at the time.
      */
     User user;
-
     /**
-     * The Array list.
+     * Detects if user is swiping on ACTION_UP.
      */
-//private ListView listView;
-    private ArrayList arrayList;
-
+    private boolean mSwiping = false;
     /**
-     * The M swiping.
+     * Detects if user is currently holding down a view.
      */
-//Swiping
-    private boolean mSwiping = false; // detects if user is swiping on ACTION_UP
+    private boolean mItemPressed = false;
     /**
-     * The M item pressed.
+     * The constant SWIPE_DURATION is needed for the velocity implementation.
      */
-    private boolean mItemPressed = false; // Detects if user is currently holding down a view
+    private static final int SWIPE_DURATION = 250;
     /**
-     * The constant SWIPE_DURATION.
-     */
-    private static final int SWIPE_DURATION = 250; // needed for velocity implementation
-    /**
-     * The constant MOVE_DURATION.
+     * The constant MOVE_DURATION is used for the duration of the move.
      */
     private static final int MOVE_DURATION = 150;
-    /**
-     * The M item id top map.
-     */
-    HashMap<Long, Integer> mItemIdTopMap = new HashMap<Long, Integer>();
+
+    //HashMap<Long, Integer> mItemIdTopMap = new HashMap<Long, Integer>();
 
 
     /**
-     * On create.
+     * On create is called everytime the App is opened.
      *
      * @param savedInstanceState the saved instance state
      */
@@ -74,6 +64,7 @@ public class ActivityHomescreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        //at the moment this is just a dummy user so that the DB can be tested.
         user = new User("Testuser");
 
         viewMainList = (ListView) findViewById(R.id.mainList);
@@ -87,7 +78,7 @@ public class ActivityHomescreen extends AppCompatActivity {
     }
 
     /**
-     * On resume.
+     * On resume loads the shoppinglists from the DB.
      */
     @Override
     protected void onResume() {
@@ -98,14 +89,14 @@ public class ActivityHomescreen extends AppCompatActivity {
         }
         shoppingListAdapter.clear();
         shoppingListAdapter.addAll(shoppingListsForUser);
-
         //Log.d("LOG", "onResume");
     }
 
     /**
-     * Add shopping list.
+     * Switches the Activity to the ActivityListEditor when the user presses the add
+     * shoppinglist button.
      *
-     * @param view the view
+     * @param view the view is the current view.
      */
     public void addShoppingList(View view) {
         Intent intent = new Intent(this, ActivityListEditor.class);

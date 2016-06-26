@@ -11,7 +11,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * The type Shopping list adapter is for handling the shoppinglists added by the user in the ActivityListEditor.
+ * The type Shopping list adapter is for handling the shoppinglists added by the user.
  */
 public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
 

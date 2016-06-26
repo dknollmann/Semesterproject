@@ -11,12 +11,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * The type Activity list editor.
+ * The type ActivityListEditor is the Activity which handles the editing of a shoppinglist.
  */
 public class ActivityListEditor extends AppCompatActivity {
 
     /**
-     * The Search auto complete.
+     * The searchAutoComplete is used to search the products inside the DB and Autocomplete the
+     * queried results in a displayed dropdown list.
      */
 //SearchView prodSearchView;
     SearchAutoCompleteView searchAutoComplete;
