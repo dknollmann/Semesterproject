@@ -107,7 +107,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         openDatabase();
 
         Product product;
-        String[] args = {"" + list.getListId()};
+        String[] args = {String.valueOf(list.getListId())};
 
         Cursor dbCursor = SQLiteDatabase.rawQuery("SELECT product_id, productname, manufacturer, productprice, posx, posy, listposition FROM LIST_PRODUCT " +
                 "JOIN PRODUCT ON LIST_PRODUCT.fk_product = PRODUCT.product_id " +
@@ -258,7 +258,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         ArrayList<ShoppingList> shoppingArrayList = new ArrayList<>();
         ShoppingList shoppingList = null;
 
-        String[] args = {"" + user.getUserId()};
+        String[] args = {String.valueOf(user.getUserId())};
 
         Cursor dbCurser = SQLiteDatabase.rawQuery("SELECT list_id, listname, user_id, budget FROM LIST " +
                 "JOIN USER ON USER.user_id = LIST.fk_user " +
@@ -294,7 +294,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
             return false;
         }
 
-        String[] args = {"" + listId};
+        String[] args = {String.valueOf(listId)};
         openDatabase();
         SQLiteDatabase.beginTransaction();
         try {
@@ -336,7 +336,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
         ShoppingList shoppingList = null;
 
-        String[] args = {"" + id};
+        String[] args = {String.valueOf(id)};
 
         Cursor dbCursor = SQLiteDatabase.rawQuery("SELECT * FROM LIST WHERE list_id = ?", args);
 
@@ -403,7 +403,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
     public boolean deleteDBProductFromList(Product product, ShoppingList list) {
 
-        String[] args = {"" + product.getProductId(), "" + list.getListId()};
+        String[] args = {String.valueOf(product.getProductId()), String.valueOf(list.getListId())};
         openDatabase();
 
         //delete all entry from LIST_PRODUCT for the current product
@@ -426,8 +426,8 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         try {
             for (Product product : tmpList) {
                 ContentValues cv = new ContentValues();
-                cv.put("listposition", "" + tmpList.indexOf(product));
-                String[] args = {"" + list.getListId(), "" + product.getProductId()};
+                cv.put("listposition", String.valueOf(tmpList.indexOf(product)));
+                String[] args = {String.valueOf(list.getListId()), String.valueOf(product.getProductId())};
 
                 SQLiteDatabase.update(TBL_LIST_PRODUCT, cv, "fk_list = ? AND fk_product = ?", args);
             }
@@ -446,7 +446,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
         ContentValues cv = new ContentValues();
         cv.put("listname", shoppingList.getName());
-        String[] args = {"" + shoppingList.getListId()};
+        String[] args = {String.valueOf(shoppingList.getListId())};
         SQLiteDatabase.update(TBL_LIST, cv, "list_id = ? ", args);
 
         closeDatabase();
@@ -460,7 +460,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         contentValues.put("budget", shoppingList.getBudget());
         //Log.d("LOGBudget", list.getBudget() + "");
         //Log.d("LOGBudget", list.getListId() + "");
-        String[] args = {"" + shoppingList.getListId()};
+        String[] args = {String.valueOf(shoppingList.getListId())};
         SQLiteDatabase.update(TBL_LIST, contentValues, "list_id = ? ", args);
 
         closeDatabase();

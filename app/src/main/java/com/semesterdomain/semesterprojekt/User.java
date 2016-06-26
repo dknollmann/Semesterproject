@@ -4,12 +4,12 @@ import java.io.Serializable;
 
 public class User implements Serializable {
 
-    private int user_id;
+    private int userId;
     private String username;
 
     public User(String username) {
         this.username = username;
-        this.user_id = 1;
+        this.userId = 1;
     }
 
     public String getUsername() {
@@ -21,10 +21,10 @@ public class User implements Serializable {
     }
 
     public int getUserId() {
-        return user_id;
+        return userId;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 }

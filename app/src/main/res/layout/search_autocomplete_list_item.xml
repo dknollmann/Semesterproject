@@ -7,14 +7,13 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/search_text_prodname"
-        />
+        android:id="@+id/search_text_prodname" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/search_text_producer"
-        android:layout_below="@+id/search_text_prodname"/>
+        android:layout_below="@+id/search_text_prodname" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,8 +25,7 @@
         android:layout_alignBottom="@+id/search_text_producer"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
 
-        android:textAlignment="center"/>
-
+        android:textAlignment="center" />
 
 
 </RelativeLayout>

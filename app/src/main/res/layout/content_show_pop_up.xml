@@ -27,7 +27,7 @@
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="popUpSave"/>
+        android:onClick="popUpSave" />
 
     <Button
         android:layout_width="wrap_content"
@@ -39,5 +39,5 @@
         android:layout_toEndOf="@+id/btn_popUpSpeichern"
         android:layout_marginLeft="44dp"
         android:layout_marginStart="44dp"
-        android:onClick="popUpThrow"/>
+        android:onClick="popUpThrow" />
 </RelativeLayout>

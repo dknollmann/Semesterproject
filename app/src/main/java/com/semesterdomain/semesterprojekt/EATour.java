@@ -39,7 +39,7 @@ public class EATour {
 
         this.tour.add(0, entrance);
         this.tour.add(cashRegister);
-        Log.d("LOG", "" + tourSize());
+        //Log.d("LOG", "" + tourSize());
     }
 
     //Gets a product from the tour

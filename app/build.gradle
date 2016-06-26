@@ -38,7 +38,7 @@ dependencies {
 //    from('build/intermediates/bundles/release/')
 //    into('release/')
 //   inculde('classes.jar')
-    //Name for the exported jar
+//Name for the exported jar
 //    rename('classes.jar', 'AndroidPlugin.jar')
 //}
 

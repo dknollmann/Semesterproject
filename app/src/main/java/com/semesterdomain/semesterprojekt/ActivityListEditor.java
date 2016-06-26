@@ -38,7 +38,7 @@ public class ActivityListEditor extends AppCompatActivity {
         Intent intent = new Intent(this, ActivityHomescreen.class);
 
         intent.putExtra("shoppingList", myShoppingList);
-        Log.d("LOG", "onRestartActivityList");
+        //Log.d("LOG", "onRestartActivityList");
         startActivity(intent);
     }
 
@@ -140,7 +140,7 @@ public class ActivityListEditor extends AppCompatActivity {
         if (searchAutoComplete.product != null) {
             adapter.add(searchAutoComplete.product);
             myShoppingList.getMyProducts().add(searchAutoComplete.product);
-            Log.d("LOG ", "" + myShoppingList.getListId());
+            //Log.d("LOG ", "" + myShoppingList.getListId());
             dbH.setProductToList(searchAutoComplete.product, myShoppingList);
         }
         displaySumPrice();
@@ -168,24 +168,24 @@ public class ActivityListEditor extends AppCompatActivity {
 
     public void printArrayList(ArrayList<Product> list) {
         for (Product prod : list) {
-            Log.d("LOG", prod.getProductName());
+            //Log.d("LOG", prod.getProductName());
         }
-        Log.d("LOG", "______________");
+        //Log.d("LOG", "printArrayList");
     }
 
     public void sortByGA(View view) {
         EATourManager.destinationProducts = myShoppingList.getMyProducts();
         printArrayList(myShoppingList.getMyProducts());
         EAPopulation pop = new EAPopulation(30);
-        Log.d("LOG", "EAPopulation erstellt");
+        //Log.d("LOG", "EAPopulation erstellt");
 
         pop = EATravlingSalesman.selection(pop);
-        Log.d("LOG", "1");
+        //Log.d("LOG", "population selection");
         EATour bestEATour = pop.getFittest();
         for (int i = 0; i < 30; i++) {
             pop = EATravlingSalesman.selection(pop);
             if (bestEATour.getDistance() > pop.getFittest().getDistance()) {
-                Log.d("LOG", "" + bestEATour.getDistance());
+                //Log.d("LOG", "best tour distance: " + bestEATour.getDistance());
                 double test = bestEATour.getDistance();
                 bestEATour = pop.getFittest();
             }

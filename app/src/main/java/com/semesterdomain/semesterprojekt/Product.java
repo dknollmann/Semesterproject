@@ -78,7 +78,7 @@ public class Product implements Serializable {
 
     @Override
     public String toString() {
-        return "" + productId;
+        return String.valueOf(productId);
     }
 
     // Gets the distance to given city

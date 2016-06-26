@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp" >
+    android:paddingRight="16dp">
 
 
     <FrameLayout
@@ -20,8 +20,7 @@
             android:layout_height="wrap_content"
             android:completionThreshold="1"
             android:layout_toLeftOf="@+id/clear"
-            android:layout_toStartOf="@+id/clear">
-        </com.semesterdomain.semesterprojekt.SearchAutoCompleteView>
+            android:layout_toStartOf="@+id/clear"></com.semesterdomain.semesterprojekt.SearchAutoCompleteView>
 
         <Button
             android:layout_width="wrap_content"
@@ -34,7 +33,7 @@
             android:layout_toLeftOf="@id/btn_addProduct"
             android:layout_gravity="right|center_vertical"
 
-            android:onClick="deleteText"/>
+            android:onClick="deleteText" />
 
     </FrameLayout>
 
@@ -61,7 +60,7 @@
         android:id="@+id/et_shoppingListname"
         android:layout_marginTop="10dp"
         android:layout_toLeftOf="@+id/et_budget"
-        android:layout_below="@+id/frameLayout"/>
+        android:layout_below="@+id/frameLayout" />
 
     <EditText
         android:layout_width="40dp"
@@ -69,7 +68,7 @@
         android:layout_alignParentRight="true"
         android:id="@+id/et_budget"
         android:text="0"
-        android:layout_alignTop="@+id/et_shoppingListname"/>
+        android:layout_alignTop="@+id/et_shoppingListname" />
 
     <ListView
         android:layout_width="fill_parent"
@@ -89,8 +88,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:onClick="sortByGA"
-        />
+        android:onClick="sortByGA" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -100,8 +98,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/btn_back"
-        />
+        android:layout_alignTop="@+id/btn_back" />
 
 </RelativeLayout>
 
