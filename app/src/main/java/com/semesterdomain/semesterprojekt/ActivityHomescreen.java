@@ -65,7 +65,7 @@ public class ActivityHomescreen extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         //at the moment this is just a dummy user so that the DB can be tested.
-        user = new User("Testuser");
+        user = new User("Testuser0");
 
         viewMainList = (ListView) findViewById(R.id.mainList);
         SwiperActivityHomescreen swipe = new SwiperActivityHomescreen(viewMainList, this.getApplicationContext(), user, this, mainList);
