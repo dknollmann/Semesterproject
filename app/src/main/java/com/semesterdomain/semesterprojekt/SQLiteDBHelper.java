@@ -188,6 +188,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
      * @return the queried products.
      */
     public ArrayList<Product> getDBProductsFromList(ShoppingList list) {
+        //long startTime = System.nanoTime();
         openDatabase();
 
         Product product;
@@ -218,6 +219,9 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         }
         dbCursor.close();
         closeDatabase();
+        //long endTime = System.nanoTime();
+        //long executionTime = (endTime - startTime) / 1000000;  //divide by 1000000 to get milliseconds.
+        //Log.d("DB_LOG", "executionTime for getDBProductsFromList: " + String.valueOf(executionTime));
         return list.getMyProducts();
     }
 
@@ -284,7 +288,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
                 } while (dbCursor.moveToNext());
             }
         }
-        //Log.d("DBLOG", "productbyid");
+        //Log.d("DB_LOG", "productbyid");
         dbCursor.close();
         return product;
     }
@@ -347,7 +351,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         contentValues.put("fk_product", product.getProductId());
         contentValues.put("fk_list", list.getListId());
         contentValues.put("listposition", list.getMyProducts().indexOf(product));
-        //Log.d("LOG Productplatz:", "" + list.getMyProducts().indexOf(product));
+        //Log.d("DB_LOG Productplatz:", "" + list.getMyProducts().indexOf(product));
 
         long listProdId = 0;
 
@@ -376,7 +380,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         ShoppingList shoppingList = null;
 
         String[] args = {String.valueOf(user.getUserId())};
-        Log.d("DB_LOG", "\n------------------------" + String.valueOf(user.getUserId()) + "------------------------\n");
+        //Log.d("DB_LOG", "\n------------------------" + String.valueOf(user.getUserId()) + "------------------------\n");
 
         Cursor dbCursor = SQLiteDatabase.rawQuery("SELECT list_id, listname, user_id, budget FROM LIST " +
                 "JOIN USER ON USER.user_id = LIST.fk_user " +
@@ -418,7 +422,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
         //is the user the owner of the list?
         if (idCheck != list.getFkUser()) {
-            //Log.d("LOG", "user is not owner of list");
+            //Log.d("DB_LOG", "user is not owner of list");
             return false;
         }
 
@@ -429,7 +433,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
             //deletes all entries from LIST_PRODUCT for the current shoppinglist
             int check = SQLiteDatabase.delete(TBL_LIST_PRODUCT, "fk_list = ?", args);
             if (check == 0) {
-                //Log.d("LOG", "No deletions from LIST_PRODUCT");
+                //Log.d("DB_LOG", "No deletions from LIST_PRODUCT");
             }
 
             //deletes all entries from LIST_PSEUDO for the current shoppinglist

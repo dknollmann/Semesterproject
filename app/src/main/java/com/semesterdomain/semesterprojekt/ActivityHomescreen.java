@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
-
+import android.util.Log;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -82,6 +82,7 @@ public class ActivityHomescreen extends AppCompatActivity {
      */
     @Override
     protected void onResume() {
+        //long startTime = System.nanoTime();
         super.onResume();
         ArrayList<ShoppingList> shoppingListsForUser = dbHelper.getDBShoppingListsByUser(user);
         for (ShoppingList list : shoppingListsForUser) {
@@ -90,6 +91,9 @@ public class ActivityHomescreen extends AppCompatActivity {
         shoppingListAdapter.clear();
         shoppingListAdapter.addAll(shoppingListsForUser);
         //Log.d("LOG", "onResume");
+        //long endTime = System.nanoTime();
+        //long executionTime = (endTime - startTime) / 1000000;  //divide by 1000000 to get milliseconds.
+        //Log.d("DB_LOG", "executionTime for onResume (ActuvutyHomescreen: " + String.valueOf(executionTime));
     }
 
     /**

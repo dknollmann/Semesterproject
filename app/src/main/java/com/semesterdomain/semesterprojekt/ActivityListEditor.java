@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import android.util.Log;
 import java.util.ArrayList;
 
 /**
@@ -19,7 +19,6 @@ public class ActivityListEditor extends AppCompatActivity {
      * The searchAutoComplete is used to search the products inside the DB and Autocomplete the
      * queried results in a displayed dropdown list.
      */
-//SearchView prodSearchView;
     SearchAutoCompleteView searchAutoComplete;
 
     /**
@@ -28,9 +27,8 @@ public class ActivityListEditor extends AppCompatActivity {
     ArrayList<Product> item = new ArrayList<Product>();
 
     /**
-     * The Search auto complete adapter.
+     * The adapter for the autoCompleteSearch.
      */
-// adapter for auto-complete
     SearchAutoCompleteAdapter searchAutoCompleteAdapter;
     /**
      * The Adapter.
@@ -64,6 +62,23 @@ public class ActivityListEditor extends AppCompatActivity {
      * The Db h.
      */
     SQLiteDBHelper dbH = new SQLiteDBHelper(this);
+
+    /**
+     * The constant GENERATIONS is the number of Generations for the EA.
+     */
+    private final int GENERATIONS = 30;
+
+    /**
+     * The constant POPULATION_SIZE is the size of the generated Population for the EA.
+     */
+    private final int POPULATION_SIZE = 30;
+
+    /**
+     * The constant NANO_TO_MILLI is used to convert Nanoseconds into Milliseconds.
+     */
+    private final int NANO_TO_MILLI = 1000000;
+
+    private final int BREAK_EA = 110000;
 
     /**
      * On restart.
@@ -242,15 +257,27 @@ public class ActivityListEditor extends AppCompatActivity {
      * @param view the view
      */
     public void sortByGA(View view) {
+        //long startTime = System.nanoTime();
+        //long endTime = System.nanoTime();
+        //long executionTime = (endTime - startTime) / 1000000;  //divide by 1000000 to get milliseconds.
+        //Log.d("DB_LOG", "executionTime for onResume (ActuvutyHomescreen: " + String.valueOf(executionTime));
+
+        long startTime = System.nanoTime();
+
         EATourManager.destinationProducts = myShoppingList.getMyProducts();
         printArrayList(myShoppingList.getMyProducts());
-        EAPopulation pop = new EAPopulation(30);
+        EAPopulation pop = new EAPopulation(POPULATION_SIZE);
         //Log.d("LOG", "EAPopulation erstellt");
 
         pop = EATravlingSalesman.selection(pop);
         //Log.d("LOG", "population selection");
         EATour bestEATour = pop.getFittest();
-        for (int i = 0; i < 30; i++) {
+        for (int i = 0; i < GENERATIONS; i++) {
+            long checkTime = System.nanoTime();
+            if(((checkTime - startTime)/NANO_TO_MILLI) < BREAK_EA){
+                break; //break if the 2min timewindow is to short.
+            }
+
             pop = EATravlingSalesman.selection(pop);
             if (bestEATour.getDistance() > pop.getFittest().getDistance()) {
                 //Log.d("LOG", "best tour distance: " + bestEATour.getDistance());
@@ -258,6 +285,7 @@ public class ActivityListEditor extends AppCompatActivity {
                 bestEATour = pop.getFittest();
             }
         }
+        Log.d("EA_LOG", "executionTime for sortByGA" + String.valueOf((System.nanoTime() - startTime) / NANO_TO_MILLI));
         ArrayList<Product> tempTour = bestEATour.getTour();
 
         //Remove entrance and cash register
