@@ -66,19 +66,19 @@ public class ActivityListEditor extends AppCompatActivity {
     /**
      * The constant GENERATIONS is the number of Generations for the EA.
      */
-    private final int GENERATIONS = 30;
+    private final int GENERATIONS = 1000;
 
     /**
      * The constant POPULATION_SIZE is the size of the generated Population for the EA.
      */
-    private final int POPULATION_SIZE = 30;
+    private final int POPULATION_SIZE = 10000;
 
     /**
      * The constant NANO_TO_MILLI is used to convert Nanoseconds into Milliseconds.
      */
-    private final int NANO_TO_MILLI = 1000000;
+    private final int NANO_TO_MILLI = 100;
 
-    private final int BREAK_EA = 110000;
+    private final int BREAK_EA = 100;
 
     /**
      * On restart.
@@ -274,7 +274,8 @@ public class ActivityListEditor extends AppCompatActivity {
         EATour bestEATour = pop.getFittest();
         for (int i = 0; i < GENERATIONS; i++) {
             long checkTime = System.nanoTime();
-            if(((checkTime - startTime)/NANO_TO_MILLI) < BREAK_EA){
+            if(((checkTime - startTime)/NANO_TO_MILLI) > BREAK_EA){
+                //Log.d("EA_LOG", "executionTime for sortByGA: checkTime failed.");
                 break; //break if the 2min timewindow is to short.
             }
 
@@ -285,7 +286,8 @@ public class ActivityListEditor extends AppCompatActivity {
                 bestEATour = pop.getFittest();
             }
         }
-        Log.d("EA_LOG", "executionTime for sortByGA" + String.valueOf((System.nanoTime() - startTime) / NANO_TO_MILLI));
+        long endTime = System.nanoTime();
+        //Log.d("EA_LOG", "executionTime for sortByGA: " + String.valueOf((endTime - startTime) / NANO_TO_MILLI));
         ArrayList<Product> tempTour = bestEATour.getTour();
 
         //Remove entrance and cash register
