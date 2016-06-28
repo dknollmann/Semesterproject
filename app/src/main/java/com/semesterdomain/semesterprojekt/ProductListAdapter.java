@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
      * The mTouchListener is used to listen to interactions with the items of the displayed shoppinglist.
      */
     View.OnTouchListener mTouchListener;
+    /**
+
 
     /**
      * Instantiates a new ProductListAdapter .
@@ -53,11 +56,13 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         TextView tvProdName = (TextView) convertView.findViewById(R.id.text_prodname);
         TextView tvManufacturer = (TextView) convertView.findViewById(R.id.text_producer);
         TextView tvPrice = (TextView) convertView.findViewById(R.id.text_prodprice);
+        NumberPicker npAmount = (NumberPicker) convertView.findViewById(R.id.numberPicker);
 
         //Populate the data into the template view using the data object
         tvProdName.setText(product.getProductName());
         tvManufacturer.setText(product.getManufacturer());
         tvPrice.setText(product.getPrice() + "€");
+        npAmount.setEnabled(true);
 
         convertView.setOnTouchListener(mTouchListener);
         //Return the completed view to render on screen

@@ -83,6 +83,7 @@ public class SwiperActivityHomescreen extends Swiper {
         Intent intent = new Intent(context, ActivityListEditor.class);
         ShoppingList shoppingList = (ShoppingList) listView.getItemAtPosition(i);
         intent.putExtra("shoppingListForward", shoppingList);
+        intent.putExtra("user", user);
         activity.startActivity(intent);
     }
 }

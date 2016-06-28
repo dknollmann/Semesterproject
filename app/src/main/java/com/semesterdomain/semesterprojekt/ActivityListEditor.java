@@ -2,6 +2,7 @@ package com.semesterdomain.semesterprojekt;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -9,6 +10,11 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.util.Log;
+
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import java.util.ArrayList;
 
 /**
@@ -50,6 +56,11 @@ public class ActivityListEditor extends AppCompatActivity {
 //displays budget
     EditText et_budget;
 
+    TextView tv_sumPrice;
+    /**
+     * The application user
+     */
+    User user;
     /**
      * The My shopping list.
      */
@@ -62,6 +73,13 @@ public class ActivityListEditor extends AppCompatActivity {
      * The Db h.
      */
     SQLiteDBHelper dbH = new SQLiteDBHelper(this);
+    /**
+     * All available shopping lists for user
+     */
+    ArrayList<ShoppingList> lists;
+
+
+    boolean listNameIsSaved = false;
 
     /**
      * The constant GENERATIONS is the number of Generations for the EA.
@@ -82,6 +100,11 @@ public class ActivityListEditor extends AppCompatActivity {
      * The constant BREAK_EA is used to stop the EA when timeWindows is exceeded.
      */
     private final int BREAK_EA = 100;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     /**
      * On restart start the ActivityHomescreen with the shoppinglist as an extra.
@@ -110,6 +133,7 @@ public class ActivityListEditor extends AppCompatActivity {
         product_lv = (ListView) findViewById(R.id.list);
         et_list_name = (EditText) findViewById(R.id.et_shoppingListname);
         et_budget = (EditText) findViewById(R.id.et_budget);
+        tv_sumPrice = (TextView) findViewById(R.id.text_sumPrice);
 
         searchAutoComplete = (SearchAutoCompleteView) findViewById(R.id.myautocomplete);
 
@@ -127,17 +151,26 @@ public class ActivityListEditor extends AppCompatActivity {
 
         Intent intent = getIntent();
         myShoppingList = (ShoppingList) intent.getSerializableExtra("shoppingListForward");
+        user = (User) intent.getSerializableExtra("user");
 
 
         if (myShoppingList == null) {
             myShoppingList = new ShoppingList();
-            myShoppingList.setName("Meine Einkaufsliste");
-
-            SwiperActivityListEditor swiper = new SwiperActivityListEditor(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList);
+            lists = dbH.getDBShoppingListsByUser(user);
+            int i = 0;
+            for (ShoppingList slist : lists) {
+                if (slist.getName().compareTo("Meine Einkaufsliste" + i) == 0) {
+                    i++;
+                } else {
+                    myShoppingList.setName("Meine Einkaufsliste" + i);
+                }
+            }
+            SwiperActivityListEditor swiper = new SwiperActivityListEditor(product_lv, this, this, prodListItems, myShoppingList);
             adapter = new ProductListAdapter(this, prodListItems, swiper);
             product_lv.setAdapter(adapter);
 
             dbH.addDBList(myShoppingList);
+            listNameIsSaved = true;
         } else {
             SwiperActivityListEditor swiper = new SwiperActivityListEditor(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList);
             adapter = new ProductListAdapter(this, prodListItems, swiper);
@@ -151,39 +184,62 @@ public class ActivityListEditor extends AppCompatActivity {
             displaySumPrice(myShoppingList);
         }
 
-        et_list_name.addTextChangedListener(new AfterTextChangedWatcher(myShoppingList, et_list_name));
         et_list_name.setText(myShoppingList.getName());
         et_list_name.setSingleLine();
         et_list_name.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    dbH.updateDBShoppingListName(myShoppingList);
-                }
-            }
-        });
-
-        et_budget.addTextChangedListener(new AfterTextChangedWatcher(myShoppingList, et_budget));
-        et_budget.setText(String.valueOf(myShoppingList.getBudget()));
-        et_budget.setSingleLine();
-        et_budget.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    myShoppingList.setBudget(Integer.parseInt(et_budget.getText().toString()));
-                    dbH.updateDBBudgetForList(myShoppingList);
-                    EditText budget = (EditText) findViewById(R.id.et_budget);
-                    TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
-                    if(myShoppingList.getBudget() < myShoppingList.getSumPrice()){
-                        budget.setTextColor(Color.RED);
-                        sumPrice.setTextColor(Color.RED);
+                    if (checkUniqueShoppingList()) {
+                        myShoppingList.setName(et_list_name.getText().toString());
+                        dbH.updateDBShoppingListName(myShoppingList);
+                        et_list_name.setTextColor(Color.BLACK);
+                        listNameIsSaved = true;
                     }else{
-                        budget.setTextColor(Color.BLACK);
-                        sumPrice.setTextColor(Color.BLACK);
+                        et_list_name.setTextColor(Color.RED);
+                        listNameIsSaved = false;
                     }
                 }
             }
         });
+
+        et_budget.setText(String.valueOf(myShoppingList.getBudget()));
+        et_budget.setSingleLine();
+        if (myShoppingList.getBudget() < myShoppingList.getSumPrice()) {
+            et_budget.setTextColor(Color.RED);
+            tv_sumPrice.setTextColor(Color.RED);
+        } else {
+            et_budget.setTextColor(Color.BLACK);
+            tv_sumPrice.setTextColor(Color.BLACK);
+        }
+        et_budget.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    //avoid empty et_budget
+                    if (et_budget.getText().toString().compareTo("") == 0) {
+                        Log.d("LOGFOCUS", et_budget.getText() + "");
+                        et_budget.setText("" + myShoppingList.getBudget());
+                    }
+                    myShoppingList.setBudget(Integer.parseInt(et_budget.getText().toString()));
+                    dbH.updateDBBudgetForList(myShoppingList);
+                    EditText et_budget = (EditText) findViewById(R.id.et_budget);
+                    TextView tv_sumPrice = (TextView) findViewById(R.id.text_sumPrice);
+
+                    if (myShoppingList.getBudget() < myShoppingList.getSumPrice()) {
+                        et_budget.setTextColor(Color.RED);
+                        tv_sumPrice.setTextColor(Color.RED);
+                    } else {
+                        et_budget.setTextColor(Color.BLACK);
+                        tv_sumPrice.setTextColor(Color.BLACK);
+                    }
+                }
+            }
+        });
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     /**
@@ -198,13 +254,13 @@ public class ActivityListEditor extends AppCompatActivity {
             dbH.addDBProductToList(searchAutoComplete.product, myShoppingList);
         }
         displaySumPrice(myShoppingList);
-        if(!checkPrice(myShoppingList.getBudget(), myShoppingList.calculateSumPrice())){
+        if (!checkPrice(myShoppingList.getBudget(), myShoppingList.calculateSumPrice())) {
             EditText budget = (EditText) findViewById(R.id.et_budget);
             TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
             budget.setTextColor(Color.RED);
             sumPrice.setTextColor(Color.RED);
-            Log.d("LOGSUM", myShoppingList.getBudget()+"");
-            Log.d("LOGSUM", myShoppingList.calculateSumPrice()+"");
+            Log.d("LOGSUM", myShoppingList.getBudget() + "");
+            Log.d("LOGSUM", myShoppingList.calculateSumPrice() + "");
         }
     }
 
@@ -214,7 +270,7 @@ public class ActivityListEditor extends AppCompatActivity {
      */
     public void displaySumPrice(ShoppingList list) {
         TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
-        sumPrice.setText(list.calculateSumPrice()+"");
+        sumPrice.setText(list.calculateSumPrice() + "");
     }
 
     /**
@@ -222,14 +278,24 @@ public class ActivityListEditor extends AppCompatActivity {
      */
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(this, ActivityHomescreen.class);
-        if(et_budget.hasFocus()) {
+
+        if (et_budget.hasFocus()) {
             et_budget.clearFocus();
         }
-        if (et_list_name.hasFocus()){
-            et_list_name.clearFocus();
+
+        if(checkUniqueShoppingList()){
+            if(!listNameIsSaved){
+                myShoppingList.setName(et_list_name.getText().toString());
+                dbH.updateDBShoppingListName(myShoppingList);
+            }
+            Intent intent = new Intent(this, ActivityHomescreen.class);
+            startActivity(intent);
+        }else{
+            Log.d("LOGFOCUS","test");
+            et_list_name.setTextColor(Color.RED);
+            et_list_name.requestFocus();
         }
-        startActivity(intent);
+
     }
 
     /**
@@ -280,7 +346,7 @@ public class ActivityListEditor extends AppCompatActivity {
         EATour bestEATour = pop.getFittest();
         for (int i = 0; i < GENERATIONS; i++) {
             long checkTime = System.nanoTime();
-            if(((checkTime - startTime)/NANO_TO_MILLI) > BREAK_EA){
+            if (((checkTime - startTime) / NANO_TO_MILLI) > BREAK_EA) {
                 //Log.d("EA_LOG", "executionTime for sortByGA: checkTime failed.");
                 break; //break if the 2min timewindow is to short.
             }
@@ -320,11 +386,67 @@ public class ActivityListEditor extends AppCompatActivity {
         searchAutoComplete.setText("");
         searchAutoComplete.product = null;
     }
+
     public boolean checkPrice(int budget, int totalCost) {
         if (budget < totalCost) {
             return false;
         }
         return true;
+    }
+
+    /**
+     * This method will check if the name of the shopping list is unique for the user
+     * @return
+     */
+    private boolean checkUniqueShoppingList(){
+        String tempListName = et_list_name.getText().toString();
+        lists =  dbH.getDBShoppingListsByUser(user);
+        for(ShoppingList slist : lists) {
+            if (slist.getName().compareTo(tempListName) == 0 && slist.getName().compareTo(myShoppingList.getName()) != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "ActivityListEditor Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.semesterdomain.semesterprojekt/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "ActivityListEditor Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app URL is correct.
+                Uri.parse("android-app://com.semesterdomain.semesterprojekt/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 }
 

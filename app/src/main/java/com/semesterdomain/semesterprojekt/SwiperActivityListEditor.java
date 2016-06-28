@@ -81,8 +81,6 @@ public class SwiperActivityListEditor extends Swiper {
             budget.setTextColor(Color.BLACK);
             sumPrice.setTextColor(Color.BLACK);
         }
-        //Log.d("LOGSUM", myShoppingList.getBudget()+"");
-        //Log.d("LOGSUM", myShoppingList.calculateSumPrice()+"");
     }
 
     /**

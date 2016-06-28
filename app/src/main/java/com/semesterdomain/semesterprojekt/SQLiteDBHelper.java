@@ -565,6 +565,9 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
             return false;
         }
         closeDatabase();
+
+        shoppingList.getMyProducts().remove(product);
+
         return true;
 
     }

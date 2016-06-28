@@ -7,12 +7,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/numberPicker"
         android:id="@+id/text_prodname" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/text_producer"
+        android:layout_toRightOf="@+id/numberPicker"
         android:layout_below="@+id/text_prodname" />
 
     <TextView
@@ -24,8 +26,16 @@
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/text_producer"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-
         android:textAlignment="center" />
+
+    <NumberPicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/numberPicker"
+        android:layout_alignBottom="@+id/text_producer"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+         />
 
 
 </RelativeLayout>

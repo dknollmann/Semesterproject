@@ -103,6 +103,7 @@ public class ActivityHomescreen extends AppCompatActivity {
      */
     public void addShoppingList(View view) {
         Intent intent = new Intent(this, ActivityListEditor.class);
+        intent.putExtra("user", user);
         startActivity(intent);
     }
 }
