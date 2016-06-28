@@ -64,7 +64,7 @@ public class SwiperActivityListEditor extends Swiper {
         mDownX = x;
         swiped = true;
         int i = listView.getPositionForView(v);
-        dbH.deleteDBProductFromList(mainList.get(i - 1), list);
+        dbH.deleteDBProductFromList(mainList.get(i), list);
     }
 
     /**
