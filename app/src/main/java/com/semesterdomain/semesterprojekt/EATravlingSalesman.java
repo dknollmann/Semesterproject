@@ -3,20 +3,22 @@ package com.semesterdomain.semesterprojekt;
 import java.util.Random;
 
 /**
- * The type Ea travling salesman.
+ * The type EATravlingSalesman implements the evolutionary algorithm (EA) for a TSP.
  */
 public class EATravlingSalesman {
 
     /**
-     * The constant mutationRate.
+     * The constant mutationRate if used to determine if a element of a shoppingtour should be mutated.
      */
     private static final double mutationRate = 0.00001;
 
     /**
-     * Selection ea population.
+     * The selection picks parents from the population for the childs of the next generation
+     * with the chooseParent method. And generates the new childs with the crossover method.
+     * After all childs are generated the childs replace the parents to creat the new population.
      *
-     * @param pop the pop
-     * @return the ea population
+     * @param pop the population of parents which were childs before.
+     * @return the new population of child which become the new parents
      */
     public static EAPopulation selection(EAPopulation pop) {
 
@@ -42,11 +44,11 @@ public class EATravlingSalesman {
     }
 
     /**
-     * Rand int int.
+     * Generates a random int in range of parameters.
      *
-     * @param min the min
-     * @param max the max
-     * @return the int
+     * @param min the minimum range for the int.
+     * @param max the maximum range for the int.
+     * @return the randomly generated int.
      */
     private static int randInt(int min, int max) {
         Random rand = new Random();
@@ -55,11 +57,11 @@ public class EATravlingSalesman {
     }
 
     /**
-     * Mutate.
+     * Mutates a signle shoppingtour. The mutation swaps random positions of the shoppingtour around.
+     * This method also adds the entrance and cash register after the mutation done.
      *
      * @param EATour the ea tour
      */
-//Mutate a EATour using swap mutation
     private static void mutate(EATour EATour) {
         //Loop through EATour products
         for (int tourPos1 = 1; tourPos1 < EATour.tourSize() - 1; tourPos1++) {
@@ -81,10 +83,10 @@ public class EATravlingSalesman {
     }
 
     /**
-     * Choose parent ea tour.
+     * Chooses a tour as a parent for the childs from the population based on the fitness.
      *
-     * @param pop the pop
-     * @return the ea tour
+     * @param pop the population where the parent should be choosen from.
+     * @return the choosen tour.
      */
     public static EATour chooseParent(EAPopulation pop) {
 
@@ -108,7 +110,7 @@ public class EATravlingSalesman {
                 return pop.getTour(i);
             }
         }
-        //fail
+        //no parent picked -> problem
         return null;
     }
 
@@ -155,10 +157,14 @@ public class EATravlingSalesman {
 
 
     /**
-     * Crossover ea tour.
+     * Sets the elements of a new child based on the paramenters which are perant for the child.
+     * The choosen elements from the perants are placed in between the last and first postion of the child.
+     * This is done so that the entrance and the cash register do not get replaced and mess up the oder of elements.
+     * It has also has to be considered that the first and last postion of the perant should not be picked as
+     * elements for the child.
      *
-     * @param parent1 the parent 1
-     * @param parent2 the parent 2
+     * @param parent1 the first parent where elements are choosen from.
+     * @param parent2 the secound parent where elements are choosen from.
      * @return the ea tour
      */
     public static EATour crossover(EATour parent1, EATour parent2) {
@@ -167,13 +173,13 @@ public class EATravlingSalesman {
         child.getTour().add(0, EATour.entrance);
         child.getTour().add(EATour.cashRegister);
 
-        // Get start and end sub tour positions for parent1's tour
+        //Get start and end sub tour positions for parent1's tour
 
         int startPos = randInt(1, parent1.tourSize() - 1);
         int endPos = randInt(1, parent1.tourSize() - 1);
-        // Loop and add the sub tour from parent1 to our child
+        //Loop and add the sub tour from parent1 to our child
         for (int i = 1; i < child.tourSize() - 1; i++) {
-            // If our start position is less than the end position
+            //If our start position is less than the end position
             if (startPos < endPos && i > startPos && i < endPos) {
                 child.setProductToTour(i, parent1.getProductFromTour(i));
             } // If our start position is larger
@@ -186,7 +192,7 @@ public class EATravlingSalesman {
 
         //Loop through parent2's product tour
         for (int i = 1; i < parent2.tourSize() - 1; i++) {
-            // If child doesn't have the product add it
+            //If child doesn't have the product add it
             if (!child.tourContainsProduct(parent2.getProductFromTour(i))) {
                 //Loop to find a spare position in the child's tour
                 for (int ii = 1; ii < child.tourSize() - 1; ii++) {
@@ -205,3 +211,4 @@ public class EATravlingSalesman {
 
 
 }
+

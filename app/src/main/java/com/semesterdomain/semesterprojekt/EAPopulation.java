@@ -1,22 +1,20 @@
 package com.semesterdomain.semesterprojekt;
 
 /**
- * The type Ea population.
+ * The type EAPopulation represent a population of tours for the EA.
  */
 public class EAPopulation {
 
     /**
-     * The Ea tours.
+     * The population of EAtours.
      */
-//Holds population of EATours
     EATour[] EATours;
 
     /**
-     * Instantiates a new Ea population.
+     * Instantiates a new Ea population with the given populationSize.
      *
-     * @param populationSize the population size
+     * @param populationSize the size of the pupulation for the EA.
      */
-//Construct a population
     public EAPopulation(int populationSize) {
         EATours = new EATour[populationSize];
 
@@ -29,33 +27,31 @@ public class EAPopulation {
     }
 
     /**
-     * Save tour.
+     * Save a tour to the EATour Array.
      *
-     * @param index  the index
-     * @param EATour the ea tour
+     * @param index  the index in which position the tour should be saved.
+     * @param EATour the EATour Array where the tour should be saved to.
      */
-//Saves a EATour
     public void saveTour(int index, EATour EATour) {
         EATours[index] = EATour;
     }
 
     /**
-     * Gets tour.
+     * Gets a tour from the pululation.
      *
-     * @param index the index
+     * @param index the index that should be returned.
      * @return the tour
      */
-//Gets a tour from population
     public EATour getTour(int index) {
         return EATours[index];
     }
 
     /**
-     * Gets fittest.
+     * Gets the fittest tour of the population.
      *
-     * @return the fittest
+     * @return the fittest tour of the population
      */
-//Gets the best tour in the population
+
     public EATour getFittest() {
         EATour fittest = EATours[0];
         // Loop through individuals to find fittest
@@ -68,9 +64,9 @@ public class EAPopulation {
     }
 
     /**
-     * Gets average distance.
+     * Gets the average distance of a single tour.
      *
-     * @return the average distance
+     * @return the average distance of a the tour.
      */
     public double getAverageDistance() {
         //Loop through individuals to find fittest
@@ -85,12 +81,12 @@ public class EAPopulation {
     }
 
     /**
-     * Population size int.
+     * Gets the current size of the population array
      *
-     * @return the int
+     * @return the size of the population array.
      */
-// Gets population size
     public int populationSize() {
         return EATours.length;
     }
 }
+

@@ -5,9 +5,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ListView;
-import android.util.Log;
+
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * The type Activity homescreen is used for handling the user interaction on the Homescreen.
@@ -17,11 +16,11 @@ public class ActivityHomescreen extends AppCompatActivity {
     /**
      * The Main list holds all shoppinglists for the user of the App.
      */
-    ArrayList<ShoppingList> mainList = new ArrayList<>();
+    ArrayList<ShoppingList> homescreenShoppingLists = new ArrayList<>();
     /**
      * The View main list is the view for the list of shoppinglists.
      */
-    ListView viewMainList;
+    ListView lv_homescreenShoppingLists;
     /**
      * The adapter for shoppinglists.
      */
@@ -67,10 +66,10 @@ public class ActivityHomescreen extends AppCompatActivity {
         //at the moment this is just a dummy user so that the DB can be tested.
         user = new User("Testuser0");
 
-        viewMainList = (ListView) findViewById(R.id.mainList);
-        SwiperActivityHomescreen swipe = new SwiperActivityHomescreen(viewMainList, this.getApplicationContext(), user, this, mainList);
-        shoppingListAdapter = new ShoppingListAdapter(ActivityHomescreen.this, mainList, swipe);
-        viewMainList.setAdapter(shoppingListAdapter);
+        lv_homescreenShoppingLists = (ListView) findViewById(R.id.mainList);
+        SwiperActivityHomescreen swipe = new SwiperActivityHomescreen(lv_homescreenShoppingLists, this.getApplicationContext(), user, this, homescreenShoppingLists);
+        shoppingListAdapter = new ShoppingListAdapter(ActivityHomescreen.this, homescreenShoppingLists, swipe);
+        lv_homescreenShoppingLists.setAdapter(shoppingListAdapter);
 
         dbHelper = new SQLiteDBHelper(this.getApplicationContext());
 
@@ -107,3 +106,4 @@ public class ActivityHomescreen extends AppCompatActivity {
         startActivity(intent);
     }
 }
+

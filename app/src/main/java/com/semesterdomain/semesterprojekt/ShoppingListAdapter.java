@@ -59,8 +59,7 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
 
         // Populate the data into the template view using the data object
         tvListName.setText(shoppingList.getName());
-        //Log.d("LOG", shoppingList.calculateSumPrice(shoppingList.getMyProducts()) + "");
-        tvListPrice.setText(String.valueOf(shoppingList.calculateSumPrice(shoppingList.getMyProducts())));
+        tvListPrice.setText(String.valueOf(shoppingList.calculateSumPrice()));
 
         v.setOnTouchListener(mTouchListener);
 

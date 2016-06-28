@@ -181,6 +181,7 @@ public abstract class Swiper implements View.OnTouchListener {
                     }
                 }
                 mItemIdTopMap.clear();
+                adapter.notifyDataSetChanged();
                 return true;
             }
         });

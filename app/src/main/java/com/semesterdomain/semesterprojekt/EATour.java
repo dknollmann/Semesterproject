@@ -6,38 +6,38 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * The type Ea tour.
+ * The type EATour represents a single shoppingtour through the shop.
  */
 public class EATour {
 
     /**
-     * The Tour.
+     * The Tour array holds the tour of products.
      */
-//Holds the tour of products
     private ArrayList tour = new ArrayList<Product>();
 
     /**
-     * The Fitness.
+     * The Fitness for a tour the fitness describes how suited a tour is for the TSP. A vaule between 0 and 1.
      */
     private double fitness = 0;
+
     /**
-     * The Distance.
+     * The Distance of the tour. The way trough the shop to every shoppinglist item also including the cash register and the entrance.
      */
     private int distance = 0;
+
     /**
-     * The constant entrance.
+     * The constant fix portions for the entrance of the shop.
      */
-//fix portions for the entrance and the Cash Register
     public static Product entrance = new Product(0, 0);
+
     /**
-     * The constant cashRegister.
+     * The constant fix portions for the cash register of the shop.
      */
     public static Product cashRegister = new Product(0, 50);
 
     /**
-     * Instantiates a new Ea tour.
+     * Instantiates a new blank (null) tour with the size of the number of products.
      */
-//Constructs a blank tour
     public EATour() {
         for (int i = 0; i < EATourManager.numberOfProducts(); i++) {
             tour.add(null);
@@ -45,9 +45,9 @@ public class EATour {
     }
 
     /**
-     * Instantiates a new Ea tour.
+     * Instantiates a new Eatour.
      *
-     * @param tour the tour
+     * @param tour the shoppinglist for which a tour should be created.
      */
     public EATour(ArrayList<Product> tour) {
 
@@ -55,9 +55,8 @@ public class EATour {
     }
 
     /**
-     * Generate individual.
+     * Generates a random individual by shuffling for the EA.
      */
-// Creates a random individual
     public void generateIndividual() {
         //Loop through all the destination products and add them to the tour
         for (int productIndex = 0; productIndex < EATourManager.numberOfProducts(); productIndex++) {
@@ -72,37 +71,34 @@ public class EATour {
     }
 
     /**
-     * Gets product from tour.
+     * Gets a product from the tour.
      *
-     * @param tourPosition the tour position
-     * @return the product from tour
+     * @param tourPosition the index of the product that should be returned.
+     * @return the product from tour searched by the index.
      */
-//Gets a product from the tour
     public Product getProductFromTour(int tourPosition) {
 
         return (Product) tour.get(tourPosition);
     }
 
     /**
-     * Sets product to tour.
+     * Sets a product in a certain position within a tour.
+     * The fitness and distance are also set to zero because the shoppingtour got altered.
      *
-     * @param tourPosition the tour position
-     * @param product      the product
+     * @param tourPosition the index of the tour where the products should be added to.
+     * @param product      the product that should be added to the shoppingtour.
      */
-//Sets a product in a certain position within a tour
     public void setProductToTour(int tourPosition, Product product) {
         tour.set(tourPosition, product);
-        //If the EATours been altered the fitness and distance need to be reseated
         fitness = 0;
         distance = 0;
     }
 
     /**
-     * Gets fitness.
+     * Calculates the fitness for a shoppingtour.
      *
-     * @return the fitness
+     * @return the fitness of the shoppingtour must be a value randing from 0 to 1.
      */
-//Gets the EATours fitness
     public double getFitness() {
         if (fitness == 0) {
             fitness = 1 / (double) getDistance();
@@ -111,11 +107,10 @@ public class EATour {
     }
 
     /**
-     * Gets distance.
+     * Calculates the total distance of a shoppingtour.
      *
-     * @return the distance
+     * @return the distance of a shoppingtour.
      */
-//Gets the total distance of the tour
     public int getDistance() {
         if (distance == 0) {
             int tourDistance = 0;
@@ -126,7 +121,7 @@ public class EATour {
                 //the Product the EA is travelling to
                 Product destinationProduct = null;
                 //Check we're not on our tour's last product, if we are set our
-                // tour's final destination product to our starting product
+                //tour's final destination product to our starting product
                 if (productIndex + 1 < tourSize()) {
                     destinationProduct = getProductFromTour(productIndex + 1);
                 } else {
@@ -141,30 +136,28 @@ public class EATour {
     }
 
     /**
-     * Tour size int.
+     * Gets the number of products of a shoppingtour.
      *
-     * @return the int
+     * @return the int size of the shoppingtour.
      */
-//Get number of products on our tour
     public int tourSize() {
         return tour.size();
     }
 
     /**
-     * Tour contains product boolean.
+     * Check if the tour already contains a product.
      *
-     * @param product the product
-     * @return the boolean
+     * @param product the product that maybe already part of the shoppingtour.
+     * @return the boolean indicates if the product is already part of the shoppingtour.
      */
-// heck if the tour contains a product
     public boolean tourContainsProduct(Product product) {
         return tour.contains(product);
     }
 
     /**
-     * To string string.
+     * Used to log the products of a shoppingtour.
      *
-     * @return the string
+     * @return all products of a shoppingtour as a string.
      */
     @Override
     public String toString() {
@@ -176,11 +169,12 @@ public class EATour {
     }
 
     /**
-     * Gets tour.
+     * Gets a tour.
      *
-     * @return the tour
+     * @return the tour as an ArrayList
      */
     public ArrayList<Product> getTour() {
         return tour;
     }
 }
+

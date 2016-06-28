@@ -1,6 +1,7 @@
 package com.semesterdomain.semesterprojekt;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -36,13 +37,12 @@ public class ActivityListEditor extends AppCompatActivity {
     ProductListAdapter adapter;
 
     /**
-     * The Product lv.
+     * This ListView is used for diplaying products.
      */
     ListView product_lv;
     /**
-     * The Et list name.
+     * This EditText is used for display the ShoppingListname.
      */
-//displays ShoppingListname
     EditText et_list_name;
     /**
      * The Et budget.
@@ -76,12 +76,15 @@ public class ActivityListEditor extends AppCompatActivity {
     /**
      * The constant NANO_TO_MILLI is used to convert Nanoseconds into Milliseconds.
      */
-    private final int NANO_TO_MILLI = 100;
+    private final int NANO_TO_MILLI = 10000;
 
+    /**
+     * The constant BREAK_EA is used to stop the EA when timeWindows is exceeded.
+     */
     private final int BREAK_EA = 100;
 
     /**
-     * On restart.
+     * On restart start the ActivityHomescreen with the shoppinglist as an extra.
      */
     @Override
     protected void onRestart() {
@@ -94,9 +97,9 @@ public class ActivityListEditor extends AppCompatActivity {
     }
 
     /**
-     * On create.
+     * On create implements the core functionality for this Acitivity.
      *
-     * @param savedInstanceState the saved instance state
+     * @param savedInstanceState the savedInstanceState for properly displaying the Acitivity.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +137,6 @@ public class ActivityListEditor extends AppCompatActivity {
             adapter = new ProductListAdapter(this, prodListItems, swiper);
             product_lv.setAdapter(adapter);
 
-            //neuimplementierung
             dbH.addDBList(myShoppingList);
         } else {
             SwiperActivityListEditor swiper = new SwiperActivityListEditor(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList);
@@ -142,11 +144,11 @@ public class ActivityListEditor extends AppCompatActivity {
             product_lv.setAdapter(adapter);
 
             adapter.clear();
-            for (Product p : myShoppingList.getMyProducts()) { //dbH.getDBProductsFromList(myShoppingList)
+            for (Product p : myShoppingList.getMyProducts()) {
                 adapter.add(p);
                 //Log.d("LOG", "add");
             }
-            displaySumPrice();
+            displaySumPrice(myShoppingList);
         }
 
         et_list_name.addTextChangedListener(new AfterTextChangedWatcher(myShoppingList, et_list_name));
@@ -170,30 +172,22 @@ public class ActivityListEditor extends AppCompatActivity {
                 if (!hasFocus) {
                     myShoppingList.setBudget(Integer.parseInt(et_budget.getText().toString()));
                     dbH.updateDBBudgetForList(myShoppingList);
+                    EditText budget = (EditText) findViewById(R.id.et_budget);
+                    TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
+                    if(myShoppingList.getBudget() < myShoppingList.getSumPrice()){
+                        budget.setTextColor(Color.RED);
+                        sumPrice.setTextColor(Color.RED);
+                    }else{
+                        budget.setTextColor(Color.BLACK);
+                        sumPrice.setTextColor(Color.BLACK);
+                    }
                 }
             }
         });
-
-
-        //define Header of Productlist
-        /*list_header = new EditText(this);
-        list_header.addTextChangedListener(new AfterTextChangedWatcher(myShoppingList, list_header));
-        list_header.setText(myShoppingList.getName());
-        list_header.setSingleLine();*/
-        //   product_lv.addHeaderView(list_header);
-
-        //For the search widget
-        //SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        // Assumes current activity is the searchable activity
-        //prodSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        //prodSearchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-
-        //Log.d("LOG", "onCreateListActivity");
-
     }
 
     /**
-     * Add product.
+     * Is used for the add product button.
      *
      * @param view the view
      */
@@ -201,46 +195,59 @@ public class ActivityListEditor extends AppCompatActivity {
         if (searchAutoComplete.product != null) {
             adapter.add(searchAutoComplete.product);
             myShoppingList.getMyProducts().add(searchAutoComplete.product);
-            //Log.d("LOG ", "" + myShoppingList.getListId());
             dbH.addDBProductToList(searchAutoComplete.product, myShoppingList);
         }
-        displaySumPrice();
+        displaySumPrice(myShoppingList);
+        if(!checkPrice(myShoppingList.getBudget(), myShoppingList.calculateSumPrice())){
+            EditText budget = (EditText) findViewById(R.id.et_budget);
+            TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
+            budget.setTextColor(Color.RED);
+            sumPrice.setTextColor(Color.RED);
+            Log.d("LOGSUM", myShoppingList.getBudget()+"");
+            Log.d("LOGSUM", myShoppingList.calculateSumPrice()+"");
+        }
     }
 
 
     /**
      * Displays the SumPrice inside the view.
      */
-    public void displaySumPrice() {
+    public void displaySumPrice(ShoppingList list) {
         TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
-        sumPrice.setText(myShoppingList.calculateSumPrice(prodListItems) + "€");
+        sumPrice.setText(list.calculateSumPrice()+"");
     }
 
     /**
-     * On back pressed.
+     * When the backbutton on the buttom side of the smartphone is pressed the ActivityHomescreen is started.
      */
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(this, ActivityHomescreen.class);
+        if(et_budget.hasFocus()) {
+            et_budget.clearFocus();
+        }
+        if (et_list_name.hasFocus()){
+            et_list_name.clearFocus();
+        }
         startActivity(intent);
     }
 
     /**
-     * Gets items from db.
+     * Gets products from the DB based on the typed searchTerm.
      *
-     * @param searchTerm the search term
+     * @param searchTerm the searchTerm is used to search the DB.
      * @return the items from db
      */
 // this function is used in CustomAutoCompleteTextChangedListener.java
     public ArrayList<Product> getItemsFromDb(String searchTerm) {
 
-        // add items on the array dynamically
+        // add items to the array dynamically
         ArrayList<Product> products = dbH.getDBProductsBySearchTerm(searchTerm);
         return products;
     }
 
     /**
-     * Print array list.
+     * Prints the name of the products of an ArrayList to Log.d.
      *
      * @param list the list
      */
@@ -248,18 +255,17 @@ public class ActivityListEditor extends AppCompatActivity {
         for (Product prod : list) {
             //Log.d("LOG", prod.getProductName());
         }
-        //Log.d("LOG", "printArrayList");
     }
 
     /**
-     * Sort by ga.
+     * Used for the sort button. This Method launches the EA impelmention and handles the iterations of the generations.
      *
-     * @param view the view
+     * @param view the view that is used to display the sorted shoppinglist.
      */
     public void sortByGA(View view) {
         //long startTime = System.nanoTime();
         //long endTime = System.nanoTime();
-        //long executionTime = (endTime - startTime) / 1000000;  //divide by 1000000 to get milliseconds.
+        //long executionTime = (endTime - startTime) / NANO_TO_MILLI;
         //Log.d("DB_LOG", "executionTime for onResume (ActuvutyHomescreen: " + String.valueOf(executionTime));
 
         long startTime = System.nanoTime();
@@ -306,12 +312,19 @@ public class ActivityListEditor extends AppCompatActivity {
     }
 
     /**
-     * Delete text.
+     * Used for the delete button next to the search input it clears the typed text.
      *
-     * @param view the view
+     * @param view the view that is used to display the delete button.
      */
     public void deleteText(View view) {
         searchAutoComplete.setText("");
         searchAutoComplete.product = null;
     }
+    public boolean checkPrice(int budget, int totalCost) {
+        if (budget < totalCost) {
+            return false;
+        }
+        return true;
+    }
 }
+

@@ -10,7 +10,8 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * The type Search auto complete adapter.
+ * The type SearchAutoCompleteAdapter is used to handle the EditText which
+ * is used for searching product.
  */
 public class SearchAutoCompleteAdapter extends ArrayAdapter<Product> {
 
@@ -22,16 +23,15 @@ public class SearchAutoCompleteAdapter extends ArrayAdapter<Product> {
      */
     public SearchAutoCompleteAdapter(Context context, List<Product> products) {
         super(context, 0, products);
-
     }
 
     /**
-     * Gets view.
+     * Handles the drop down menu of suggestions querried from the DB.
      *
-     * @param position    the position
-     * @param convertView the convert view
-     * @param parent      the parent
-     * @return the view
+     * @param position    the position of the selected item of the drop down menu.
+     * @param convertView the convertView is used to listen to events on a drop down menu item.
+     * @param parent      the parent is default.
+     * @return the view of the selected drop down menu item.
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -57,3 +57,4 @@ public class SearchAutoCompleteAdapter extends ArrayAdapter<Product> {
         return convertView;
     }
 }
+

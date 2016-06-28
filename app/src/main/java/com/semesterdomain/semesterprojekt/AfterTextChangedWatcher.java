@@ -5,21 +5,21 @@ import android.text.TextWatcher;
 import android.widget.EditText;
 
 /**
- * The type After text changed watcher.
+ * The type AfterTextChangedWatcher is used to an EditText object so the App can react if user changes a value of an EditText.
  */
 public class AfterTextChangedWatcher implements TextWatcher {
 
     /**
-     * The Shopping list.
+     * The shoppingList where the name should be changed.
      */
     ShoppingList shoppingList;
     /**
-     * The Edit text.
+     * The EditText where the text should be watched.
      */
     EditText editText;
 
     /**
-     * Instantiates a new After text changed watcher.
+     * Instantiates a new AfterTextChangedWatcher.
      *
      * @param shoppingList the shopping list
      * @param editText     the edit text
@@ -30,7 +30,7 @@ public class AfterTextChangedWatcher implements TextWatcher {
     }
 
     /**
-     * Before text changed.
+     * Not implemented.
      *
      * @param s     the s
      * @param start the start
@@ -43,7 +43,7 @@ public class AfterTextChangedWatcher implements TextWatcher {
     }
 
     /**
-     * On text changed.
+     * Not implemented.
      *
      * @param s      the s
      * @param start  the start
@@ -56,9 +56,9 @@ public class AfterTextChangedWatcher implements TextWatcher {
     }
 
     /**
-     * After text changed.
+     * This method will set the a new name for the shoppinglist when the user exits the EditText for the shoppingListName.
      *
-     * @param s the s
+     * @param s is the
      */
     @Override
     public void afterTextChanged(Editable s) {
@@ -66,3 +66,4 @@ public class AfterTextChangedWatcher implements TextWatcher {
         shoppingList.setName(editText.getText().toString());
     }
 }
+

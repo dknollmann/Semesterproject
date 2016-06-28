@@ -3,45 +3,43 @@ package com.semesterdomain.semesterprojekt;
 import java.util.ArrayList;
 
 /**
- * The type Ea tour manager.
+ * The type EATourManager is a helper class for the tours of the EA.
  */
 public class EATourManager {
 
     /**
-     * The constant destinationProducts.
+     * The constant destinationProducts holds products.
      */
-//Holds the products
+
     public static ArrayList<Product> destinationProducts = new ArrayList<Product>();
 
     /**
-     * Add product.
+     * Adds a product to the destinationProducts.
      *
-     * @param product the product
+     * @param product the product that should be added.
      */
-//Adds a destination product
     public static void addProduct(Product product) {
         destinationProducts.add(product);
     }
 
     /**
-     * Gets product.
+     * Gets a products of the  destinationProducts array.
      *
-     * @param index the index
-     * @return the product
+     * @param index the index which should be returned
+     * @return the product at the index position
      */
-//Get a product
     public static Product getProduct(int index) {
         return (Product) destinationProducts.get(index);
     }
 
     /**
-     * Number of products int.
+     * Gets the size of the destinationProducts.
      *
-     * @return the int
+     * @return the size of the destinationProducts.
      */
-//Get the number of destination products
     public static int numberOfProducts() {
         return destinationProducts.size();
     }
 
 }
+

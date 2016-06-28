@@ -10,21 +10,21 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 /**
- * The type Product list adapter.
+ * The type ProductListAdapter regulates how the shoppinglist is displayed and edited in the ActivityListEditor.
  */
 public class ProductListAdapter extends ArrayAdapter<Product> {
 
     /**
-     * The M touch listener.
+     * The mTouchListener is used to listen to interactions with the items of the displayed shoppinglist.
      */
     View.OnTouchListener mTouchListener;
 
     /**
-     * Instantiates a new Product list adapter.
+     * Instantiates a new ProductListAdapter .
      *
-     * @param context  the context
-     * @param products the products
-     * @param listener the listener
+     * @param context  the context.
+     * @param products the products that are displayed inside the shoppinglist.
+     * @param listener the listener that is is used to edit the shoppinglist.
      */
     public ProductListAdapter(Context context, ArrayList<Product> products, View.OnTouchListener listener) {
         super(context, R.layout.prod_list_item, products);
@@ -32,12 +32,12 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     }
 
     /**
-     * Gets view.
+     * Handles a sinlge item of the shopppinglist.
      *
-     * @param position    the position
-     * @param convertView the convert view
-     * @param parent      the parent
-     * @return the view
+     * @param position    the index of the selected shoppinglist product.
+     * @param convertView the convertView is used to listen to events on a single shoppinglist item.
+     * @param parent      the parent view is default.
+     * @return the view of the selected shoppinglist product.
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -65,3 +65,4 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     }
 
 }
+

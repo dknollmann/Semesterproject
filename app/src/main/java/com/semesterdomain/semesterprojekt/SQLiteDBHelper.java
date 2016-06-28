@@ -26,16 +26,18 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
      * The constant DATABASE_VERSION is only used for the super constructor from
      * the SQLiteOpenHelper.
      */
-
     private static final int DATABASE_VERSION = 1;
+
     /**
      * The constant BUFFER_SIZE is used for coping the DB.
      */
     private static final int BUFFER_SIZE = 1024;
+
     /**
      * The constant DB_NAME simply stores the filename of the SQLite DB which is used for App.
      */
     private static final String DB_NAME = "ShoppingDB32kRecordsFinal.sqlite";
+
     /**
      * The constant DB_PATH stores the filepath to the SQLite DB file which should be loaded.
      */
@@ -44,7 +46,6 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     /**
      * The constant TBL_PRODUCT.
      */
-
     private static final String TBL_PRODUCT = "PRODUCT";
     /**
      * The constant TBL_LIST.
@@ -76,6 +77,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
      * The Db helper context.
      */
     private final Context dbHelperContext;
+
     /**
      * The SQLiteDatabase is used in many other classed for operating with the DB.
      */
@@ -85,7 +87,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     /**
      * Instantiates a new SQLiteDBHelper.
      *
-     * @param context the context
+     * @param context the context.
      */
     SQLiteDBHelper(Context context) {
         super(context, DB_NAME, null, DATABASE_VERSION);
@@ -93,7 +95,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Imports the DB and if the databasefile exists the DB will be copied.
+     * Imports the DB and if the database file exists the DB will be copied.
      */
     public void importDatabase() {
 
@@ -107,7 +109,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     }
 
     /**
-     * Checks if the databasefile exists.
+     * Checks if the database file exists.
      *
      * @return the boolean
      */
@@ -547,7 +549,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     /**
      * Deletes a single products from the DB record for a single shoppinglist.
      *
-     * @param product the product
+     * @param product the product that should be deleted.
      * @param shoppingList    the shoppinglist where the product should be deleted from.
      * @return the boolean indicates if the deletion was succesfull or not.
      */

@@ -1,9 +1,13 @@
 package com.semesterdomain.semesterprojekt;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -46,6 +50,7 @@ public class SwiperActivityListEditor extends Swiper {
     @Override
     protected void onItemSwipeLeft(final View v, float x) {
         v.setEnabled(false); // need to disable the view for the animation to run
+        Product prodToRemove;
 
         // stacked the animations to have the pause before the views flings off screen
         v.animate().setDuration(ANIMATION_DURATION).translationX(-v.getWidth() / 3).withEndAction(new Runnable() {
@@ -64,7 +69,20 @@ public class SwiperActivityListEditor extends Swiper {
         mDownX = x;
         swiped = true;
         int i = listView.getPositionForView(v);
-        dbH.deleteDBProductFromList(mainList.get(i), list);
+        TextView result = (TextView) activity.findViewById(R.id.text_sumPrice);
+        prodToRemove = mainList.get(i);
+
+        dbH.deleteDBProductFromList(prodToRemove, list);
+        result.setText(""+list.calculateSumPrice());
+
+        if(list.getBudget() >= list.calculateSumPrice()) {
+            EditText budget = (EditText) activity.findViewById(R.id.et_budget);
+            TextView sumPrice = (TextView) activity.findViewById(R.id.text_sumPrice);
+            budget.setTextColor(Color.BLACK);
+            sumPrice.setTextColor(Color.BLACK);
+        }
+        //Log.d("LOGSUM", myShoppingList.getBudget()+"");
+        //Log.d("LOGSUM", myShoppingList.calculateSumPrice()+"");
     }
 
     /**
