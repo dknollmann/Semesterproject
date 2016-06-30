@@ -7,7 +7,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/search_text_prodname" />
+        android:id="@+id/search_text_prodname"
+        android:textColor="@color/black"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -24,6 +25,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/search_text_producer"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:textColor="@color/black"
 
         android:textAlignment="center" />
 

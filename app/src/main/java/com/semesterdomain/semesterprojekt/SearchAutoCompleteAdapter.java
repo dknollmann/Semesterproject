@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -51,7 +52,10 @@ public class SearchAutoCompleteAdapter extends ArrayAdapter<Product> {
         //Populate the data into the template view using the data object
         tvProdName.setText(product.getProductName());
         tvManufacturer.setText(product.getManufacturer());
-        tvPrice.setText(product.getPrice() + "€");
+
+        double tmpPrice = product.getPrice()/ActivityListEditor.EUROCONVERSION;
+        tvPrice.setText(new DecimalFormat("##.##").format(tmpPrice) + "€");
+
 
         //Return the completed view to render on screen
         return convertView;

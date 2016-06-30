@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.NumberPicker;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -72,13 +73,16 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         //Populate the data into the template view using the data object
         tvProdName.setText(product.getProductName());
         tvManufacturer.setText(product.getManufacturer());
-        tvPrice.setText(product.getPrice() + "€");
+
+        double tmpPrice = product.getPrice()/ActivityListEditor.EUROCONVERSION;
+        tvPrice.setText(new DecimalFormat("##.##").format(tmpPrice) + "€");
         tvAmount.setText(String.valueOf(dbH.getDBAmountofProductFromList(slist, product)));
+
         tvAmount.setSingleLine();
 
         //npAmount.setEnabled(true);
         if (dbH.isMarked(slist, product) > 0) {
-            convertView.setBackgroundColor(Color.GREEN);
+            convertView.setBackgroundColor(Color.parseColor(ActivityListEditor.ISMARKT_COLOR));
         }
 
         tvAmount.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -88,7 +92,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
                     product.setAmount(Integer.parseInt(tvAmount.getText().toString()));
                     dbH.setAmount(slist, product);
                     TextView sumPrice = (TextView) activity.findViewById(R.id.text_sumPrice);
-                    sumPrice.setText(String.valueOf(slist.calculateSumPrice() + "€"));
+                    double tmpSum = slist.calculateSumPrice()/ActivityListEditor.EUROCONVERSION;
+                    sumPrice.setText(new DecimalFormat("##.##").format(tmpSum) + "€");
                 }
             }
         });

@@ -15,6 +15,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -109,6 +110,10 @@ public class ActivityListEditor extends AppCompatActivity {
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
+    public static final double EUROCONVERSION = 100.0;
+
+    public static final String ISMARKT_COLOR = "#a2e665";
+
     private GoogleApiClient client;
 
 
@@ -184,6 +189,8 @@ public class ActivityListEditor extends AppCompatActivity {
             SwiperActivityListEditor swiper = new SwiperActivityListEditor(product_lv, this, this, prodListItems, myShoppingList);
             adapter = new ProductListAdapter(this, prodListItems, swiper, dbH, myShoppingList, this);
             product_lv.setAdapter(adapter);
+            double tmpSum = myShoppingList.getSumPrice()/EUROCONVERSION;
+            tv_sumPrice.setText(new DecimalFormat("##.##").format(tmpSum) + "€");
 
             dbH.addDBList(myShoppingList);
             listNameIsSaved = true;
@@ -218,8 +225,8 @@ public class ActivityListEditor extends AppCompatActivity {
                 }
             }
         });
-
-        et_budget.setText(String.valueOf(myShoppingList.getBudget() + "€"));
+        double tmpBudget = myShoppingList.getBudget()/EUROCONVERSION;
+        et_budget.setText(new DecimalFormat("##.##").format(tmpBudget) + "€");
         et_budget.setSingleLine();
         if (myShoppingList.getBudget() < myShoppingList.getSumPrice()) {
             et_budget.setTextColor(Color.RED);
@@ -233,11 +240,15 @@ public class ActivityListEditor extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     //avoid empty et_budget
-                    if (et_budget.getText().toString().compareTo("") == 0) {
-                        Log.d("LOGFOCUS", et_budget.getText() + "");
-                        et_budget.setText("" + myShoppingList.getBudget());
+                    String budgetText = et_budget.getText().toString();
+                    //if (budgetText.compareTo("") == 0 || budgetText.charAt(budgetText.length()-1) != '€') {
+                    if (budgetText.compareTo("") == 0 || budgetText.charAt(budgetText.length()-1) != '€') {
+                        double tmpBudget = myShoppingList.getBudget()/EUROCONVERSION;
+                        et_budget.setText(new DecimalFormat("##.##").format(tmpBudget) + "€");
                     }
-                    myShoppingList.setBudget(Integer.parseInt(et_budget.getText().toString()));
+
+                    String tmpBudget = cutlastLetterOfString(et_budget.getText().toString());
+                    myShoppingList.setBudget(Integer.parseInt(tmpBudget) * (int) EUROCONVERSION);
                     dbH.updateDBBudgetForList(myShoppingList);
                     EditText et_budget = (EditText) findViewById(R.id.et_budget);
                     TextView tv_sumPrice = (TextView) findViewById(R.id.text_sumPrice);
@@ -286,7 +297,10 @@ public class ActivityListEditor extends AppCompatActivity {
      */
     public void displaySumPrice(ShoppingList list) {
         TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
-        sumPrice.setText(list.calculateSumPrice() + "€");
+
+        double tmpSum = list.calculateSumPrice()/EUROCONVERSION;
+        sumPrice.setText(new DecimalFormat("##.##").format(tmpSum) + "€");
+        Log.d("LOG", " displaySumPrice");
     }
 
     /**
@@ -426,6 +440,12 @@ public class ActivityListEditor extends AppCompatActivity {
             }
         }
         return true;
+    }
+    private String cutlastLetterOfString(String str){
+        if(str != null && str.length() > 0 && str.charAt(str.length()-1)=='€'){
+            str = str.substring(0, str.length()-1);
+        }
+        return str;
     }
 
  /*   @Override

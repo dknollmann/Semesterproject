@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -59,7 +60,9 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
 
         // Populate the data into the template view using the data object
         tvListName.setText(shoppingList.getName());
-        tvListPrice.setText(String.valueOf(shoppingList.calculateSumPrice()));
+
+        double tmpSum = shoppingList.calculateSumPrice()/ActivityListEditor.EUROCONVERSION;
+        tvListPrice.setText(new DecimalFormat("##.##").format(tmpSum) + "€");
 
         v.setOnTouchListener(mTouchListener);
 

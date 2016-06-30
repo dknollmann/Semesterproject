@@ -28,7 +28,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/text_producer"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@color/black"/>
     <EditText
         android:layout_width="30dp"
         android:layout_height="match_parent"

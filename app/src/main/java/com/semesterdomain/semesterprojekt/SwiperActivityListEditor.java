@@ -109,7 +109,7 @@ public class SwiperActivityListEditor extends Swiper {
             v.setBackgroundColor(Color.parseColor("#fafafa"));
         } else if (isBought == 0) {
             dbH.markAsInShoppingCart(list, product);
-            v.setBackgroundColor(Color.GREEN);
+            v.setBackgroundColor(Color.parseColor(ActivityListEditor.ISMARKT_COLOR));
         } else {
             Log.d("LOG", "isbought is not set");
         }

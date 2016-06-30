@@ -34,7 +34,7 @@
                 android:layout_weight=".9"
                 android:layout_toLeftOf="@+id/clear"
                 android:layout_toStartOf="@+id/clear"
-                android:popupBackground="@color/colorPrimary"
+                android:popupBackground="@android:color/background_light"
                 android:layout_marginLeft="5dp"
                 android:background="@android:color/transparent"
                 ></com.semesterdomain.semesterprojekt.SearchAutoCompleteView>
@@ -92,18 +92,6 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/et_shoppingListname" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="sortieren"
-        android:layout_weight=".2"
-        android:id="@+id/btn_back"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:background="@drawable/addbutton"
-        android:onClick="sortByGA" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -115,24 +103,40 @@
         android:id="@+id/bottom_line"
         android:weightSum="1">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="sortieren"
+            android:layout_weight=".2"
+            android:id="@+id/btn_back"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/addbutton"
+            android:onClick="sortByGA" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight=".4"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Budget:"/>
+
+
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/et_budget"
                 android:text="0"
+                android:textSize="20sp"
                 android:background="@android:color/transparent"
                 />
+
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -146,30 +150,19 @@
                 android:layout_height="wrap_content"
                 android:text="Preis:"/>
 
-            <LinearLayout
+
+
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="1">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".8"
-                    android:text="0"
-                    android:id="@+id/text_sumPrice"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignTop="@+id/btn_back" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight=".2"
-                    android:text="€"
-                    android:id="@+id/currency_sumprice"
-                    />
-            </LinearLayout>
+                android:layout_weight=".8"
+                android:text="0"
+                android:textSize="20sp"
+                android:id="@+id/text_sumPrice"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/btn_back" />
 
         </LinearLayout>
 
