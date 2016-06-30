@@ -55,7 +55,7 @@ public class ShoppingList implements Serializable {
     public int calculateSumPrice() {
         sumPrice = 0;
         for (Product p : myProducts) {
-            this.sumPrice += p.getPrice();
+            this.sumPrice += (p.getPrice() * p.getAmount());
         }
         return this.sumPrice;
     }

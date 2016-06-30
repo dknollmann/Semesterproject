@@ -69,6 +69,11 @@ public class SwiperActivityHomescreen extends Swiper {
 
     }
 
+    @Override
+    protected void onItemSwipeRight(View v, float x) {
+
+    }
+
     /**
      * On item touch.
      *

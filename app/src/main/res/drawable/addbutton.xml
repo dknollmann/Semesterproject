@@ -18,7 +18,5 @@
         android:startColor="#4D95E8"
         android:endColor="#4D95FF"
         android:type="radial" />
-    <size
-        android:width="60dp"
-        android:height="45dp" />
+
 </shape>

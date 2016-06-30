@@ -7,14 +7,16 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/numberPicker"
-        android:id="@+id/text_prodname" />
+        android:layout_toRightOf="@+id/prod_amount"
+        android:id="@+id/text_prodname"
+        android:textColor="@android:color/black"
+        />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/text_producer"
-        android:layout_toRightOf="@+id/numberPicker"
+        android:layout_toRightOf="@+id/prod_amount"
         android:layout_below="@+id/text_prodname" />
 
     <TextView
@@ -27,15 +29,20 @@
         android:layout_alignBottom="@+id/text_producer"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:textAlignment="center" />
-
-    <NumberPicker
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/numberPicker"
+    <EditText
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:id="@+id/prod_amount"
         android:layout_alignBottom="@+id/text_producer"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-         />
+        android:layout_marginRight="10dp"
+        android:text="1"
+        android:textAlignment="center"
+        android:background="@android:color/transparent"
+        />
+
+
 
 
 </RelativeLayout>

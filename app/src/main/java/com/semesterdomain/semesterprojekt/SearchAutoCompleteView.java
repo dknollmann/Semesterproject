@@ -1,6 +1,7 @@
 package com.semesterdomain.semesterprojekt;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.AutoCompleteTextView;
 
@@ -21,6 +22,7 @@ public class SearchAutoCompleteView extends AutoCompleteTextView {
      * The Shopping list.
      */
     ShoppingList shoppingList;
+
 
     /**
      * Instantiates a new Search auto complete view.

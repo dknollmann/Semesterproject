@@ -56,6 +56,7 @@ public class ActivityListEditor extends AppCompatActivity {
 //displays budget
     EditText et_budget;
 
+
     TextView tv_sumPrice;
     /**
      * The application user
@@ -101,10 +102,15 @@ public class ActivityListEditor extends AppCompatActivity {
      */
     private final int BREAK_EA = 100;
     /**
+     * The constant SHOPPINGLISTNAME_DEFAULT is the default name of a shopping list.
+     */
+    private final String SHOPPINGLISTNAME_DEFAULT = "Meine Einkaufsliste";
+    /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+
 
     /**
      * On restart start the ActivityHomescreen with the shoppinglist as an extra.
@@ -135,6 +141,7 @@ public class ActivityListEditor extends AppCompatActivity {
         et_budget = (EditText) findViewById(R.id.et_budget);
         tv_sumPrice = (TextView) findViewById(R.id.text_sumPrice);
 
+
         searchAutoComplete = (SearchAutoCompleteView) findViewById(R.id.myautocomplete);
 
         // add the listener so it will tries to suggest while the user types
@@ -157,23 +164,32 @@ public class ActivityListEditor extends AppCompatActivity {
         if (myShoppingList == null) {
             myShoppingList = new ShoppingList();
             lists = dbH.getDBShoppingListsByUser(user);
-            int i = 0;
-            for (ShoppingList slist : lists) {
-                if (slist.getName().compareTo("Meine Einkaufsliste" + i) == 0) {
-                    i++;
-                } else {
-                    myShoppingList.setName("Meine Einkaufsliste" + i);
+
+
+            if (!lists.isEmpty()) {
+
+                int i = 0;
+                //make default name unique
+                for (ShoppingList slist : lists) {
+                    if (slist.getName().compareTo(SHOPPINGLISTNAME_DEFAULT + i) == 0) {
+                        i++;
+                        Log.d("LOGLISTE", "" + i);
+                    }
+                    myShoppingList.setName(SHOPPINGLISTNAME_DEFAULT + i);
                 }
+            } else {
+                myShoppingList.setName(SHOPPINGLISTNAME_DEFAULT);
+                Log.d("LOGLISTE", "default gesetzt");
             }
             SwiperActivityListEditor swiper = new SwiperActivityListEditor(product_lv, this, this, prodListItems, myShoppingList);
-            adapter = new ProductListAdapter(this, prodListItems, swiper);
+            adapter = new ProductListAdapter(this, prodListItems, swiper, dbH, myShoppingList, this);
             product_lv.setAdapter(adapter);
 
             dbH.addDBList(myShoppingList);
             listNameIsSaved = true;
         } else {
             SwiperActivityListEditor swiper = new SwiperActivityListEditor(product_lv, this.getApplicationContext(), this, prodListItems, myShoppingList);
-            adapter = new ProductListAdapter(this, prodListItems, swiper);
+            adapter = new ProductListAdapter(this, prodListItems, swiper, dbH, myShoppingList, this);
             product_lv.setAdapter(adapter);
 
             adapter.clear();
@@ -195,7 +211,7 @@ public class ActivityListEditor extends AppCompatActivity {
                         dbH.updateDBShoppingListName(myShoppingList);
                         et_list_name.setTextColor(Color.BLACK);
                         listNameIsSaved = true;
-                    }else{
+                    } else {
                         et_list_name.setTextColor(Color.RED);
                         listNameIsSaved = false;
                     }
@@ -203,7 +219,7 @@ public class ActivityListEditor extends AppCompatActivity {
             }
         });
 
-        et_budget.setText(String.valueOf(myShoppingList.getBudget()));
+        et_budget.setText(String.valueOf(myShoppingList.getBudget() + "€"));
         et_budget.setSingleLine();
         if (myShoppingList.getBudget() < myShoppingList.getSumPrice()) {
             et_budget.setTextColor(Color.RED);
@@ -270,7 +286,7 @@ public class ActivityListEditor extends AppCompatActivity {
      */
     public void displaySumPrice(ShoppingList list) {
         TextView sumPrice = (TextView) findViewById(R.id.text_sumPrice);
-        sumPrice.setText(list.calculateSumPrice() + "");
+        sumPrice.setText(list.calculateSumPrice() + "€");
     }
 
     /**
@@ -283,15 +299,17 @@ public class ActivityListEditor extends AppCompatActivity {
             et_budget.clearFocus();
         }
 
-        if(checkUniqueShoppingList()){
-            if(!listNameIsSaved){
+        if (checkUniqueShoppingList()) {
+            if (!listNameIsSaved) {
                 myShoppingList.setName(et_list_name.getText().toString());
                 dbH.updateDBShoppingListName(myShoppingList);
+                listNameIsSaved = true;
             }
             Intent intent = new Intent(this, ActivityHomescreen.class);
             startActivity(intent);
-        }else{
-            Log.d("LOGFOCUS","test");
+        } else {
+            Log.d("LOGFOCUS", "test");
+            listNameIsSaved = false;
             et_list_name.setTextColor(Color.RED);
             et_list_name.requestFocus();
         }
@@ -396,12 +414,13 @@ public class ActivityListEditor extends AppCompatActivity {
 
     /**
      * This method will check if the name of the shopping list is unique for the user
+     *
      * @return
      */
-    private boolean checkUniqueShoppingList(){
+    private boolean checkUniqueShoppingList() {
         String tempListName = et_list_name.getText().toString();
-        lists =  dbH.getDBShoppingListsByUser(user);
-        for(ShoppingList slist : lists) {
+        lists = dbH.getDBShoppingListsByUser(user);
+        for (ShoppingList slist : lists) {
             if (slist.getName().compareTo(tempListName) == 0 && slist.getName().compareTo(myShoppingList.getName()) != 0) {
                 return false;
             }
@@ -409,7 +428,7 @@ public class ActivityListEditor extends AppCompatActivity {
         return true;
     }
 
-    @Override
+ /*   @Override
     public void onStart() {
         super.onStart();
 
@@ -447,6 +466,6 @@ public class ActivityListEditor extends AppCompatActivity {
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
-    }
+    }*/
 }
 

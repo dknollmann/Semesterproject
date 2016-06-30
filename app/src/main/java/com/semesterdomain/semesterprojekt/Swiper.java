@@ -79,6 +79,14 @@ public abstract class Swiper implements View.OnTouchListener {
     protected abstract void onItemSwipeLeft(final View v, float x);
 
     /**
+     * On item swipe right.
+     *
+     * @param v the v
+     * @param x the x
+     */
+    protected abstract void onItemSwipeRight(final View v, float x);
+
+    /**
      * On item touch.
      *
      * @param v the v
@@ -253,7 +261,7 @@ public abstract class Swiper implements View.OnTouchListener {
 
             if (deltaX > v.getWidth() / 3) //swipe to right
             {
-                mDownX = x;
+               /* mDownX = x;
                 swiped = true;
                 mSwiping = false;
                 mItemPressed = false;
@@ -261,7 +269,8 @@ public abstract class Swiper implements View.OnTouchListener {
 
                 v.animate().setDuration(ANIMATION_DURATION).translationX(v.getWidth() / 3); //could pause here, same way as delete
                 TextView tv = (TextView) v.findViewById(R.id.text_shoppingListname);
-                //tv.setText("Swiped!");
+                //tv.setText("Swiped!");*/
+                onItemSwipeRight(v, x);
                 return true;
             } else if (deltaX < -1 * (v.getWidth() / 3)) //swipe to left
             {

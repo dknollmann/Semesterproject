@@ -73,14 +73,47 @@ public class SwiperActivityListEditor extends Swiper {
         prodToRemove = mainList.get(i);
 
         dbH.deleteDBProductFromList(prodToRemove, list);
-        result.setText(""+list.calculateSumPrice());
+        result.setText("" + list.calculateSumPrice());
 
-        if(list.getBudget() >= list.calculateSumPrice()) {
+        if (list.getBudget() >= list.calculateSumPrice()) {
             EditText budget = (EditText) activity.findViewById(R.id.et_budget);
             TextView sumPrice = (TextView) activity.findViewById(R.id.text_sumPrice);
             budget.setTextColor(Color.BLACK);
             sumPrice.setTextColor(Color.BLACK);
         }
+    }
+
+    /**
+     * On item swipe left.
+     *
+     * @param v the v
+     * @param x the x
+     */
+    @Override
+    protected void onItemSwipeRight(final View v, float x) {
+        Product product;
+        mDownX = x;
+        swiped = true;
+        mSwiping = false;
+        mItemPressed = false;
+
+        v.animate().setDuration(ANIMATION_DURATION).translationX(v.getWidth() / 3); //could pause here, same way as delete
+
+        int i = listView.getPositionForView(v);
+        product = mainList.get(i);
+
+        int isBought = dbH.isMarked(list, product);
+
+        if (isBought > 0) {
+            dbH.unMarkAsInShoppingCart(list, product);
+            v.setBackgroundColor(Color.parseColor("#fafafa"));
+        } else if (isBought == 0) {
+            dbH.markAsInShoppingCart(list, product);
+            v.setBackgroundColor(Color.GREEN);
+        } else {
+            Log.d("LOG", "isbought is not set");
+        }
+
     }
 
     /**

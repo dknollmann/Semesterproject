@@ -36,7 +36,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     /**
      * The constant DB_NAME simply stores the filename of the SQLite DB which is used for App.
      */
-    private static final String DB_NAME = "ShoppingDB32kRecordsFinal.sqlite";
+    private static final String DB_NAME = "ShoppingDBWithoutLists.sqlite";
 
     /**
      * The constant DB_PATH stores the filepath to the SQLite DB file which should be loaded.
@@ -196,15 +196,12 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
         Product product;
         String[] args = {String.valueOf(list.getListId())};
 
-        Cursor dbCursor = SQLiteDatabase.rawQuery("SELECT product_id, productname, manufacturer, productprice, posx, posy, listposition FROM LIST_PRODUCT " +
+        Cursor dbCursor = SQLiteDatabase.rawQuery("SELECT product_id, productname, manufacturer, productprice, posx, posy, listposition, amount FROM LIST_PRODUCT " +
                 "JOIN PRODUCT ON LIST_PRODUCT.fk_product = PRODUCT.product_id " +
                 "WHERE LIST_PRODUCT.fk_list = ?" +
                 "ORDER BY listposition ASC", args);
         list.getMyProducts().clear();
         if (dbCursor != null) {
-            /*c.getCount();
-            ArrayList<Product> al = new ArrayList<>();
-            */
             if (dbCursor.moveToFirst()) {
                 do {
                     product = new Product("Dummy", "Dummy", 1);
@@ -214,7 +211,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
                     product.setPrice(dbCursor.getInt(3));
                     product.setPosX(dbCursor.getInt(4));
                     product.setPosY(dbCursor.getInt(5));
-                    //Log.d("LOGBla", "" + c.getInt(6));
+                    product.setAmount(dbCursor.getInt(7));
                     list.getMyProducts().add(product);
                 } while (dbCursor.moveToNext());
             }
@@ -411,7 +408,7 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
      * RIGHT) from the DB. For this operation the owner (user) of the shoppinglist is needed
      * because only the owner is supposed to delete his own shoppinglists.
      *
-     * @param user        the user who might be the rightfull owner of the shoppinglist.
+     * @param user            the user who might be the rightfull owner of the shoppinglist.
      * @param ToBeDeletedList the shoppinglist which gets removed from the DB.
      * @return the boolean is false when the user is not the owner.
      */
@@ -549,8 +546,8 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
     /**
      * Deletes a single products from the DB record for a single shoppinglist.
      *
-     * @param product the product that should be deleted.
-     * @param shoppingList    the shoppinglist where the product should be deleted from.
+     * @param product      the product that should be deleted.
+     * @param shoppingList the shoppinglist where the product should be deleted from.
      * @return the boolean indicates if the deletion was succesfull or not.
      */
     public boolean deleteDBProductFromList(Product product, ShoppingList shoppingList) {
@@ -629,10 +626,117 @@ public class SQLiteDBHelper extends SQLiteOpenHelper {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("budget", shoppingList.getBudget());
-        //Log.d("LOGBudget", list.getBudget() + "");
-        //Log.d("LOGBudget", list.getListId() + "");
+
         String[] args = {String.valueOf(shoppingList.getListId())};
         SQLiteDatabase.update(TBL_LIST, contentValues, "list_id = ? ", args);
+
+        closeDatabase();
+    }
+
+    /**
+     * Marks Product as in Shooping Cart
+     *
+     * @param shoppingList
+     * @param product
+     */
+    public void markAsInShoppingCart(ShoppingList shoppingList, Product product) {
+        openDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("isbought", 1);
+
+        String[] args = {String.valueOf(shoppingList.getListId()), String.valueOf(product.getProductId())};
+        SQLiteDatabase.update(TBL_LIST_PRODUCT, contentValues, "fk_list = ? AND fk_product = ? ", args);
+
+        closeDatabase();
+    }
+
+    /**
+     * Marks Product as not in Shooping Cart
+     *
+     * @param shoppingList
+     * @param product
+     */
+    public void unMarkAsInShoppingCart(ShoppingList shoppingList, Product product) {
+        openDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("isbought", 0);
+
+        String[] args = {String.valueOf(shoppingList.getListId()), String.valueOf(product.getProductId())};
+        SQLiteDatabase.update(TBL_LIST_PRODUCT, contentValues, "fk_list = ? AND fk_product = ? ", args);
+
+        closeDatabase();
+    }
+
+    /**
+     * Watches if a Product is already marked as in Shopping Cart
+     *
+     * @param shoppingList
+     * @param product
+     * @return
+     */
+    public int isMarked(ShoppingList shoppingList, Product product) {
+
+        int isbought;
+
+        openDatabase();
+
+        String whereClause = "fk_list = ? AND fk_product = ?";
+        String[] args = {String.valueOf(shoppingList.getListId()), String.valueOf(product.getProductId())};
+        String[] columns = {"isbought"};
+
+        Cursor c = SQLiteDatabase.query(TBL_LIST_PRODUCT, columns, whereClause, args, null, null, null);
+        if (c != null) {
+            if (c.moveToFirst()) {
+
+                isbought = c.getInt(0);
+            } else {
+                isbought = -1;
+            }
+        } else {
+            isbought = -1;
+        }
+
+        c.close();
+
+        closeDatabase();
+
+        return isbought;
+    }
+
+    public int getDBAmountofProductFromList(ShoppingList list, Product product) {
+
+        int amount = 0;
+
+        openDatabase();
+
+        String whereClause = "fk_list = ? AND fk_product = ?";
+        String[] args = {String.valueOf(list.getListId()), String.valueOf(product.getProductId())};
+        String[] columns = {"amount"};
+
+        Cursor c = SQLiteDatabase.query(TBL_LIST_PRODUCT, columns, whereClause, args, null, null, null);
+        if (c != null) {
+            if (c.moveToFirst()) {
+
+                amount = c.getInt(0);
+            }
+
+        }
+
+        closeDatabase();
+
+        return amount;
+    }
+
+    public void setAmount(ShoppingList list, Product product) {
+        openDatabase();
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("amount", product.getAmount());
+
+        String[] args = {String.valueOf(list.getListId()), String.valueOf(product.getProductId())};
+        SQLiteDatabase.update(TBL_LIST_PRODUCT, contentValues, "fk_list = ? AND fk_product = ? ", args);
 
         closeDatabase();
     }
