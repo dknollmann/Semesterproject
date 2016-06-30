@@ -32,6 +32,16 @@ public class Product implements Serializable {
      */
     private double posY;
 
+    private int amount;
+
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
 
     /**
      * Instantiates a new Product with the given name, manufacturer and price.
@@ -44,6 +54,7 @@ public class Product implements Serializable {
         this.productName = name;
         this.manufacturer = manufacturer;
         this.price = price;
+        this.amount = 1;
     }
 
     /**
